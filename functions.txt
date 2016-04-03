@@ -1,0 +1,11 @@
+SceneItem
+setPropertyByTime
+getPropertyByTime
+setFilterByTime
+getFilterByTime
+setTransformByTime
+getTransformByTime
+
+
+Frame
+getProperty
