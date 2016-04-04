@@ -182,11 +182,11 @@ var Util = {
 		 */
 	 	if(typeof a1 == "string") {
 	 		a1 = a1.trim();
-	 		if(a1.indexOf("(") != -1)
+	 		if(a1.indexOf("(") != -1) //괄호가 들어갈 때
 	 			return this.dot(this.toBracketObject(a1), a2, b1, b2);
-	 		else if(a1.indexOf(",") != -1)
+	 		else if(a1.indexOf(",") != -1) //구분자가 ","
 		 		return this.dot(new PropertyObject(a1, ","), a2, b1,b2);
-		 	else if(a1.indexOf(" ") != -1)
+		 	else if(a1.indexOf(" ") != -1) //구분자가 " "
 		 		return this.dot(new PropertyObject(a1, " "), a2, b1,b2);
 		 	
 	 	}
@@ -215,6 +215,9 @@ var Util = {
 		var r1 = b1 / (b1 + b2);
 		var r2 = 1- r1;
 		var v;
+		/*
+			숫자가 아닐경우 첫번째 값을 반환 b2가 0일경우 두번째 값을 반환
+		*/
 		if(isNaN(v1.value)) {
 			if(r1 >=1)
 				return a2;
