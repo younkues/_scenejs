@@ -1,3 +1,3 @@
-var ColorObject = function(arr) {
+var ColorObject = function(object) {
 	
 }
