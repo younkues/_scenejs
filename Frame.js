@@ -99,7 +99,7 @@ var propertyFunctions = {
 		if(typeof v === "object") {
 			if(v.length == 3)
 				v[3] = 1;
-			return "rgba(" + parseInt(v[0]) + "," + parseInt(v[1]) + "," + parseInt(v[2]) + "," + v[3]/255 + ")";
+			return "rgba(" + parseInt(v[0]) + "," + parseInt(v[1]) + "," + parseInt(v[2]) + "," + v[3] + ")";
 		} else {
 			return v;
 		}
@@ -114,7 +114,7 @@ FramePrototype.getCSSObject = function() {
 	for(var transformName in transforms) {
 		value = transforms[transformName];
 		if(value instanceof Object)
-			value = Util.join(value, ",");
+			value = value.toValue();
 		cssTransform += transformName + "(" + value + ")";
 		cssTransform += " ";
 	}
@@ -122,6 +122,8 @@ FramePrototype.getCSSObject = function() {
 	/*filter css*/
 	for(var filterName in filters) {
 		value = filters[filterName];
+		if(value instanceof Object)
+			value = value.toValue();
 		cssFilter += filterName + "(" + value + ")";
 		cssFilter += " ";
 	}
@@ -129,8 +131,8 @@ FramePrototype.getCSSObject = function() {
 	
 	for(var propertyName in properties) {
 		value = properties[propertyName];
-		if(propertyName.indexOf("color") != -1)
-			value = propertyFunctions["color"](value);
+		if(value instanceof Object)
+			value = value.toValue();
 		cssObject[propertyName] = value;
 	}
 	return cssObject;

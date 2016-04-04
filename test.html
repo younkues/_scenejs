@@ -11,20 +11,26 @@ body {
 		background:#84cce8;
 }
 .test {width:100px; height:100px; background:#f55;}
-.path {
-  fill: #f55;
-  stroke-width: 6;
+.svg_circle {
+	border: 1px solid black;
+}
+.svg_circle circle{
+  stroke-width: 10;
   stroke-linejoin: round;
-  stroke-dasharray: 0 50000;
-  stroke-dashoffset: 0;
+  stroke-dasharray: 0 1000;
+  stroke-dashoffset: 1;
   
   stroke: #3AA1BF;
-  -webkit-transition:all 1s linear;
+  transition:all 2s cubic-bezier(.78,1.87,.53,.39);
 }
-.svg:hover path{
-	stroke: #ff5;
-	stroke-dasharray: 1000 50000;
-	stroke-dashoffset: 0;
+.svg_circle:hover circle{
+/* 	stroke: #ff5; */
+	stroke-dasharray: 315 1000;
+	stroke-dashoffset: -314;
+}
+.svg_circle:hover circle.rotate_circle1 {
+	stroke-dasharray: 126 1000;
+	stroke-dashoffset: -125;	
 }
 
 #moon path{
@@ -128,6 +134,13 @@ body {
 
 </svg>
 </div>
+<svg class ="svg_circle" version="1.1" id="레이어_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" width="100px" height="100px" viewBox="0 0 100 100" enable-background="new 0 0 56.69 56.69"
+	 xml:space="preserve">
+<circle class="rotate_circle1" fill="transparent" stroke="#000000" stroke-miterlimit="10" cx="50" cy="50" r="20"/>
+<circle class="rotate_circle2" fill="transparent" stroke="#000000" stroke-miterlimit="10" cx="50" cy="50" r="50"/>
+</svg>
+
 
 
 <div id="circle" class="circle"></div>

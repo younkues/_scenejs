@@ -75,6 +75,16 @@ var Util = {
 		return {unit:unit, value:value};
 		
 	 },
+	 arrayToColorObject: function(arr) {
+		if(arr.length === 3)
+			arr[3] = 1;
+		 
+		var object = new PropertyObject(arr, ",");
+		object.setPrefix("rgba(");
+		object.setSuffix(")");
+		
+		return object;
+	 },
 	 toColorObject: function(v) {
 		var rgb = [];
 		if(v.charAt(0) === "#")  {
@@ -94,15 +104,17 @@ var Util = {
 				rgb[i] = parseInt(rgb[i]);
 			}
 		}
-		if(rgb.length === 3)
-			rgb[3] = 255;
-			
-		return rgb;
+		return this.arrayToColorObject(rgb);
 	 },
 	 dotBracket: function(a1, a2, b1, b2) {
 		 
 	 },
  	 dotColor: function(a1, a2, b1, b2) {
+ 	 	if(a1 instanceof Array)
+ 	 		return this.dotColor(this.arrayToColorObject(a1), a2, b1, b2);
+		else if(a2 instanceof Array)
+			return this.dotColor(a1, this.arrayToColorObject(a2), b1, b2);
+			 	 		
 		if(typeof a1 !== "object")
 			a1 = this.toColorObject(a1);
 		if(typeof a2 !== "object")
@@ -119,32 +131,42 @@ var Util = {
 	 dotDictionary: function(a1, a2, b1, b2) {
 	 	var obj = {};
 	 	var v1, v2;
-		for(var n in a1) {
-			v1 = a1[n];
-			if(!n in a2)
+	 	var _a1 = a1.value;
+	 	var _a2 = a2.value;
+		for(var n in _a1) {
+			v1 = _a1[n];
+			if(!n in _a2)
 				obj[n] = v1;
 			else
-				obj[n] = this.dot(v1, a2[n], b1, b2);
+				obj[n] = this.dot(v1, _a2[n], b1, b2);
 		}
-
-		return obj;
+		return new PropertyObject(obj, a1.separator);
 	 },
 	 // a2 *  b1 / (b1 + b2) + a1 * b2 / (b1 + b2)
 	 dot : function dot(a1, a2, b1, b2) {
 
 	 	if(typeof a1 == "string") {
+	 		a1 = a1.trim();
 	 		if(a1.indexOf("(") != -1)
 	 			return this.dotBracket(a1, a2, b1, b2);
 	 		else if(a1.indexOf(",") != -1)
-		 		return this.dot(a1.split(","), a2, b1,b2);
+		 		return this.dot(new PropertyObject(a1, ","), a2, b1,b2);
+		 	else if(a1.indexOf(" ") != -1)
+		 		return this.dot(new PropertyObject(a1, " "), a2, b1,b2);
 		 	
 	 	}
-	 	if(typeof a2 == "string" && a2.indexOf(",") != -1)
-	 		return this.dot(a1, a2.split(","), b1,b2);
+	 	if(typeof a2 == "string") {
+	 		a2 = a2.trim();
+	 		if(a2.indexOf(",") != -1)
+		 		return this.dot(a1, new PropertyObject(a2, ","), b1,b2);
+		 	else if(a2.indexOf(" ") != -1)
+		 		return this.dot(a1, new PropertyObject(a2, " "), b1,b2);
+	 	}
 	 		
 	 		
 	 	if(a1 instanceof Object)
 	 		return this.dotDictionary(a1, a2, b1, b2);
+
 	 	if(b1 + b2 == 0)
 	 		return a1;
 	 	

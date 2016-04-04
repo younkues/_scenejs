@@ -5,7 +5,8 @@
 <script src="Bezier.js"></script>
 <script src="TimingFunction.js"></script>
 <script src="jquery.min.js"></script>
-<script src="TransformFunction.js"></script>
+<script src="PropertyFunction.js"></script>
+<script src="PropertyObject.js"></script>
 <style>
 body {
 		background:skyblue;
@@ -83,6 +84,33 @@ body {
 	box-sizing: border-box;
 	border: 75px solid transparent;
 }
+
+
+.svg_circle {
+	top:50%;
+	left: 50%;
+	width: 300px;
+	height: 300px;
+	font-size: 100px;
+	margin-left:-150px;
+	margin-top:-150px;
+	position: absolute;
+}
+.svg_circle circle{
+  stroke-width: 5;
+  stroke-linejoin: round;
+  stroke-dasharray: 0 1000;
+  stroke-dashoffset: 1;
+  
+  stroke: #3AA1BF;
+/*   transition:all 2s cubic-bezier(.96,1.88, 0.6, 0.41); */
+}
+.svg_circle:hover circle{
+/* 	stroke: #ff5; */
+	stroke-dasharray: 283 1000;
+	stroke-dashoffset: -283;
+}
+
 </style>
 
 
@@ -100,15 +128,28 @@ body {
 
 <div class="circles" id="circles1">
 	<div class="circle" style="border-color:#c9af52;"></div>
-	<div class="circle"></div>
-	<div class="circle"></div>
-	<div class="circle"></div>
-	<div class="circle"></div>
-	<div class="circle"></div>	
+	<div class="circle" style="border-color:#183c43;"></div>
+	<div class="circle" style="border-color:#FF0088;"></div>
+	<div class="circle" style="border-color:#7986CB;"></div>
+	<div class="circle" style="border-color:#E2E6E9;"></div>
 </div>
+
+
+<svg class ="svg_circle" version="1.1" id="레이어_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" width="300px" height="300px" viewBox="0 0 100 100" enable-background="new 0 0 56.69 56.69"
+	 xml:space="preserve">
+<circle id="rotate_circle1" fill="transparent" stroke="#000000" stroke-miterlimit="10" cx="50" cy="50" r="25"/>
+<circle id="rotate_circle2" fill="transparent" stroke="#000000" stroke-miterlimit="10" cx="50" cy="50" r="35"/>
+<circle id="rotate_circle3" fill="transparent" stroke="#000000" stroke-miterlimit="10" cx="50" cy="50" r="45"/>
+</svg>
+
+
 
 <div id="text">1
 </div>
+
+
+
 <script>
 var easeinout = [.48,.01,.25,1];
 var sceneSunny = new Scene();
@@ -130,33 +171,64 @@ for (var i = 0; i < sun_afters.length; ++i) {
 }
 //rainy  1s  ~ 3s
 var scene2 = new Scene();
+
+var _circles = [];
+var circles = document.querySelectorAll("#circles1 .circle");
+
+var circlesPosition = [
+{x:0, y:0, r: 100, delay: 0, duration: 1},
+{x:-30, y:-50, r: 40, delay: 0.3, duration: 0.7},
+{x:40, y:50, r: 50, delay: 0.5, duration: 0.7},
+{x:-40, y:60, r: 60, delay: 0.6, duration: 0.7},
+{x:70, y:-40, r: 50, delay: 0.8, duration: 0.8}
+]
+var cp, r , w,d, duration, x, y;
+for (var i = 0; i < circles.length; ++i) {
+	_circles[i] = scene2.addElement(circles[i]);
+	 cp = circlesPosition[i];
+	r = cp.r + "px", w =  (cp.r * 2) + "px";
+	d = cp.delay, duration = cp.duration;
+	x = cp.x, y = cp.y;
+	_circles[i].setProperties(-1, {
+		"margin-left": "-"+r,
+		"margin-top" : "-"+r,
+		width: w,
+		height: w
+	});
+	_circles[i].translate(0, x +"px,"+y+"px").scale(0, "0,0").scale(d, "0,0").scale(duration + d, "1,1").setProperty(duration * 0.3 + d, "border-width", r).setProperty(duration + d, "border-width","0px").addTimingFunction(d, duration + d, easeinout);
+	_circles[i].opacity(d + duration * 0.7, "1").opacity(d+ duration, "0");
+}
+
+scene2.synchronize(0);
+
+
+var scene3 = new Scene();
+var rc1 = scene3.addElement(rotate_circle1);
+var rc2 = scene3.addElement(rotate_circle2);
+var rc3 = scene3.addElement(rotate_circle3);
+/*
+	stroke-dasharray: 283 1000;
+	stroke-dashoffset: -283;
+*/
+rc1.setProperties(1, {
+	"stroke-dasharray": "283 1000",
+	"stroke-dashoffset": -283
+});
+
+
+
 sceneSunny.onAnimate(function(time, isFinish) {
 	if(isFinish) {
 		text.innerHTML = "2";
 		scene2.play();
 	}
 });
-var _circles = [];
-var circles = document.querySelectorAll("#circles1 .circle");
-for (var i = 0; i < circles.length; ++i) {
-	_circles[i] = scene2.addElement(circles[i]);
-	_circles[i].setProperties(-1, {
-		"margin-left": "-100px",
-		"margin-top" : "-100px",
-		width: "200px",
-		height: "200px"
-	});
-	_circles[i].scale(0, "0,0").scale(1, "1,1").setProperty(0.3, "border-width", "100px").setProperty(1, "border-width","0px");
-}
-
-scene2.synchronize(0);
-/* scene2.setPlaySpeed(2); */
-//snow 3s ~ 5s
-
-
-
-// wind
-
+scene2.onAnimate(function(time, isFinish) {
+	if(isFinish) {
+		text.innerHTML = "3";
+		scene3.play();
+	}
+});
 
 
 sceneSunny.synchronize(0);
