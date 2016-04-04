@@ -1,11 +1,11 @@
-<script src="Util.js"></script>
-<script src="Scene.js"></script>
-<script src="SceneItem.js"></script>
-<script src="Frame.js"></script>
-<script src="Bezier.js"></script>
-<script src="TimingFunction.js"></script>
-<script src="PropertyFunction.js"></script>
-<script src="PropertyObject.js"></script>
+<script src="../Util.js"></script>
+<script src="../Scene.js"></script>
+<script src="../SceneItem.js"></script>
+<script src="../Frame.js"></script>
+<script src="../Bezier.js"></script>
+<script src="../TimingFunction.js"></script>
+<script src="../PropertyFunction.js"></script>
+<script src="../PropertyObject.js"></script>
 <style>
 body {
 		background:skyblue;
@@ -120,7 +120,7 @@ body {
 	height: 0;
 	margin-left: -17px;
 	width: 24px;
-	border-bottom: 150px solid #777;
+	border-bottom: 150px solid #E5EBF7;
 	border-left: 5px solid transparent;
 	border-right: 5px solid transparent;
 	transform-origin: 50% 0%;
@@ -129,6 +129,60 @@ body {
 #slice_circle {
 	background: #ea6b96;
 	
+}
+.circle_square {
+	width: 20px;
+	height: 20px;
+	top:50%;
+	left: 50%;
+	margin-top:-10px;
+	margin-left:-10	px;
+	position: absolute;
+	border-radius: 50%;
+	box-sizing: border-box;
+	background: #FFDDDD;
+}
+
+#bomb {
+	position: absolute;
+	width: 200px;
+	height: 200px;
+	top:50%;
+	left: 50%;
+	margin-left:-100px;
+	margin-top:-100px;
+	stroke-dasharray: 100 1000;
+	stroke-dashoffset: 0;
+	transform: rotate(20deg);
+}
+#bomb .tail {
+	position: absolute;
+	left: 50%;
+	top:-110px;
+	width: 200px;
+	height: 200px;
+	margin-left: -10px;
+}
+#bomb .tail path {
+	stroke-width: 3px;
+}
+#bomb .head {
+	position: absolute;
+	width: 80px;
+	height: 20px;
+	left: 50%;
+	margin-left: -40px;
+	top:-10px;
+	background: #000;
+	
+}
+#bomb .body{
+	position: absolute;
+	top:0;
+	width: 200px;
+	height: 200px;
+	background: #000;
+	border-radius: 50%;
 }
 </style>
 
@@ -164,9 +218,39 @@ body {
 
 <div id="stick"></div>
 <div id="slice_circle" class="circle"></div>
-<div id="text">1
+
+
+<div id="circle_squares">
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
 </div>
 
+<div id="bomb">
+	<svg class="tail" version="1.1" id="&#xB808;&#xC774;&#xC5B4;_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+		 x="0px" y="0px" width="63.333px" height="30.667px" viewBox="0 0 63.333 30.667"
+		 style="enable-background:new 0 0 63.333 30.667;" xml:space="preserve">
+	<path style="fill:none;stroke:#000000;stroke-miterlimit:10;" d="M3,19.333C3,17.258,9.159,1.416,21,5.667
+		c13,4.667,13.167,38.724,39.667,7.39"/>
+	</svg>
+	<div class="head"></div>
+	<div class="body"></div>
+
+</div>
+<div id="text">1</div>
 
 
 <script>
@@ -247,42 +331,104 @@ st.setTransforms(0, {rotate:"-90deg", scale:"1, 0"}).setTransforms(delay/2, {rot
 st.rotate(delay + 1, "270deg").rotate(delay + 2, "630deg"); // rotate stick
 st.setTransforms(2+delay, {scale:"1, 1"}).setTransforms(2+delay +delay/2, {scale:"1, 0"}); // hide stick
 
+scene3.setPlaySpeed(1);
+scene3.addTimingFunction(0, delay, ease).addTimingFunction(delay, delay + 1, ease).addTimingFunction(delay + 1, delay + 2, ease).addTimingFunction(delay + 2, delay + delay/2 + 2, ease);
 
 
 
 var scene4 = new Scene();
 var sc = scene4.addElement(slice_circle);
 
-sc.setProperty(0, "clip", "rect(0px, 150px, 150px, 0px)");
-sc.setProperty(0.5, "clip", "rect(20px, 150px, 150px, 0px)");
-sc.setProperty(1, "clip", "rect(40px, 150px, 150px, 0px)");
-sc.rotate(0, "0deg").rotate(0.5, "20deg").rotate(1, "-20deg");
+
+/* sc.setProperty(0, "clip", "rect(20px, 150px, 150px, 0px)"); */
+var clipArea, sign, r = 75;
+duration = 0.3;
+sc.scale(0, "0, 0"). scale(0.3, "1, 1");
+for(var i = 0; i <= 5; ++i) {
+	clipArea = i * 30 ;
+	sc.setProperty(0.3 + i * duration, "clip", "rect("+clipArea+"px, 150px, 150px, 0px)");	
+	sign = i % 2 == 0 ? 1 : -1;
+	sc.rotate(0.3 + i * duration, sign * 10 + "deg");
+	if(i != 4)
+		sc.addTimingFunction(0.3 + i * duration, 0.3 + (i + 1) * duration, easeinout);
+}
+
+var scene5 = new Scene();
+
+var _css = [];
+var css = document.querySelectorAll("#circle_squares .circle_square");
+l = css.length;
+deg = 360 / l;
+for (var i = 0; i < l; ++i) {
+	_css[i] = scene5.addElement(css[i]);
+	_css[i].setTransforms(0, {rotate:(i * deg +"deg"), translate:"100px, 0px", scale: "0,0"});
+	_css[i].setTransforms(i * 0.1, {scale:"0, 0"});
+	_css[i].setTransforms(i * 0.1 + 0.2, {scale:"1.3, 1.3"});
+	_css[i].setTransforms(i * 0.1 + 0.3, {scale:"1, 1"});
+	_css[i].setProperties(i * 0.1 + 0.6, {"border-radius": "50%", opacity: 1});
+	_css[i].setProperties(i * 0.1 + 1, {"border-radius": "0%", opacity: 0});
+}
 
 
+
+
+
+var scene6 = new Scene();
+var _bomb = scene6.addElement(bomb);
+var bomb_tail = scene6.addElement(bomb.querySelector(".tail path"));
+var bomb_body = scene6.addElement(bomb.querySelector(".body"));
+
+_bomb.rotate(0, "20deg").scale(0, "0, 0").scale(0.3, "1.3, 1.3").scale(0.5, "1,1");
+_bomb.addTimingFunction(0, 0.5, ease);
+bomb_tail.setProperty(0, "stroke-dashoffset", 0);
+bomb_tail.setProperty(2, "stroke-dashoffset", 100);
+bomb_body.scale(2, "1,1");
+bomb_body.scale(3, "20,20");
+bomb_body.addTimingFunction(2, 3, ease);
 scene1.onAnimate(function(time, isFinish) {
 	if(isFinish) {
 		text.innerHTML = "2";
-		scene2.play();
+		scene3.play();
 	}
 });
 scene2.onAnimate(function(time, isFinish) {
 	if(isFinish) {
-		text.innerHTML = "3";
-		scene3.play();
+		text.innerHTML = "4";
+		scene4.play();
 	}
 });
-
-scene3.setPlaySpeed(1);
-scene3.addTimingFunction(0, delay, ease).addTimingFunction(delay, delay + 1, ease).addTimingFunction(delay + 1, delay + 2, ease).addTimingFunction(delay + 2, delay + delay/2 + 2, ease);
-
-
+scene3.onAnimate(function(time, isFinish) {
+	if(isFinish) {
+		text.innerHTML = "3";
+		scene2.play();
+	}
+});
+scene4.onAnimate(function(time, isFinish) {
+	if(isFinish) {
+		text.innerHTML = "5";
+		scene5.play();
+	}
+});
+scene5.onAnimate(function(time, isFinish) {
+	if(isFinish) {
+		text.innerHTML = "6";
+		scene6.play();
+	}
+});
+scene6.onAnimate(function(time, isFinish) {
+	if(isFinish) {
+		text.innerHTML = "";
+	}
+});
+scene1.setPlaySpeed(0.5);
 scene1.synchronize(0);
 scene2.synchronize(0);
 scene3.synchronize(0);
 scene4.synchronize(0);
+scene5.synchronize(0);
+scene6.synchronize(0);
 
-
-scene4.play();
+scene1.play();
 
 
 </script>

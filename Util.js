@@ -206,15 +206,5 @@ var Util = {
 		
 		var unit = v1.unit || v2.unit || "";	
 		return v + unit.trim();
-	},
-	join: function(arr, separator) {
-		var rv = "";
-		var s = false;
-		for(var i in arr) {
-			if(s) rv += ",";
-			rv += arr[i];
-			s = true;
-		}
-		return rv;
 	}
 };

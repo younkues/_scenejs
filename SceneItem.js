@@ -17,9 +17,8 @@ var SceneItem = function(element) {
 		this.addStyleToFrame(-1);
 	}
 }
+
 var sceneItemPrototype = SceneItem.prototype;
-
-
 
 var addPropertyFunction = function(name, names) {
 	var setProperty = camelize("set " + name);
