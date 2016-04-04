@@ -5,7 +5,7 @@
 <script src="Bezier.js"></script>
 <script src="TimingFunction.js"></script>
 <script src="jquery.min.js"></script>
-<script src="TransformFUnction.js"></script>
+<script src="TransformFunction.js"></script>
 <style>
 body {
 		background:skyblue;
@@ -68,6 +68,9 @@ body {
 	
 	font-family: sans-serif;
 }
+.circles {
+	z-index: 100;
+}
 .circle {
 	width: 150px;
 	height: 150px;
@@ -78,6 +81,7 @@ body {
 	position: absolute;
 	border-radius: 50%;
 	box-sizing: border-box;
+	border: 75px solid transparent;
 }
 </style>
 
@@ -136,10 +140,17 @@ var _circles = [];
 var circles = document.querySelectorAll("#circles1 .circle");
 for (var i = 0; i < circles.length; ++i) {
 	_circles[i] = scene2.addElement(circles[i]);
-	
+	_circles[i].setProperties(-1, {
+		"margin-left": "-100px",
+		"margin-top" : "-100px",
+		width: "200px",
+		height: "200px"
+	});
+	_circles[i].scale(0, "0,0").scale(1, "1,1").setProperty(0.3, "border-width", "100px").setProperty(1, "border-width","0px");
 }
 
-
+scene2.synchronize(0);
+/* scene2.setPlaySpeed(2); */
 //snow 3s ~ 5s
 
 
@@ -149,7 +160,7 @@ for (var i = 0; i < circles.length; ++i) {
 
 
 sceneSunny.synchronize(0);
-sceneSunny.setPlaybackSpeed(0.5);
+sceneSunny.setPlaySpeed(0.5);
 sceneSunny.play();
 
 </script>

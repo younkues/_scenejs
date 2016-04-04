@@ -3,13 +3,13 @@ var Scene = function Scene() {
 	this.sceneItems = [];
 	this.startTime = this.prevTime = this.nowTime = 0;
 	this.isStart = this.isFinish = this.isPause = false;
-	this.playbackSpeed = 1;
+	this.playSpeed = 1;
 }
 
 
 var scenePrototype = Scene.prototype;
 
-defineGetterSetter(scenePrototype, "playbackSpeed");
+defineGetterSetter(scenePrototype, "playSpeed");
 
 scenePrototype.addItem = function(sceneItem) {
 	this.sceneItems.push(sceneItem);
@@ -106,7 +106,7 @@ scenePrototype.timerFunction = function() {
 	this.nowTime = Date.now();
 	var duration = (this.nowTime - this.startTime) / 1000;
 /* 	var ease = Curve.cubicBezier(0.48,0.01,0.25,1); */
-	var isProcess = this.synchronize(duration * this.playbackSpeed, true);
+	var isProcess = this.synchronize(duration * this.playSpeed, true);
 	
 
 	if(!isProcess) {
