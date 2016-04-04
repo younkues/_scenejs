@@ -95,14 +95,16 @@ FramePrototype.translate = function(x, y) {
 	this.setTransform("translate", {x:x, y:y});
 }
 var propertyFunctions = {
-	"background-color": function(v) {
-		if(typeof v === "object")
+	"color": function(v) {
+		if(typeof v === "object") {
+			if(v.length == 3)
+				v[3] = 1;
 			return "rgba(" + parseInt(v[0]) + "," + parseInt(v[1]) + "," + parseInt(v[2]) + "," + v[3]/255 + ")";
-		else
+		} else {
 			return v;
+		}
 	}
 }
-propertyFunctions.color = propertyFunctions["background-color"];
 
 FramePrototype.getCSSObject = function() {
 	var transforms = this.transforms, filters = this.filters, properties = this.properties;
@@ -127,9 +129,9 @@ FramePrototype.getCSSObject = function() {
 	
 	for(var propertyName in properties) {
 		value = properties[propertyName];
-		if(propertyName in propertyFunctions)
-			value = propertyFunctions[propertyName](property);
-		cssObject[propertyName] = value;	
+		if(propertyName.indexOf("color") != -1)
+			value = propertyFunctions["color"](value);
+		cssObject[propertyName] = value;
 	}
 	return cssObject;
 }

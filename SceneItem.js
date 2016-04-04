@@ -11,10 +11,11 @@ var SceneItem = function(element) {
 	this.animateFunction;	
 	
 	this.element = element;
-	if(element)
-		element.setAttribute("role", "item");
-		
 	this.newFrame(-1);
+	if(element) {
+		element.setAttribute("role", "item");
+		this.addStyleToFrame(-1);
+	}
 }
 var sceneItemPrototype = SceneItem.prototype;
 
@@ -195,6 +196,25 @@ getFramePropertyFunction("property");
 getFramePropertyFunction("transform");
 getFramePropertyFunction("filter");
 
+
+sceneItemPrototype.addStyleToFrame = function(time) {
+	if(!this.element)
+		return this;
+	var cssText = this.element.style.cssText;
+	var a1 = cssText.split(";");
+	var l = a1.length;
+	var a2;
+	var cssObject = {};
+	for(var i =0; i < l; ++i) {
+		a2 = a1[i].split(":");
+		if(a2.length <= 1)
+			continue;
+		cssObject[a2[0].trim()] = a2[1].trim();
+	}
+	this.setProperties(time, cssObject);
+	
+	return this;
+}
 sceneItemPrototype.getTimeIndex = function(time) {
 	return this.times.indexOf(time);
 }
@@ -267,7 +287,6 @@ sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
 		return false;
 	
 	this.element.style.cssText = cssText;
-	//console.log("synchronize", cssText);
 	
 	return true;
 }

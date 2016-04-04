@@ -1,0 +1,3 @@
+var ColorObject = function(arr) {
+	
+}
