@@ -104,6 +104,9 @@ var Util = {
 			rgbObject = this.toBracketObject(v);
 			rgb = rgbObject.value;
 			var length = rgb.length;
+			/*
+				문자열을 숫자로 변환한다. 안하게 되면 내적에서 문제가 생긴다.
+			*/
 			for(var i = 0; i < length; ++i) {
 				rgb[i] = parseInt(rgb[i]);
 			}
@@ -129,6 +132,9 @@ var Util = {
 		return object;
 	 },
  	 dotColor: function(a1, a2, b1, b2) {
+	 	 /*
+	 	 	배열을 PropertyObject로 변환		 	 
+	 	 */
  	 	if(a1 instanceof Array)
  	 		return this.dotColor(this.arrayToColorObject(a1), a2, b1, b2);
 		else if(a2 instanceof Array)
