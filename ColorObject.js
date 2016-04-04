@@ -1,3 +1,0 @@
-var ColorObject = function(object) {
-	
-}
