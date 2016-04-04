@@ -29,31 +29,31 @@ var Frame = Scene.Frame = function Frame(sceneItem, time) {
 	this.filters = {};
 	this.time = time;
 }
-var FramePrototype = Frame.prototype;
-defineAll(FramePrototype, "property", "properties");
-defineAll(FramePrototype, "sceneItem");
-defineAll(FramePrototype, "transform", "transforms");
-defineAll(FramePrototype, "filter", "filters");
+var framePrototype = Frame.prototype;
+defineAll(framePrototype, "property", "properties");
+defineAll(framePrototype, "sceneItem");
+defineAll(framePrototype, "transform", "transforms");
+defineAll(framePrototype, "filter", "filters");
 
-Frame.setPropertyFunction = function(name, names) {
+var setPropertyFunction = function(name, names) {
 	var setProperty = camelize("set " + name);
 	var setProperties = camelize("set " + names);
 	var removeProperty = camelize("remove " + names);
 	var addPropertyName =camelize("add " + name) + "Name";
-	FramePrototype[setProperty] = addFunction(FramePrototype[setProperty], function(property, value) {
+	framePrototype[setProperty] = addFunction(framePrototype[setProperty], function(property, value) {
 		var sceneItem = this.getSceneItem();
 		if(sceneItem)
 			sceneItem[addPropertyName](property);
 			
 		return this;
 	});
-	FramePrototype[setProperties] = function(properties) {
+	framePrototype[setProperties] = function(properties) {
 		for(var property in properties) {
 			this[setProperty](property, properties[property]);
 		}
 		return this;
 	}
-	FramePrototype[removeProperty] = addFunction(FramePrototype.removeProperty, function(property) {
+	framePrototype[removeProperty] = addFunction(framePrototype.removeProperty, function(property) {
 		var sceneItem = this.getSceneItem();
 		if(sceneItem)
 			sceneItem[removeProperty + "Name"](property);
@@ -62,20 +62,20 @@ Frame.setPropertyFunction = function(name, names) {
 	});
 
 }
-Frame.setPropertyFunction("property", "properties");
-Frame.setPropertyFunction("transform", "transforms");
-Frame.setPropertyFunction("filter", "filters");
+setPropertyFunction("property", "properties");
+setPropertyFunction("transform", "transforms");
+setPropertyFunction("filter", "filters");
 
 
 // 프레임 복사본을 만든다.
-FramePrototype.copy = function() {
+framePrototype.copy = function() {
 	var frame = new Frame(this.sceneItem, this.time);
 	frame.merge(this);
 	
 	return frame;
 }
 //다른 프레임과 합치다.
-FramePrototype.merge = function(frame) {
+framePrototype.merge = function(frame) {
 
 	var properties = frame.properties;
 	var transforms = frame.transforms;
@@ -88,25 +88,8 @@ FramePrototype.merge = function(frame) {
 }
 
 
-/* transform */
-FramePrototype.translate = function(x, y) {
-	x = x || 0;
-	y = y || 0;
-	this.setTransform("translate", {x:x, y:y});
-}
-var propertyFunctions = {
-	"color": function(v) {
-		if(typeof v === "object") {
-			if(v.length == 3)
-				v[3] = 1;
-			return "rgba(" + parseInt(v[0]) + "," + parseInt(v[1]) + "," + parseInt(v[2]) + "," + v[3] + ")";
-		} else {
-			return v;
-		}
-	}
-}
 
-FramePrototype.getCSSObject = function() {
+framePrototype.getCSSObject = function() {
 	var transforms = this.transforms, filters = this.filters, properties = this.properties;
 	var value;
 	var cssObject = {}, cssTransform = "", cssFilter = "";
@@ -143,7 +126,7 @@ var convertCrossBrowserCSSObject = function(cssObject, property) {
 	cssObject["-o-" + property] =
 	cssObject["-webkit-" + property] = cssObject[property];
 }
-FramePrototype.getCSSText = function() {
+framePrototype.getCSSText = function() {
 	var cssObject = this.getCSSObject();
 	var cssText = "", value, property;
 	convertCrossBrowserCSSObject(cssObject, "transform");

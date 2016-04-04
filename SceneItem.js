@@ -217,6 +217,9 @@ sceneItemPrototype.addStyleToFrame = function(time) {
 sceneItemPrototype.getTimeIndex = function(time) {
 	return this.times.indexOf(time);
 }
+/*
+	Frame과 Frame 사이를 시간에 대해 내적해서 얻은 Frame을 얻어냄
+*/
 sceneItemPrototype.getNowFrame = function(time) {
 	var times = this.times;
 	var propertyNames = this.propertyNames;
@@ -241,15 +244,26 @@ sceneItemPrototype.getNowFrame = function(time) {
 	}
 	return frame;
 }
+/*
+	재생이 끝났는지 확인
+*/
 sceneItemPrototype.isFinish = function() {
 	return this.getFinishTime() <= this.time;
 }
 sceneItemPrototype.getFinishTime = function() {
 	return this.times.length > 0 ? this.times[this.times.length - 1] : 0;
 }
+
+
+/*
+	재생간에 불러낼 함수 지정
+*/
 sceneItemPrototype.onAnimate = function onAnimate(func) {
 	this.animateFunction = func;
 }
+/*
+	해당 시간에 지정된 Frame으로 Element style 변경
+*/
 sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
 	if(this.getFinishTime() < time)
 		time = this.getFinishTime();
@@ -263,6 +277,8 @@ sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
 	var timingFunctions = this.timingFunctions;
 	var length = timingFunctions.length;
 	var nowTimingFunction = this.nowTimingFunction;
+	
+	//
 	if(nowTimingFunction && (nowTimingFunction.endTime < time || time < nowTimingFunction.startTime) || length > 0  && !nowTimingFunction ) {
 		nowTimingFunction = this.nowTimingFunction = 0;
 		for(var i = 0; i < length; ++i) {
@@ -355,7 +371,7 @@ sceneItemPrototype.removeFrame = function(time) {
 	this.frames[time].setSceneItem(null);
 	var index = this.getTimeIndex(time);
 	if(index == -1)
-		return;
+		return this;
 	this.times.splice(index, 1);
 	delete this.frames[time];
 	
