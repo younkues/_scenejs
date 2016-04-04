@@ -28,7 +28,9 @@ var addPropertyFunction = function(name, names) {
 	var isInProperty = camelize("isIn " + name);
 	var propertyNames = name + "Names";
 
-	//property 이름을 추가한다.
+	/*
+		property 이름을 추가한다.
+	*/
 	sceneItemPrototype[addPropertyName] = function(name) {
 		if(this[propertyNames].indexOf(name) != -1)
 			return;
@@ -36,8 +38,10 @@ var addPropertyFunction = function(name, names) {
 		
 		return this;
 	}
-	//sceneItem.setProperty(4, "top", "40px");
-	//해당 시간에 대한 프레임을 찾아 property를 추가
+
+	/*
+		해당 시간에 대한 프레임을 찾아 property를 추가
+	*/
 	sceneItemPrototype[setProperty] = function(time, property, value) {
 		var frame;
 		if(!(frame = this.getFrame(time))) {
@@ -46,7 +50,10 @@ var addPropertyFunction = function(name, names) {
 		frame[setProperty](property, value);
 		return this;
 	}
-	//해당 시간에 대한 프레임을 찾아 property들을 추가
+	/*
+		해당 시간에 대한 프레임을 찾아 property들을 추가
+	*/
+	
 	sceneItemPrototype[setProperties] = function(time, properties) {
 		var frame;
 		if(!(frame = this.getFrame(time))) {
@@ -57,7 +64,9 @@ var addPropertyFunction = function(name, names) {
 	
 		return this;
 	}
-	//property가 어느 시간에도 없을 때 제거한다.
+	/*
+		property가 어느 시간에도 없을 때 제거한다.
+	*/
 	sceneItemPrototype[removeProperty] = function(property) {
 		var index = this[propertyNames].indexOf(property);
 		if(index == -1)
@@ -68,7 +77,9 @@ var addPropertyFunction = function(name, names) {
 			
 		return this;
 	}
-	//property가 여기에 존재하지 않은지 확인
+	/*
+		property가 존재하는지 확인
+	*/
 	sceneItemPrototype[isInProperty] = function(property) {
 		var frame, time, frames = this.frames;
 		//var count = 0;
@@ -87,8 +98,10 @@ addPropertyFunction("transform", "transforms");
 addPropertyFunction("filter", "filters");
 
 
-
-//property functions
+/*
+	getNowFrameByProperty, getNowFrameByTransform, getNowFrameByFilter
+	time에 해당하는 Frame을 가져온다.
+*/
 var getNowFrameByProperty = function(sceneItem, time, property, prevFunc, nextFunc, func) {
 
 	var prevFrame = sceneItem[prevFunc](time, property);
@@ -114,6 +127,7 @@ var getNowFrameByProperty = function(sceneItem, time, property, prevFunc, nextFu
 	if(prevTime < 0)
 		prevTime = 0;
 		
+		
 	if(property.indexOf("color") != -1)
 			value = Util.dotColor(prevValue, nextValue, time - prevTime, nextFrame.time - time);
 	else
@@ -122,7 +136,7 @@ var getNowFrameByProperty = function(sceneItem, time, property, prevFunc, nextFu
 }
 /*
 	getPrevFrameByProperty, getPrevFrameByTransform, getPrevFrameByFilter
-	property가 time 이전에 있는지 확인다. 없으면 Element의 Style을 기본값으로 설정한다.
+	property가 time 이전에 있는 Frame을 가져온다. 없으면 Element의 Style을 기본값으로 설정한다.
 */
 var getPrevFrameByProperty = function(sceneItem, time, property, func) {
 	var frame;
@@ -203,7 +217,9 @@ getFramePropertyFunction("property");
 getFramePropertyFunction("transform");
 getFramePropertyFunction("filter");
 
-
+/*
+	Element의 현재 Style을 해당 time의 Frame에 저장한다.
+*/
 sceneItemPrototype.addStyleToFrame = function(time) {
 	if(!this.element)
 		return this;
@@ -222,6 +238,9 @@ sceneItemPrototype.addStyleToFrame = function(time) {
 	
 	return this;
 }
+/*
+	해당 time이 몇번째에 지정되어있는지 확인
+*/
 sceneItemPrototype.getTimeIndex = function(time) {
 	return this.times.indexOf(time);
 }
