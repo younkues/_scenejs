@@ -120,6 +120,10 @@ var getNowFrameByProperty = function(sceneItem, time, property, prevFunc, nextFu
 		value = Util.dot(prevValue, nextValue, time - prevTime, nextFrame.time - time);
 	return value;
 }
+/*
+	getPrevFrameByProperty, getPrevFrameByTransform, getPrevFrameByFilter
+	property가 time 이전에 있는지 확인다. 없으면 Element의 Style을 기본값으로 설정한다.
+*/
 var getPrevFrameByProperty = function(sceneItem, time, property, func) {
 	var frame;
 	var value, tvalue = 0;
@@ -160,6 +164,10 @@ var getPrevFrameByProperty = function(sceneItem, time, property, func) {
 	}
 	return sceneItem.getFrame(-1);
 }
+/*
+	getNextFrameByProperty, getNextFrameByTransform, getNextFrameByFilter
+	property가 time 이후에 있는지 확인다.
+*/
 var getNextFrameByProperty = function(sceneItem, time, property, func) {
 	var frame;
 	var value, tvalue = 0;
@@ -278,7 +286,7 @@ sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
 	var length = timingFunctions.length;
 	var nowTimingFunction = this.nowTimingFunction;
 	
-	//
+	//시간이 벗어나거나 TimingFunction이 미지정일시 해당 시간에 만족하는 TimingFunction을 찾는다.
 	if(nowTimingFunction && (nowTimingFunction.endTime < time || time < nowTimingFunction.startTime) || length > 0  && !nowTimingFunction ) {
 		nowTimingFunction = this.nowTimingFunction = 0;
 		for(var i = 0; i < length; ++i) {
@@ -288,6 +296,8 @@ sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
 			}
 		}
 	}
+	
+
 	time = nowTimingFunction && nowTimingFunction.cubicBezier(time) || time;
 	var frame = this.getNowFrame(time);
 
@@ -307,11 +317,9 @@ sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
 }
 
 
-
-/*프레임 기본속성 함수*/
-
-//해당시간에 새로운 프레임을 만든다. 이미 있다면 만들지 않는다.
-//해당 시간에 프레임을 추가한다 이미 있으면 추가하지 않는다.
+/*
+	해당시간에 새로운 Frame을 만든다. 이미 있다면 만들지 않고 병합을 한다.
+*/
 sceneItemPrototype.addFrame = function(time, frame) {
 	//ctrace("--- addFrame", time + "s");
 	//해당 시간에 프레임이 있는지 확인 없으면 추가 있으면 에러 제공
@@ -322,7 +330,6 @@ sceneItemPrototype.addFrame = function(time, frame) {
 		_frame.merge(frame);
 		return;
 	}
-	
 	
 	frame.setSceneItem(this);
 	
@@ -381,8 +388,7 @@ sceneItemPrototype.removeFrame = function(time) {
 sceneItemPrototype.copyFrame = function(fromTime, toTime) {
 	var frame = this.getFrame(fromTime);
 	var copyFrame = frame.copy();
-	this.setFrame(toTime, copyFrame);
-	
+	this.setFrame(toTime, copyFrame);	
 	return this;
 }
 
