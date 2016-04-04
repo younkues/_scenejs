@@ -111,7 +111,7 @@ framePrototype.getCSSObject = function() {
 		cssFilter += " ";
 	}
 	cssObject["filter"] = cssFilter;
-	
+	/*property css*/
 	for(var propertyName in properties) {
 		value = properties[propertyName];
 		if(value instanceof Object)
@@ -120,12 +120,18 @@ framePrototype.getCSSObject = function() {
 	}
 	return cssObject;
 }
+/*
+	크로스 브라우징 접두사를 추가시켜준다.
+*/
 var convertCrossBrowserCSSObject = function(cssObject, property) {
 	cssObject["-moz-" + property] =
 	cssObject["-ms-" + property] =
 	cssObject["-o-" + property] =
 	cssObject["-webkit-" + property] = cssObject[property];
 }
+/*
+	CSSObject를 cssText로 바꿔준다.
+*/
 framePrototype.getCSSText = function() {
 	var cssObject = this.getCSSObject();
 	var cssText = "", value, property;
