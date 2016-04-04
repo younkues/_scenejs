@@ -20,23 +20,6 @@ function camelize(str) {
     return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
   }).replace(/\s+/g, '');
 }
-var defineGetterSetter = function(object, name, target) {
-	defineGetter(object, name, target);
-	defineSetter(object, name, target);	
-}
-var defineAll = function(object, name, target) {
-	defineGetter(object, name, target);
-	defineSetter(object, name, target);
-	defineRemover(object, name, target);
-}
-var addFunction = function(func, func2) {
-	return  function() {
-		return function() {
-			func.apply(this, arguments);
-			func2.apply(this, arguments);
-		}
-	}();
-}
 var defineGetter = function(object, name, target) {
 	
 	object[camelize("get " + name)] = function(name) {
@@ -66,6 +49,29 @@ var defineRemover = function(object, name, target) {
 		}
 	}(name);
 };
+/*
+	GetterSetter 함수를 만들어준다.
+*/
+var defineGetterSetter = function(object, name, target) {
+	defineGetter(object, name, target);
+	defineSetter(object, name, target);	
+}
+/*
+	GetterSetterRemover 함수를 만들어준다.
+*/
+var defineAll = function(object, name, target) {
+	defineGetter(object, name, target);
+	defineSetter(object, name, target);
+	defineRemover(object, name, target);
+}
+var addFunction = function(func, func2) {
+	return  function() {
+		return function() {
+			func.apply(this, arguments);
+			func2.apply(this, arguments);
+		}
+	}();
+}
 var Util = {
 	// ex) 100px unit:px, value: 100
 	splitUnit: function splitUnit(v) {
@@ -106,9 +112,10 @@ var Util = {
 		return this.arrayToColorObject(rgb);
 	 },
 	 toBracketObject: function(a1) {
+	 	/*
+			[prefix, value, other]
+		*/
 		var _a1 = a1.split(/\(|\)/g);
-		
-		// [prefix, value, other]
 		if(_a1.length < 3)
 			return a1;
 			
@@ -158,10 +165,15 @@ var Util = {
 		object.setSuffix(a1.getSuffix());
 		
 		return object;
-	 },
-	 // a2 *  b1 / (b1 + b2) + a1 * b2 / (b1 + b2)
+	 },	 
+	 /*
+		 a1과 a2를 b1과 b2에 대해 내적한다.
+		 a2 *  b1 / (b1 + b2) + a1 * b2 / (b1 + b2)
+	 */
 	 dot : function dot(a1, a2, b1, b2) {
-
+		 /*
+			 문자일 경우 ex) 0px, rgba(0,0), "1, 1", "0 0"
+		 */
 	 	if(typeof a1 == "string") {
 	 		a1 = a1.trim();
 	 		if(a1.indexOf("(") != -1)
@@ -188,8 +200,10 @@ var Util = {
 
 	 	if(b1 + b2 == 0)
 	 		return a1;
-	 			 		
-	 		
+	 	
+	 	/*
+		 	값과 단위를 나눠준다.
+	 	*/	
 		var v1 = this.splitUnit(a1);
 		var v2 = this.splitUnit(a2);
 		var r1 = b1 / (b1 + b2);
