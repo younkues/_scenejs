@@ -4,7 +4,6 @@
 <script src="Frame.js"></script>
 <script src="Bezier.js"></script>
 <script src="TimingFunction.js"></script>
-<script src="jquery.min.js"></script>
 <script src="PropertyFunction.js"></script>
 <script src="PropertyObject.js"></script>
 <style>
@@ -102,15 +101,35 @@ body {
   stroke-dasharray: 0 1000;
   stroke-dashoffset: 1;
   
-  stroke: #3AA1BF;
-/*   transition:all 2s cubic-bezier(.96,1.88, 0.6, 0.41); */
+  stroke: #ff8c3a;
 }
-.svg_circle:hover circle{
-/* 	stroke: #ff5; */
-	stroke-dasharray: 283 1000;
-	stroke-dashoffset: -283;
+.svg_circle circle#rotate_circle1 {
+}
+.svg_circle circle#rotate_circle2 {
+	stroke-width: 2;
+  stroke: #3AA1BF;
+}
+.svg_circle circle#rotate_circle3 {
+	stroke-width: 1;
+  stroke: white;
+}
+#stick {
+	position: absolute;
+	top:50%;
+	left: 50%;
+	height: 0;
+	margin-left: -17px;
+	width: 24px;
+	border-bottom: 150px solid #777;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	transform-origin: 50% 0%;
 }
 
+#slice_circle {
+	background: #ea6b96;
+	
+}
 </style>
 
 
@@ -143,30 +162,31 @@ body {
 <circle id="rotate_circle3" fill="transparent" stroke="#000000" stroke-miterlimit="10" cx="50" cy="50" r="45"/>
 </svg>
 
-
-
+<div id="stick"></div>
+<div id="slice_circle" class="circle"></div>
 <div id="text">1
 </div>
 
 
 
 <script>
+var ease= [.42,0,.58,1];
 var easeinout = [.48,.01,.25,1];
-var sceneSunny = new Scene();
+var scene1 = new Scene();
 //sunny
-var _sun1 = sceneSunny.addElement(sun);
+var _sun1 = scene1.addElement(sun);
 _sun1.setTransform(0, "scale", "0, 0").setTransform(0.5, "scale", "1, 1").setProperty(0.2, "border-width", "100px").setProperty(0.4988, "display", "none").setProperty(0.5, "border-width","0px")
 _sun1.addTimingFunction(0, 0.5, easeinout);
 
 
-var _sun2 = sceneSunny.addElement(sun2);
+var _sun2 = scene1.addElement(sun2);
 _sun2.setTransform(0, "scale", "0, 0").setTransform(0.2, "scale", "0, 0").setTransform(0.45, "scale", "0.9, 0.9").setProperty(0.0, "border-width", "100px").setProperty(0.45, "border-width","0px").addTimingFunction(0, 0.5, easeinout);//.setProperty(0.3, "opacity", 1).setProperty(0.4, "opacity", 0)
 
 
 var _sun_after = [];
 var sun_afters = document.querySelectorAll(".sun_afterimage");
 for (var i = 0; i < sun_afters.length; ++i) {
-	_sun_after[i] = sceneSunny.addElement(sun_afters[i]);
+	_sun_after[i] = scene1.addElement(sun_afters[i]);
 	_sun_after[i].setTransforms(0, {rotate:(i * 45 +"deg"), translate:"80px, 0px", scale: "0,1"}).copyFrame(0, 0.9).setTransforms(0.2, {translate:"80px, 0px", scale: "0.7,1"}).setTransforms(0.5, {translate:"150px, 0px", scale: "0,1"}).addTimingFunction(0, 0.5, easeinout);
 }
 //rainy  1s  ~ 3s
@@ -206,18 +226,40 @@ var scene3 = new Scene();
 var rc1 = scene3.addElement(rotate_circle1);
 var rc2 = scene3.addElement(rotate_circle2);
 var rc3 = scene3.addElement(rotate_circle3);
+var st = scene3.addElement(stick);
 /*
 	stroke-dasharray: 283 1000;
 	stroke-dashoffset: -283;
 */
-rc1.setProperties(1, {
-	"stroke-dasharray": "283 1000",
-	"stroke-dashoffset": -283
-});
+var r1 = 25 * 2 * Math.PI, r2 = 35 * 2 * Math.PI, r3 = 45 * 2 * Math.PI;
+var delay = 0.4;
+rc1.setProperties(delay , {"stroke-dasharray": "0 1000", "stroke-dashoffset": 1})
+	.setProperties(delay + 1, {"stroke-dasharray": r1+" 1000", "stroke-dashoffset": 1})
+	.setProperties(delay + 2, {"stroke-dashoffset": -r1});
+rc2.setProperties(delay , {"stroke-dasharray": "0 1000", "stroke-dashoffset": 1})
+	.setProperties(delay + 1, {"stroke-dasharray": (r2+1) + " 1000", "stroke-dashoffset": 1})
+	.setProperties(delay + 2, {"stroke-dashoffset": -r2});
+rc3.setProperties(delay , {"stroke-dasharray": "0 1000", "stroke-dashoffset": 1})
+	.setProperties(delay + 1, {"stroke-dasharray": (r3+1) + " 1000", "stroke-dashoffset": 1})
+	.setProperties(delay + 2, {"stroke-dashoffset": -r3});
+	
+st.setTransforms(0, {rotate:"-90deg", scale:"1, 0"}).setTransforms(delay/2, {rotate:"-90deg", scale:"1,1"}).setTransforms(delay, {rotate:"-90deg", scale:"1,1"});// show stick
+st.rotate(delay + 1, "270deg").rotate(delay + 2, "630deg"); // rotate stick
+st.setTransforms(2+delay, {scale:"1, 1"}).setTransforms(2+delay +delay/2, {scale:"1, 0"}); // hide stick
 
 
 
-sceneSunny.onAnimate(function(time, isFinish) {
+
+var scene4 = new Scene();
+var sc = scene4.addElement(slice_circle);
+
+sc.setProperty(0, "clip", "rect(0px, 150px, 150px, 0px)");
+sc.setProperty(0.5, "clip", "rect(20px, 150px, 150px, 0px)");
+sc.setProperty(1, "clip", "rect(40px, 150px, 150px, 0px)");
+sc.rotate(0, "0deg").rotate(0.5, "20deg").rotate(1, "-20deg");
+
+
+scene1.onAnimate(function(time, isFinish) {
 	if(isFinish) {
 		text.innerHTML = "2";
 		scene2.play();
@@ -230,9 +272,17 @@ scene2.onAnimate(function(time, isFinish) {
 	}
 });
 
+scene3.setPlaySpeed(1);
+scene3.addTimingFunction(0, delay, ease).addTimingFunction(delay, delay + 1, ease).addTimingFunction(delay + 1, delay + 2, ease).addTimingFunction(delay + 2, delay + delay/2 + 2, ease);
 
-sceneSunny.synchronize(0);
-sceneSunny.setPlaySpeed(0.5);
-sceneSunny.play();
+
+scene1.synchronize(0);
+scene2.synchronize(0);
+scene3.synchronize(0);
+scene4.synchronize(0);
+
+
+scene4.play();
+
 
 </script>

@@ -87,6 +87,7 @@ var Util = {
 	 },
 	 toColorObject: function(v) {
 		var rgb = [];
+		var rgbObject;
 		if(v.charAt(0) === "#")  {
 			if(v.length === 4) {
 				rgb = hexToRGB(hex4to6(v));
@@ -94,20 +95,31 @@ var Util = {
 				rgb = hexToRGB(v);
 			}
 		} else if(v.indexOf("rgb(") === 0 || v.indexOf("rgba(") === 0) {
-			v = v.replace("rgb(", "");
-			v = v.replace("rgba(", "");			
-			v = v.replace(")", "");
-			v = v.replaceAll(" ", "");
-			rgb = v.split(",");
+			rgbObject = this.toBracketObject(v);
+			rgb = rgbObject.value;
 			var length = rgb.length;
 			for(var i = 0; i < length; ++i) {
 				rgb[i] = parseInt(rgb[i]);
 			}
+			return rgbObject;
 		}
 		return this.arrayToColorObject(rgb);
 	 },
-	 dotBracket: function(a1, a2, b1, b2) {
-		 
+	 toBracketObject: function(a1) {
+		var _a1 = a1.split(/\(|\)/g);
+		
+		// [prefix, value, other]
+		if(_a1.length < 3)
+			return a1;
+			
+		var prefix = _a1[0] +"(";
+		var v = _a1[1].trim();
+		var suffix = ")";
+		var object = new PropertyObject(v, ",");
+		object.setPrefix(prefix);
+		object.setSuffix(suffix);
+		
+		return object;
 	 },
  	 dotColor: function(a1, a2, b1, b2) {
  	 	if(a1 instanceof Array)
@@ -120,15 +132,16 @@ var Util = {
 		if(typeof a2 !== "object")
 			a2 = this.toColorObject(a2);
 		
-		if(a1.length === 3)
-			a1[3] = 255;
-		if(a2.length === 3)
-			a2[3] = 255;
+		
+		if(a1.value.length === 3)
+			a1.value[3] = 1;
+		if(a2.value.length === 3)
+			a2.value[3] = 1;
 			
-		return this.dotDictionary(a1, a2, b1, b2);
+		return this.dotObject(a1, a2, b1, b2);
 			
 	 },
-	 dotDictionary: function(a1, a2, b1, b2) {
+	 dotObject: function(a1, a2, b1, b2) {
 	 	var obj = {};
 	 	var v1, v2;
 	 	var _a1 = a1.value;
@@ -140,7 +153,11 @@ var Util = {
 			else
 				obj[n] = this.dot(v1, _a2[n], b1, b2);
 		}
-		return new PropertyObject(obj, a1.separator);
+		var object = new PropertyObject(obj, a1.separator);
+		object.setPrefix(a1.getPrefix());
+		object.setSuffix(a1.getSuffix());
+		
+		return object;
 	 },
 	 // a2 *  b1 / (b1 + b2) + a1 * b2 / (b1 + b2)
 	 dot : function dot(a1, a2, b1, b2) {
@@ -148,7 +165,7 @@ var Util = {
 	 	if(typeof a1 == "string") {
 	 		a1 = a1.trim();
 	 		if(a1.indexOf("(") != -1)
-	 			return this.dotBracket(a1, a2, b1, b2);
+	 			return this.dot(this.toBracketObject(a1), a2, b1, b2);
 	 		else if(a1.indexOf(",") != -1)
 		 		return this.dot(new PropertyObject(a1, ","), a2, b1,b2);
 		 	else if(a1.indexOf(" ") != -1)
@@ -157,7 +174,9 @@ var Util = {
 	 	}
 	 	if(typeof a2 == "string") {
 	 		a2 = a2.trim();
-	 		if(a2.indexOf(",") != -1)
+	 		if(a2.indexOf("(") != -1)
+	 			return this.dot(a1, this.toBracketObject(a2), b1, b2);
+	 		else if(a2.indexOf(",") != -1)
 		 		return this.dot(a1, new PropertyObject(a2, ","), b1,b2);
 		 	else if(a2.indexOf(" ") != -1)
 		 		return this.dot(a1, new PropertyObject(a2, " "), b1,b2);
@@ -165,11 +184,10 @@ var Util = {
 	 		
 	 		
 	 	if(a1 instanceof Object)
-	 		return this.dotDictionary(a1, a2, b1, b2);
+	 		return this.dotObject(a1, a2, b1, b2);
 
 	 	if(b1 + b2 == 0)
 	 		return a1;
-	 	
 	 			 		
 	 		
 		var v1 = this.splitUnit(a1);

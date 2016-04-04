@@ -72,6 +72,7 @@ scenePrototype.addTimingFunction = function addTimingFunction(startTime, endTime
 	for(var i = 0; i < itemsLength; ++i) {
 		sceneItems[i].addTimingFunction(startTime, endTime, curveArray);
 	}
+	return this;
 }
 scenePrototype.synchronize = function synchronize(time, isPlay) {
 	var sceneItems = this.sceneItems;

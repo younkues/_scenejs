@@ -5,6 +5,8 @@
 <script src="Bezier.js"></script>
 <script src="TimingFunction.js"></script>
 <script src="jquery.min.js"></script>
+<script src="PropertyObject.js"></script>
+
 
 <style>
 body {
@@ -106,6 +108,10 @@ body {
 	transform-origin: 0% 1px;
 	transform:translate(120px, 0px);
 }
+
+#slice_circle {
+	
+}
 </style>
 <div class="test">test</div>
 
@@ -158,6 +164,9 @@ body {
 <div class="sun_afterimage"></div>
 <div class="sun_afterimage"></div>
 <div class="sun_afterimage"></div>
+
+
+<div id="slice_circle" class="circle"></div>
 <script>
 var scene2 = new Scene();
 var _circle1 = scene2.addElement(circle);
@@ -194,7 +203,7 @@ for (var i = 0; i < sun_afters.length; ++i) {
 	_sun_after[i].addTimingFunction(0.9, 1.5, [.48,.01,.25,1]);
 }
 scene2.synchronize(0);
-scene2.setPlaybackSpeed(1);
+scene2.setPlaySpeed(1);
 scene2.play();
 
 </script>
