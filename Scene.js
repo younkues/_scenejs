@@ -34,10 +34,10 @@ scenePrototype.synchronize = function synchronize(time, isPlay) {
 	}
 	var isFinish = (itemsLength <= finishCount);
 	
-	
-	if(this.animateFunction)
-		this.animateFunction(time, isFinish);
-		
+	try {
+		if(this.animateFunction)
+			this.animateFunction(time, isFinish);
+	} catch(e) {}
 	if(isFinish)
 		return false;
 	

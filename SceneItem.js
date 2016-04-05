@@ -316,8 +316,12 @@ sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
 		}
 	}
 	
-
-	time = nowTimingFunction && nowTimingFunction.cubicBezier(time) || time;
+	try {
+		time = nowTimingFunction && nowTimingFunction.cubicBezier(time) || time;
+	} catch(e) {
+		/*Error on TimingFunction*/
+	}
+	
 	var frame = this.getNowFrame(time);
 
 
@@ -396,7 +400,7 @@ sceneItemPrototype.getFrame = function(time) {
 sceneItemPrototype.removeFrame = function(time) {
 	this.frames[time].setSceneItem(null);
 	var index = this.getTimeIndex(time);
-	if(index == -1)
+	if(index < 0)
 		return this;
 	this.times.splice(index, 1);
 	delete this.frames[time];

@@ -71,3 +71,29 @@
 		<td class="node tm"><div>0s ~ 0.3s<br/>.48,.01,.25,1</div><div>0.7s ~ 1s<br/>.55,0,.1,1</div></td>
 	</tr>
 </table>
+<br>
+Play Model
+<table>
+	<tr>
+		<td>Scene</td>
+		<td colspan=3 class="node scene"><div>synchronize(time)</div></td>
+	</tr>
+	<tr>
+		<td>SceneItem</td>
+		<td class="node item"><div>synchronize(time)</div></td>
+		<td class="node item"><div>synchronize(time)</div></td>
+		<td class="node item"><div>synchronize(time)</div></td>
+	</tr>
+	<tr>
+		<td>Frame</td>
+		<td class="node frame"><div>0s</div><div>1s</div><div>2s</div></td>
+		<td class="node frame"><div>0s</div><div>1.5s</div><div>2s</div></td>
+		<td class="node frame"><div>0s</div><div>0.5s</div><div>1s</div></td>
+	</tr>
+	<tr>
+		<td>TimingFn</td>
+		<td class="node tm"><div>0s ~ 1s<br>ease</div><div>1s ~ 2s<br>easeinout</div></td>
+		<td class="node tm"><div>0s ~ 0.5s<br/>linear</div><div>0.5s ~ 1s<br/>easein</div><div>1s ~ 2s<br/> easeout</div></td>
+		<td class="node tm"><div>0s ~ 0.3s<br/>.48,.01,.25,1</div><div>0.7s ~ 1s<br/>.55,0,.1,1</div></td>
+	</tr>
+</table>

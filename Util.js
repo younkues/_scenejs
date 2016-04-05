@@ -82,6 +82,9 @@ var Util = {
 		
 	 },
 	 arrayToColorObject: function(arr) {
+	 	if(arr.instanceof PropertyObject)
+	 		return arr;
+	 		
 		if(arr.length === 3)
 			arr[3] = 1;
 		 
@@ -218,6 +221,7 @@ var Util = {
 		/*
 			숫자가 아닐경우 첫번째 값을 반환 b2가 0일경우 두번째 값을 반환
 		*/
+		
 		if(isNaN(v1.value)) {
 			if(r1 >=1)
 				return a2;

@@ -96,27 +96,33 @@ framePrototype.getCSSObject = function() {
 	/*transform css*/
 	for(var transformName in transforms) {
 		value = transforms[transformName];
-		if(value instanceof Object)
-			value = value.toValue();
-		cssTransform += transformName + "(" + value + ")";
-		cssTransform += " ";
+		try {
+			if(value instanceof Object)
+				value = value.toValue();
+			cssTransform += transformName + "(" + value + ")";
+			cssTransform += " ";
+		} catch(e) {}
 	}
 	cssObject["transform"] = cssTransform;
 	/*filter css*/
 	for(var filterName in filters) {
 		value = filters[filterName];
-		if(value instanceof Object)
-			value = value.toValue();
-		cssFilter += filterName + "(" + value + ")";
-		cssFilter += " ";
+		try {
+			if(value instanceof Object)
+				value = value.toValue();
+			cssFilter += filterName + "(" + value + ")";
+			cssFilter += " ";
+		catch(e){}
 	}
 	cssObject["filter"] = cssFilter;
 	/*property css*/
 	for(var propertyName in properties) {
 		value = properties[propertyName];
-		if(value instanceof Object)
-			value = value.toValue();
-		cssObject[propertyName] = value;
+		try {
+			if(value instanceof Object)
+				value = value.toValue();
+			cssObject[propertyName] = value;
+		} catch(e) {}
 	}
 	return cssObject;
 }
