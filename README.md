@@ -33,26 +33,26 @@ or
 ```
 
 ## Support Browser
-**[Default]**
+**Default**
 * Most Browser(Only IE 9+)
-** Transform **
- * IE 9+(Transform 3D 10+, Filter Not Supported)
- * Chrome 4+ (Transform 3D 12+, Filter 18+)
- * Safari 3.2+ (Transform 3D 4+, Filter 6+)
- * Firefox 3.5+ (Transform 3D 10+, Filter 35+)
- * Opera 10.5+ (Transform 3D 15+, Filter 15+)
-** Transform 3D **
- * IE 10+
- * Chrome 12+
- * Safari 4+
- * Firefox 10+
- * Opera 15+
-** Filter **
- * IE Not Supported
- * Chrome 18+	
- * Safari 6+
- * Firefox 35+
- * Opera 15+
+**Transform**
+* IE 9+(Transform 3D 10+, Filter Not Supported)
+* Chrome 4+ (Transform 3D 12+, Filter 18+)
+* Safari 3.2+ (Transform 3D 4+, Filter 6+)
+* Firefox 3.5+ (Transform 3D 10+, Filter 35+)
+* Opera 10.5+ (Transform 3D 15+, Filter 15+)
+**Transform 3D**
+* IE 10+
+* Chrome 12+
+* Safari 4+
+* Firefox 10+
+* Opera 15+
+**Filter**
+* IE Not Supported
+* Chrome 18+	
+* Safari 6+
+* Firefox 35+
+* Opera 15+
  
  
 ## Usage
