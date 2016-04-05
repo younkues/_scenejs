@@ -4,7 +4,7 @@ Scene.js is an Javascript Aniamtion Library
 
 <br>
 
-<img src="model/model.png" width="400">
+<img src="model/model.png">
 
 ## Component
 * **Scene** : @@@
@@ -18,18 +18,22 @@ Scene.js is an Javascript Aniamtion Library
 
 ## Support Browser
 **Default**
+
 |Internet Explorer|Chrome|FireFox|Safari|Opera|
 |---|---|---|---|---|
 |9+|Latest|Latest|Latest|Latest|
 **Transform**
+
 |Internet Explorer|Chrome|FireFox|Safari|Opera|
 |---|---|---|---|---|
 |9+|4+|3.5+|3.2+|10.5+|
 **Transform 3D**
+
 |Internet Explorer|Chrome|FireFox|Safari|Opera|
 |---|---|---|---|---|
 |10+|12+|10+|4+|15+|
 **Filter**
+
 |Internet Explorer|Chrome|FireFox|Safari|Opera|
 |---|---|---|---|---|
 |X|18+|35+|6+|15+|
