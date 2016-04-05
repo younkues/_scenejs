@@ -1,0 +1,73 @@
+<style>
+	* {
+		font-family: sans-serif;
+		text-align: center;
+	}
+	table {
+		border-collapse: collapse;
+	}
+	td {
+		padding: 10px;
+	}
+	td:nth-child(2n+1), .node {
+		border-right: 1px solid #ccc;
+		border-bottom: 1px solid #ccc;
+	}
+	td:nth-child(2n) {
+		border-bottom: 1px solid #ccc;
+	}
+	tr td.node:last-child {
+		border-right: 0;
+	}
+	.node div{
+		display: inline-block;
+		border-radius: 5px;
+		color: white;
+		margin:3px;	
+	}
+	.scene div {
+		padding: 20px;
+		background: #6BBFDB;
+	}
+	.item div{
+		padding: 15px;
+		background: #B1B1D8;
+	}
+	.frame div {
+		background: #DF5C5D;
+		padding: 1px 10px;
+		margin:2px;
+	}
+	.tm div {
+		background: #F08E55;
+		padding: 1px 10px;
+		margin: 2px;
+	}
+	.item {
+		width:200px;
+	}
+</style>
+<table>
+	<tr>
+		<td>Scene</td>
+		<td colspan=3 class="node scene"><div>scene1</div></td>
+	</tr>
+	<tr>
+		<td>SceneItem</td>
+		<td class="node item"><div>item1</div></td>
+		<td class="node item"><div>item2</div></td>
+		<td class="node item"><div>item3</div></td>
+	</tr>
+	<tr>
+		<td>Frame</td>
+		<td class="node frame"><div>0s</div><div>1s</div><div>2s</div></td>
+		<td class="node frame"><div>0s</div><div>1.5s</div><div>2s</div></td>
+		<td class="node frame"><div>0s</div><div>0.5s</div><div>1s</div></td>
+	</tr>
+	<tr>
+		<td>TimingFn</td>
+		<td class="node tm"><div>0s ~ 1s<br>ease</div><div>1s ~ 2s<br>easeinout</div></td>
+		<td class="node tm"><div>0s ~ 0.5s<br/>linear</div><div>0.5s ~ 1s<br/>easein</div><div>1s ~ 2s<br/> easeout</div></td>
+		<td class="node tm"><div>0s ~ 0.3s<br/>.48,.01,.25,1</div><div>0.7s ~ 1s<br/>.55,0,.1,1</div></td>
+	</tr>
+</table>
