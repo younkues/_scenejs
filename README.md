@@ -4,7 +4,7 @@ Scene.js is an Javascript Aniamtion Library
 
 <br>
 
-<img src="demo/img/sweetsearchscreen.png" width="250">
+<img src="model/model.png" width="400">
 
 ## Component
 * **Scene** : @@@
