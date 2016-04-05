@@ -15,29 +15,44 @@ http://daybrush.com/Scene.js/sample/circleburst.html
 
 
 ```HTML
-<script src="scene.js"></script>
+<script src="scene.all.js"></script>
 
 
-but
+or
 
-<script src="../Util.js"></script>
-<script src="../Scene.js"></script>
-<script src="../SceneItem.js"></script>
-<script src="../Frame.js"></script>
-<script src="../Curve.js"></script>
-<script src="../TimingFunction.js"></script>
-<script src="../PropertyFunction.js"></script>
-<script src="../PropertyObject.js"></script>
+<script src="Util.js"></script>
+<script src="Scene.js"></script>
+<script src="SceneItem.js"></script>
+<script src="Frame.js"></script>
+<script src="Curve.js"></script>
+<script src="TimingFunction.js"></script>
+<script src="PropertyFunction.js"></script>
+<script src="PropertyObject.js"></script>
 
 
 ```
 
 ## Support Browser
+** Default **
+* Most Browser(Only IE 9+)
+** Transform **
  * IE 9+(Transform 3D 10+, Filter Not Supported)
  * Chrome 4+ (Transform 3D 12+, Filter 18+)
  * Safari 3.2+ (Transform 3D 4+, Filter 6+)
  * Firefox 3.5+ (Transform 3D 10+, Filter 35+)
  * Opera 10.5+ (Transform 3D 15+, Filter 15+)
+** Transform 3D **
+ * IE 10+
+ * Chrome 12+
+ * Safari 4+
+ * Firefox 10+
+ * Opera 15+
+** Filter **
+ * IE Not Supported
+ * Chrome 18+
+ * Safari 6+
+ * Firefox 35+
+ * Opera 15+
  
  
 ## Usage
