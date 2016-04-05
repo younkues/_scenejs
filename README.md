@@ -39,21 +39,18 @@ or
 |---|---|---|---|---|
 |9+|Latest|Latest|Latest|Latest|
 <br>
-
 **Transform**
 
 |Internet Explorer|Chrome|FireFox|Safari|Opera|
 |---|---|---|---|---|
 |9+|4+|3.5+|3.2+|10.5+|
 <br>
-
 **Transform 3D**
 
 |Internet Explorer|Chrome|FireFox|Safari|Opera|
 |---|---|---|---|---|
 |10+|12+|10+|4+|15+|
 <br>
-
 **Filter**
 
 |Internet Explorer|Chrome|FireFox|Safari|Opera|
