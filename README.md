@@ -80,6 +80,9 @@ sceneItem.setTransform(time, name, value);
 sceneItem.setFilter(time, name, value);
 //blur, brightness, contrast, drop-shadow, grayscale, hue-rotate, invert, opacity, saturate, sepia
 
+var ease= [.42,0,.58,1];
+sceneItem.addTimingFunction(startTime, endTime, ease);
+
 scene.play();
         
 ```
