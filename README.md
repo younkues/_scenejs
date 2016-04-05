@@ -46,7 +46,6 @@ or
 * Safari 3.2+ (Transform 3D 4+, Filter 6+)
 * Firefox 3.5+ (Transform 3D 10+, Filter 35+)
 * Opera 10.5+ (Transform 3D 15+, Filter 15+)
-
 <br>
 
 **Transform 3D**
