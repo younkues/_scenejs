@@ -33,7 +33,7 @@ or
 ```
 
 ## Support Browser
-** Default **
+**[Default]**
 * Most Browser(Only IE 9+)
 ** Transform **
  * IE 9+(Transform 3D 10+, Filter Not Supported)
@@ -49,7 +49,7 @@ or
  * Opera 15+
 ** Filter **
  * IE Not Supported
- * Chrome 18+
+ * Chrome 18+	
  * Safari 6+
  * Firefox 35+
  * Opera 15+
