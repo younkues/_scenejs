@@ -1,4 +1,4 @@
-var SceneItem = function(element) {
+var SceneItem = Scene.SceneItem = function(element) {
 	this.element = element;
 	this.time = 0;
 	this.times = [];

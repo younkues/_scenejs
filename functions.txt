@@ -1,12 +1,23 @@
+Scene
+synchronize
+play
+stop
+pause
+addItem
+addElement
+onAnimate
+timerFunction
+setPlaySpeed
+addTimingFunction
 
-SceneItem
+Scene.SceneItem
 setProperty
-해당 시간에 property를 설정한다.
+description : 해당 시간에 property를 설정한다.
 arguments : time / Number , property / String, value / String | Number | Object
 return : this / SceneItem:Object
 
 getProperty
-해당 시간의 property를 가져온다.
+description : 해당 시간의 property를 가져온다.
 arguments : time / Number , property / String
 return : value / String | Number | Object
 
