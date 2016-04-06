@@ -277,6 +277,9 @@ sceneItemPrototype.getNowFrame = function(time) {
 sceneItemPrototype.isFinish = function() {
 	return this.getFinishTime() <= this.time;
 }
+/*
+	finishTime = times last index
+*/
 sceneItemPrototype.getFinishTime = function() {
 	return this.times.length > 0 ? this.times[this.times.length - 1] : 0;
 }
@@ -287,6 +290,8 @@ sceneItemPrototype.getFinishTime = function() {
 */
 sceneItemPrototype.onAnimate = function onAnimate(func) {
 	this.animateFunction = func;
+	
+	return this;
 }
 /*
 	해당 시간에 지정된 Frame으로 Element style 변경
@@ -351,7 +356,7 @@ sceneItemPrototype.addFrame = function(time, frame) {
 	var _frame = this.getFrame(time);
 	if(_frame) {
 		_frame.merge(frame);
-		return;
+		return this;
 	}
 	
 	frame.setSceneItem(this);
@@ -372,7 +377,7 @@ sceneItemPrototype.addFrame = function(time, frame) {
 	this.frames[time] = frame;
 	frame.time = time;
 	
-	return frame;
+	return this;
 }
 sceneItemPrototype.newFrame = function(time) {
 	
@@ -381,7 +386,9 @@ sceneItemPrototype.newFrame = function(time) {
 		return frame;
 		
 	frame = new Frame(this, time);
-	return this.addFrame(time, frame);
+	this.addFrame(time, frame);
+	
+	return frame;
 }
 sceneItemPrototype.setFrame = function(time, frame) {
 	//해당 시간에 프레임이 있는지 확인 없으면 추가 addFrame
