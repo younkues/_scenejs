@@ -17,7 +17,7 @@ var Color = Scene.Color = {
 		
 		return arr.join("");
 	},
-	rgbTohsl : function(rgb) {
+	rgbToHSL : function(rgb) {
 		
 	},
 	hslToRGB : function(hsl) {
@@ -29,11 +29,11 @@ var Color = Scene.Color = {
 		hsl : {}
 	}
 };
-Color.change["rgb"]["hsl"] = Color["rgb"]["hsla"] = function(rgb) { return Color.rgbTohsl(rgb);}
-Color.change["hsl"]["rgb"] = Color["hsl"]["rgba"] = function(hsl) { return Color.hslToRGB(hsl);}
+Color.change["rgb"]["hsl"] = Color.change["rgb"]["hsla"] = function(rgb) { return Color.rgbToHSL(rgb);}
+Color.change["hsl"]["rgb"] = Color.change["hsl"]["rgba"] = function(hsl) { return Color.hslToRGB(hsl);}
 
-Color.change["rgba"] = Color["rgb"];
-Color.change["hsla"] = Color["hsl"];
+Color.change["rgba"] = Color.change["rgb"];
+Color.change["hsla"] = Color.change["hsl"];
 
-Color["hex"]["rgb"] = function(hex) { return Color.hexToRGB(hex);}
+Color.change["hex"]["rgb"] = function(hex) { return Color.hexToRGB(hex);}
 

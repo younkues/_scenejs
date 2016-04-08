@@ -10,7 +10,7 @@ var Util = Scene.Util = {
 	 },
 	 arrayToColorObject: function(model, arr) {
 	 	if(arr instanceof PropertyObject) {
-		 	arr.model = model;
+		 	arr.getModel() = model;
 		 	arr.setPrefix(model + "(");
 		 	
 		 	return arr;
@@ -20,7 +20,7 @@ var Util = Scene.Util = {
 			arr[3] = 1;
 		 
 		var object = new PropertyObject(arr, ",");
-		object.model = model;
+		object.getModel() = model;
 		object.setPrefix(model + "(");
 		object.setSuffix(")");
 		
@@ -52,7 +52,7 @@ var Util = Scene.Util = {
 				
 				
  			//rgb hsl model to CHANGE rgba hsla				
-			var colorModel = colorObject.model;
+			var colorModel = colorObject.getModel();
 			if(colorModel === "rgb")
 				return this.arrayToColorObject("rgba", colorObject);
 			else if(colorModel === "hsl")
@@ -77,7 +77,7 @@ var Util = Scene.Util = {
 		var v = _a1[1].trim();
 		var suffix = ")";
 		var object = new PropertyObject(v, ",");
-		object.model = _a1[0];
+		object.getModel() = _a1[0];
 		object.setPrefix(prefix);
 		object.setSuffix(suffix);
 		
@@ -105,7 +105,7 @@ var Util = Scene.Util = {
 		
 		try {
 			if(a1Prefix !== a2Prefix)
-				a2v = Color.change[a2.model][a1.model](a2v);
+				a2v = Color.change[a2.getModel()][a1.getModel()](a2v);
 		} catch (e) {
 			//Not Support Model;
 		}
