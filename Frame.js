@@ -112,7 +112,7 @@ framePrototype.getCSSObject = function() {
 				value = value.toValue();
 			cssFilter += filterName + "(" + value + ")";
 			cssFilter += " ";
-		catch(e){}
+		} catch(e){}
 	}
 	cssObject["filter"] = cssFilter;
 	/*property css*/

@@ -1,78 +1,5 @@
-(function() {
-	var StringPrototype = String.prototype;
-	StringPrototype.replaceAll = function(from, to) {
-		if(!this)
-			return "";
-		return this.split(from).join(to);
-	}
-})();
-window.requestAnimFrame = (function(){
-  return  window.requestAnimationFrame       ||
-          window.webkitRequestAnimationFrame ||
-          window.mozRequestAnimationFrame    ||
-          function( callback ){
-            window.setTimeout(callback, 1000 / 60);
-          };
-})();
 
-function camelize(str) {
-  return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
-    return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
-  }).replace(/\s+/g, '');
-}
-var defineGetter = function(object, name, target) {
-	
-	object[camelize("get " + name)] = function(name) {
-		return function(obj) {
-			return target ? this[target][obj] : this[name];
-		}
-	}(name);
-}
-var defineSetter = function(object, name, target) {
-	object[camelize("set " + name)] = function(name) {
-		return function(v1, v2) {
-			if(target)
-				this[target][v1] = v2;
-			else
-				this[name] = v1;
-			
-			return this;
-		}
-	}(name);
-}
-var defineRemover = function(object, name, target) {
-	object[camelize("remove " + name)] = function(name) {
-		return function(v1) {
-			delete this[target][v1];
-
-			return this;
-		}
-	}(name);
-};
-/*
-	GetterSetter 함수를 만들어준다.
-*/
-var defineGetterSetter = function(object, name, target) {
-	defineGetter(object, name, target);
-	defineSetter(object, name, target);	
-}
-/*
-	GetterSetterRemover 함수를 만들어준다.
-*/
-var defineAll = function(object, name, target) {
-	defineGetter(object, name, target);
-	defineSetter(object, name, target);
-	defineRemover(object, name, target);
-}
-var addFunction = function(func, func2) {
-	return  function() {
-		return function() {
-			func.apply(this, arguments);
-			func2.apply(this, arguments);
-		}
-	}();
-}
-var Util = {
+var Util = Scene.Util = {
 	// ex) 100px unit:px, value: 100
 	splitUnit: function splitUnit(v) {
 		v = v + "";
@@ -81,8 +8,8 @@ var Util = {
 		return {unit:unit, value:value};
 		
 	 },
-	 arrayToColorObject: function(arr) {
-	 	if(arr.instanceof PropertyObject)
+	 arrayToRGBObject: function(arr) {
+	 	if(arr instanceof PropertyObject)
 	 		return arr;
 	 		
 		if(arr.length === 3)
@@ -94,28 +21,65 @@ var Util = {
 		
 		return object;
 	 },
+	 arrayToHSVObject: function(arr) {
+	 	if(arr instanceof PropertyObject)
+	 		return arr;
+	 		
+		if(arr.length === 3)
+			arr[3] = 1;
+		 
+		var object = new PropertyObject(arr, ",");
+		object.setPrefix("hsva(");
+		object.setSuffix(")");
+		
+		return object;
+	 },
 	 toColorObject: function(v) {
-		var rgb = [];
-		var rgbObject;
+		var colorArray = [];
+		var colorObject;
 		if(v.charAt(0) === "#")  {
 			if(v.length === 4) {
-				rgb = hexToRGB(hex4to6(v));
+				colorArray = hexToRGB(hex4to6(v));
 			} else if(v.length === 7) {
-				rgb = hexToRGB(v);
+				colorArray = hexToRGB(v);
 			}
-		} else if(v.indexOf("rgb(") === 0 || v.indexOf("rgba(") === 0) {
-			rgbObject = this.toBracketObject(v);
-			rgb = rgbObject.value;
-			var length = rgb.length;
+		} else if(v.indexOf("rgb(") === 0 || v.indexOf("rgba(") === 0) {		
+			colorObject = this.toBracketObject(v);
+			colorArray = colorObject.value;
+			var length = colorArray.length;
+			
 			/*
 				문자열을 숫자로 변환한다. 안하게 되면 내적에서 문제가 생긴다.
 			*/
 			for(var i = 0; i < length; ++i) {
-				rgb[i] = parseInt(rgb[i]);
+				colorArray[i] = parseInt(colorArray[i]);
 			}
-			return rgbObject;
+			if(length === 3)
+				colorArray[3] = 1;
+				
+			colorObject.setPrefix("rgba(");
+			return colorObject;
+		} else if(v.indexOf("hsv(") === 0 || v.indexOf("hsva(") === 0) {
+			colorObject = this.toBracketObject(v);
+			colorArray = colorObject.value;
+			var length = colorArray.length;
+			
+			/*
+				문자열을 숫자로 변환한다. 안하게 되면 내적에서 문제가 생긴다.
+			*/
+			for(var i = 0; i < length; ++i) {
+				colorArray[i] = parseInt(colorArray[i]);
+			}
+			if(length === 3)
+				colorArray[3] = 1;
+				
+			colorObject.setPrefix("hsva(");
+			
+			return colorObject;
+		} else {
+			colorArray = [0, 0, 0, 0];
 		}
-		return this.arrayToColorObject(rgb);
+		return this.arrayToRGBObject(colorArray);
 	 },
 	 toBracketObject: function(a1) {
 	 	/*
@@ -139,20 +103,29 @@ var Util = {
 	 	 	배열을 PropertyObject로 변환		 	 
 	 	 */
  	 	if(a1 instanceof Array)
- 	 		return this.dotColor(this.arrayToColorObject(a1), a2, b1, b2);
+ 	 		return this.dotColor(this.arrayToRGBObject(a1), a2, b1, b2);
 		else if(a2 instanceof Array)
-			return this.dotColor(a1, this.arrayToColorObject(a2), b1, b2);
+			return this.dotColor(a1, this.arrayToRGBObject(a2), b1, b2);
 			 	 		
 		if(typeof a1 !== "object")
 			a1 = this.toColorObject(a1);
 		if(typeof a2 !== "object")
 			a2 = this.toColorObject(a2);
 		
+
+		var a1v = a1.value, a2v = a2.value;
 		
-		if(a1.value.length === 3)
-			a1.value[3] = 1;
-		if(a2.value.length === 3)
-			a2.value[3] = 1;
+				
+		if(a1.getPrefix() !== a2.getPrefix()) {
+			
+		}
+		
+
+		if(a1v.length === 3)
+			a1v[3] = 1;
+			
+		if(a2v.length === 3)
+			a2v[3] = 1;
 			
 		return this.dotObject(a1, a2, b1, b2);
 			
@@ -204,7 +177,7 @@ var Util = {
 	 	}
 	 		
 	 		
-	 	if(a1 instanceof Object)
+	 	if(a1 instanceof PropertyObject)
 	 		return this.dotObject(a1, a2, b1, b2);
 
 	 	if(b1 + b2 == 0)

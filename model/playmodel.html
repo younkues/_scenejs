@@ -1,0 +1,76 @@
+<style>
+	* {
+		font-family: sans-serif;
+		text-align: center;
+	}
+	table {
+		border-collapse: collapse;
+	}
+	td {
+		padding: 10px;
+	}
+	td:nth-child(2n+1), .node {
+		border-right: 1px solid #ccc;
+		border-bottom: 1px solid #ccc;
+	}
+	td:nth-child(2n) {
+		border-bottom: 1px solid #ccc;
+	}
+	tr td.node:last-child {
+		border-right: 0;
+	}
+	.node div{
+		display: inline-block;
+		border-radius: 5px;
+		color: white;
+		margin:1px;
+		padding:5px 10px;
+	}
+
+	.scene div {
+
+		background: #6BBFDB;
+	}
+	.item div{
+		background: #B1B1D8;
+	}
+	.item .small {
+		font-size: 10px;
+	}
+	.frame div {
+		background: #DF5C5D;
+
+		margin:2px;
+	}
+	.tm div ,.item .tmd{
+		background: #F08E55;
+		margin: 2px;
+	}
+	
+	.item  .utild {
+		background: #E0A5BE;
+	}
+</style>
+<table>
+	<tr>
+		<td>Scene</td>
+		<td class="node scene"><div>play</div></td>
+		<td class="node scene"><div>synchronize(time)</div></td>
+	</tr>
+	<tr>
+		<td>SceneItem</td>
+		<td class="node item"></td>
+		<td class="node item"><div>synchronize(time)</div></td>
+
+		<td class="node item"><div class="tmd">TimingFn.cubicBezier(time)</div><br><div>getNowFrame(time)</div><br/><div class="utild">Util.dot(prevFrame, nextFrame)</div></td>
+		<td class="node item"><br><div>getPrevFrame...(time, ...)</div><br/><div>getNextFrame...(time, ...)</div></td>
+		<td class="node item"><br><div>getFrame(prevTime)</div><br/><div>getFrame(nextTime)</div></td>
+	</tr>
+	<tr>
+		<td>Frame</td>
+		<td class="node frame"></td>
+		<td class="node frame"><div>getCSSText()</div></td>
+		<td class="node frame"><div>getCSSObject()</div></td>
+	</tr>
+</table>
+<br>
