@@ -116,8 +116,20 @@ var Util = Scene.Util = {
 		var a1v = a1.value, a2v = a2.value;
 		
 		var a1Prefix = a1.getPrefix(), a2Prefix = a2.getPrefix();
+		var fromModel, toModel;
 		if(a1Prefix !== a2Prefix) {
-				if(a1Prefix === "rgba(")
+			if(a1Prefix === "rgba(")
+				toModel = "rgb";
+			else if(a1Prefix === "hsva(")
+				toModel = "hsv";
+				
+			if(a2Prefix == "rgba(")
+				fromModel = "rgb";
+			else if(a2Prefix == "hsva(")
+				fromModel = "hsv";
+			
+			
+			a2v = Color.change[fromModel][toModel](a2v);
 		}
 		
 

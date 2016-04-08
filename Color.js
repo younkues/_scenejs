@@ -20,9 +20,15 @@ var Color = Scene.Color = {
 	rgbToHSV : function(rgb) {
 		
 	},
+	hsvToRGB : function(hex) {
+		
+	},
 	change: {
-		rgb : {
-			hsv : function() {}
-		}
+		rgb : {},
+		hex : {},
+		hsv : {}
 	}
 };
+Color["rgb"]["hsv"] = function(rgb) { return Color.rgbToHSV(rgb);}
+Color["hsv"]["rgb"] = function(hsv) { return Color.hsvToRGB(hsv);}
+Color["hex"]["rgb"] = function(hex) { return Color.hexToRGB(hex);}
