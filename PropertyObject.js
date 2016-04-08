@@ -7,11 +7,13 @@ var PropertyObject = function(value, separator) {
 	this.separator = separator;
 	this.prefix = "";
 	this.suffix = "";
+	this.model = "";
 }
 
 var propertyObjectPrototype = PropertyObject.prototype;
 defineGetterSetter(propertyObjectPrototype, "prefix");
 defineGetterSetter(propertyObjectPrototype, "suffix");
+defineGetterSetter(propertyObjectPrototype, "model");
 
 propertyObjectPrototype.join = function() {
 		var rv = "";

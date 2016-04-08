@@ -25,15 +25,15 @@ var Util = Scene.Util = {
 		object.setSuffix(")");
 		
 		return object;
-	 }
+	 },
 	 toColorObject: function(v) {
 		var colorArray = [];
 		var colorObject;
 		if(v.charAt(0) === "#")  {
 			if(v.length === 4) {
-				colorArray = hexToRGB(hex4to6(v));
+				colorArray = Color.hexToRGB(Color.hex4to6(v));
 			} else if(v.length === 7) {
-				colorArray = hexToRGB(v);
+				colorArray = Color.hexToRGB(v);
 			}
 		} else if(v.indexOf("(") !== -1) {		
 			colorObject = this.toBracketObject(v);
@@ -46,15 +46,17 @@ var Util = Scene.Util = {
 			for(var i = 0; i < length; ++i) {
 				colorArray[i] = parseInt(colorArray[i]);
 			}
+			
 			if(length === 3)
 				colorArray[3] = 1;
 				
+				
+ 			//rgb hsl model to CHANGE rgba hsla				
 			var colorModel = colorObject.model;
-			
 			if(colorModel === "rgb")
 				return this.arrayToColorObject("rgba", colorObject);
-			else if(colorModel === "hsv")
-				return this.arrayToColorObject("hsva", colorObject);
+			else if(colorModel === "hsl")
+				return this.arrayToColorObject("hsla", colorObject);
 			
 			return colorObject;
 		} else {
@@ -100,21 +102,13 @@ var Util = Scene.Util = {
 		
 		var a1Prefix = a1.getPrefix(), a2Prefix = a2.getPrefix();
 		var fromModel, toModel;
-		if(a1Prefix !== a2Prefix) {
-			if(a1Prefix === "rgba(")
-				toModel = "rgb";
-			else if(a1Prefix === "hsva(")
-				toModel = "hsv";
-				
-			if(a2Prefix == "rgba(")
-				fromModel = "rgb";
-			else if(a2Prefix == "hsva(")
-				fromModel = "hsv";
-			
-			
-			a2v = Color.change[fromModel][toModel](a2v);
-		}
 		
+		try {
+			if(a1Prefix !== a2Prefix)
+				a2v = Color.change[a2.model][a1.model](a2v);
+		} catch (e) {
+			//Not Support Model;
+		}
 
 		if(a1v.length === 3)
 			a1v[3] = 1;

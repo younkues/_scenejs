@@ -17,23 +17,23 @@ var Color = Scene.Color = {
 		
 		return arr.join("");
 	},
-	rgbToHSV : function(rgb) {
+	rgbTohsl : function(rgb) {
 		
 	},
-	hsvToRGB : function(hsv) {
+	hslToRGB : function(hsl) {
 		
 	},
 	change: {
 		rgb : {},
 		hex : {},
-		hsv : {}
+		hsl : {}
 	}
 };
-Color["rgb"]["hsv"] = Color["rgb"]["hsva"] = function(rgb) { return Color.rgbToHSV(rgb);}
-Color["hsv"]["rgb"] = Color["hsv"]["rgba"] = function(hsv) { return Color.hsvToRGB(hsv);}
+Color.change["rgb"]["hsl"] = Color["rgb"]["hsla"] = function(rgb) { return Color.rgbTohsl(rgb);}
+Color.change["hsl"]["rgb"] = Color["hsl"]["rgba"] = function(hsl) { return Color.hslToRGB(hsl);}
 
-Color["rgba"] = Color["rgb"];
-Color["hsva"] = Color["hsv"];
+Color.change["rgba"] = Color["rgb"];
+Color.change["hsla"] = Color["hsl"];
 
 Color["hex"]["rgb"] = function(hex) { return Color.hexToRGB(hex);}
 
