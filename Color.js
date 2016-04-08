@@ -37,14 +37,14 @@ var Color = Scene.Color = {
 	        }
 	    }
 
-	    var result = [h * 60, s * 100, l * 100];
+	    var result = [h * 60, s, l];
 	    if(rgb.length > 3)
 	    	result[3] = rgb[3];
 	    	
 	    return result;
 	},
 	hslToRGB : function(hsl) {
-		var h = hsl[0], s = hsl[1] / 100, l = hsl[2] / 100;
+		var h = hsl[0], s = hsl[1], l = hsl[2];
 		if( h < 0)
 			h = h + parseInt((Math.abs(h) + 360) / 360) * 360;
 		var c = (1- Math.abs(2 * l - 1)) * s;

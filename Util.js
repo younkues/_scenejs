@@ -10,7 +10,7 @@ var Util = Scene.Util = {
 	 },
 	 arrayToColorObject: function(model, arr) {
 	 	if(arr instanceof PropertyObject) {
-		 	arr.getModel() = model;
+		 	arr.setModel(model);
 		 	arr.setPrefix(model + "(");
 		 	
 		 	return arr;
@@ -43,21 +43,35 @@ var Util = Scene.Util = {
 			/*
 				문자열을 숫자로 변환한다. 안하게 되면 내적에서 문제가 생긴다.
 			*/
-			for(var i = 0; i < length; ++i) {
-				colorArray[i] = parseInt(colorArray[i]);
+			
+			var colorModel = colorObject.getModel();
+			
+			 //rgb hsl model to CHANGE rgba hsla
+			 //string -> number
+			switch(colorModel) {
+			case "rgb":
+				this.arrayToColorObject("rgba", colorObject);
+			case "rgba":
+				for(var i = 0; i < 3; ++i) {
+					colorArray[i] = parseInt(colorArray[i]);
+				}
+				break;
+			case "hsl":
+				this.arrayToColorObject("hsla", colorObject);
+			case "hsla":
+				for(var i = 1; i < 3; ++i) {
+					if(colorArray[i].indexOf("%") !== -1)
+						colorArray[i] = parseFloat(colorArray[i]) / 100;
+				}
 			}
 			
-			if(length === 3)
+			
+			if(length === 4)
+				colorArray[3] = parseFloat(colorArray[3]);
+			else if(length === 3)
 				colorArray[3] = 1;
 				
-				
- 			//rgb hsl model to CHANGE rgba hsla				
-			var colorModel = colorObject.getModel();
-			if(colorModel === "rgb")
-				return this.arrayToColorObject("rgba", colorObject);
-			else if(colorModel === "hsl")
-				return this.arrayToColorObject("hsla", colorObject);
-			
+
 			return colorObject;
 		} else {
 			colorArray = [0, 0, 0, 0];
@@ -77,7 +91,7 @@ var Util = Scene.Util = {
 		var v = _a1[1].trim();
 		var suffix = ")";
 		var object = new PropertyObject(v, ",");
-		object.getModel() = _a1[0];
+		object.setModel(_a1[0]);
 		object.setPrefix(prefix);
 		object.setSuffix(suffix);
 		
