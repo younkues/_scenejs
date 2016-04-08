@@ -17,8 +17,31 @@ var Color = Scene.Color = {
 		
 		return arr.join("");
 	},
+	/*
+		reference to http://www.rapidtables.com/convert/color/rgb-to-hsl.htm
+	*/
 	rgbToHSL : function(rgb) {
-		
+		var r = rgb[0] / 255, g = rgb[1] / 255, b= rgb[2] / 255;
+	    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+	    var h, s, l = (max + min) / 2;
+	    var d = max - min;	
+	    if(d === 0){
+	        h = s = 0; // achromatic
+	    }else{
+
+	        s = d / (1- Math.abs(2 * l - 1));
+	        switch(max){
+	            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+	            case g: h = (b - r) / d + 2; break;
+	            case b: h = (r - g) / d + 4; break;
+	        }
+	    }
+
+	    var result = [h * 60, s, l];
+	    if(rgb.length > 3)
+	    	result[3] = rgb[3];
+	    	
+	    return result;
 	},
 	hslToRGB : function(hsl) {
 		
