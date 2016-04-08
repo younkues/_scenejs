@@ -115,9 +115,9 @@ var Util = Scene.Util = {
 
 		var a1v = a1.value, a2v = a2.value;
 		
-				
-		if(a1.getPrefix() !== a2.getPrefix()) {
-			
+		var a1Prefix = a1.getPrefix(), a2Prefix = a2.getPrefix();
+		if(a1Prefix !== a2Prefix) {
+				if(a1Prefix === "rgba(")
 		}
 		
 
@@ -127,21 +127,32 @@ var Util = Scene.Util = {
 		if(a2v.length === 3)
 			a2v[3] = 1;
 			
-		return this.dotObject(a1, a2, b1, b2);
+		var v = this.dotArray(a1v, a2v, b1, b2);
+		
+		var object = new PropertyObject(v, ",");
+		object.setPrefix(a1.getPrefix());
+		object.setSuffix(")");
+		
+		return object;
 			
 	 },
-	 dotObject: function(a1, a2, b1, b2) {
+	 dotArray: function(a1, a2, b1, b2) {
 	 	var obj = {};
 	 	var v1, v2;
-	 	var _a1 = a1.value;
-	 	var _a2 = a2.value;
-		for(var n in _a1) {
-			v1 = _a1[n];
+		for(var n in a1) {
+			v1 = a1[n];
 			if(!n in _a2)
 				obj[n] = v1;
 			else
-				obj[n] = this.dot(v1, _a2[n], b1, b2);
-		}
+				obj[n] = this.dot(v1, a2[n], b1, b2);
+		}	 
+		
+		return obj;
+	 },
+	 dotObject: function(a1, a2, b1, b2) {
+	 	var _a1 = a1.value;
+	 	var _a2 = a2.value;
+	 	var obj = this.dotArray(_a1, _a2, b1, b2);
 		var object = new PropertyObject(obj, a1.separator);
 		object.setPrefix(a1.getPrefix());
 		object.setSuffix(a1.getSuffix());

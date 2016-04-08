@@ -19,5 +19,10 @@ var Color = Scene.Color = {
 	},
 	rgbToHSV : function(rgb) {
 		
+	},
+	change: {
+		rgb : {
+			hsv : function() {}
+		}
 	}
 };
