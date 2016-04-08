@@ -8,32 +8,24 @@ var Util = Scene.Util = {
 		return {unit:unit, value:value};
 		
 	 },
-	 arrayToRGBObject: function(arr) {
-	 	if(arr instanceof PropertyObject)
-	 		return arr;
+	 arrayToColorObject: function(model, arr) {
+	 	if(arr instanceof PropertyObject) {
+		 	arr.model = model;
+		 	arr.setPrefix(model + "(");
+		 	
+		 	return arr;
+	 	}
 	 		
 		if(arr.length === 3)
 			arr[3] = 1;
 		 
 		var object = new PropertyObject(arr, ",");
-		object.setPrefix("rgba(");
+		object.model = model;
+		object.setPrefix(model + "(");
 		object.setSuffix(")");
 		
 		return object;
-	 },
-	 arrayToHSVObject: function(arr) {
-	 	if(arr instanceof PropertyObject)
-	 		return arr;
-	 		
-		if(arr.length === 3)
-			arr[3] = 1;
-		 
-		var object = new PropertyObject(arr, ",");
-		object.setPrefix("hsva(");
-		object.setSuffix(")");
-		
-		return object;
-	 },
+	 }
 	 toColorObject: function(v) {
 		var colorArray = [];
 		var colorObject;
@@ -43,7 +35,7 @@ var Util = Scene.Util = {
 			} else if(v.length === 7) {
 				colorArray = hexToRGB(v);
 			}
-		} else if(v.indexOf("rgb(") === 0 || v.indexOf("rgba(") === 0) {		
+		} else if(v.indexOf("(") !== -1) {		
 			colorObject = this.toBracketObject(v);
 			colorArray = colorObject.value;
 			var length = colorArray.length;
@@ -57,29 +49,18 @@ var Util = Scene.Util = {
 			if(length === 3)
 				colorArray[3] = 1;
 				
-			colorObject.setPrefix("rgba(");
-			return colorObject;
-		} else if(v.indexOf("hsv(") === 0 || v.indexOf("hsva(") === 0) {
-			colorObject = this.toBracketObject(v);
-			colorArray = colorObject.value;
-			var length = colorArray.length;
+			var colorModel = colorObject.model;
 			
-			/*
-				문자열을 숫자로 변환한다. 안하게 되면 내적에서 문제가 생긴다.
-			*/
-			for(var i = 0; i < length; ++i) {
-				colorArray[i] = parseInt(colorArray[i]);
-			}
-			if(length === 3)
-				colorArray[3] = 1;
-				
-			colorObject.setPrefix("hsva(");
+			if(colorModel === "rgb")
+				return this.arrayToColorObject("rgba", colorObject);
+			else if(colorModel === "hsv")
+				return this.arrayToColorObject("hsva", colorObject);
 			
 			return colorObject;
 		} else {
 			colorArray = [0, 0, 0, 0];
 		}
-		return this.arrayToRGBObject(colorArray);
+		return this.arrayToColorObject("rgba", colorArray);
 	 },
 	 toBracketObject: function(a1) {
 	 	/*
@@ -88,11 +69,13 @@ var Util = Scene.Util = {
 		var _a1 = a1.split(/\(|\)/g);
 		if(_a1.length < 3)
 			return a1;
-			
-		var prefix = _a1[0] +"(";
+		
+		var prefix = _a1[0] + "(";
+		
 		var v = _a1[1].trim();
 		var suffix = ")";
 		var object = new PropertyObject(v, ",");
+		object.model = _a1[0];
 		object.setPrefix(prefix);
 		object.setSuffix(suffix);
 		
