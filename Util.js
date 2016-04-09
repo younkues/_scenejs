@@ -191,8 +191,7 @@ var Util = Scene.Util = {
 	 */
 	 stringToObject: function(a1) {
 		 if(a1.indexOf("(") != -1) {//괄호가 들어갈 때
- 			a1 = this.toBracketObject(a1);
- 			if(Color.models.indexOf(a1.getModel()) != -1) 
+ 			if((a1 = this.toBracketObject(a1)) && Color.models.indexOf(a1.getModel()) != -1) 
 	 			return this.toColorObject(a1);
  		} else if(a1.indexOf(",") != -1) { //구분자가 ","
 	 		return new PropertyObject(a1, ",");
@@ -201,21 +200,17 @@ var Util = Scene.Util = {
 	 	} else if(a1.indexOf("#") === 0) {
 	 		return this.toColorObject(a1);
 	 	}
-	 	
 	 	return a1;
 	},
 	dot : function dot(a1, a2, b1, b2) {
 		 /*
 			 문자일 경우 ex) 0px, rgba(0,0), "1, 1", "0 0"
 		 */
-	 	if(typeof a1 == "string") {
-	 		a1 = a1.trim();
-	 		a1 = this.stringToObject(a1);
-	 	}
-	 	if(typeof a2 == "string") {
-	 		a2 = a2.trim();
-	 		a2 = this.stringToObject(a2);
-	 	}
+	 	if(typeof a1 == "string")
+	 		a1 = this.stringToObject(a1.trim());
+
+	 	if(typeof a2 == "string")
+	 		a2 = this.stringToObject(a2.trim());
 	 		
 	 		
 	 	if(a1 instanceof PropertyObject)
