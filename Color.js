@@ -1,4 +1,5 @@
 var Color = Scene.Color = {
+	models : ["rgb", "rgba", "hsl", "hsla"],
 	hexToRGB : function(h) {
 		h = this.cutHex(h);
 		var r = parseInt(h.substring(0,2), 16);

@@ -10,6 +10,7 @@ var Util = Scene.Util = {
 	 },
 	 arrayToColorObject: function(model, arr) {
 	 	if(arr instanceof PropertyObject) {
+	 		arr.setType("color");
 		 	arr.setModel(model);
 		 	arr.setPrefix(model + "(");
 		 	
@@ -27,56 +28,60 @@ var Util = Scene.Util = {
 		return object;
 	 },
 	 toColorObject: function(v) {
-		var colorArray = [];
+		var colorArray, length;
 		var colorObject;
-		if(v.charAt(0) === "#")  {
+		if(v instanceof PropertyObject) {
+			colorObject = v;
+			colorArray = colorObject.value;
+			var length = colorArray.length;
+	 	} else if(v.charAt(0) === "#")  {
 			if(v.length === 4) {
 				colorArray = Color.hexToRGB(Color.hex4to6(v));
 			} else if(v.length === 7) {
 				colorArray = Color.hexToRGB(v);
 			}
+			return this.arrayToColorObject("rgba", colorArray);
 		} else if(v.indexOf("(") !== -1) {		
 			colorObject = this.toBracketObject(v);
 			colorArray = colorObject.value;
 			var length = colorArray.length;
-			
 			/*
 				문자열을 숫자로 변환한다. 안하게 되면 내적에서 문제가 생긴다.
 			*/
-			
-			var colorModel = colorObject.getModel();
-			
-			 //rgb hsl model to CHANGE rgba hsla
-			 //string -> number
-			switch(colorModel) {
-			case "rgb":
-				this.arrayToColorObject("rgba", colorObject);
-			case "rgba":
-				for(var i = 0; i < 3; ++i) {
-					colorArray[i] = parseInt(colorArray[i]);
-				}
-				break;
-			case "hsl":
-				this.arrayToColorObject("hsla", colorObject);
-			case "hsla":
-				for(var i = 1; i < 3; ++i) {
-					if(colorArray[i].indexOf("%") !== -1)
-						colorArray[i] = parseFloat(colorArray[i]) / 100;
-				}
-			}
-			
-			
-			if(length === 4)
-				colorArray[3] = parseFloat(colorArray[3]);
-			else if(length === 3)
-				colorArray[3] = 1;
-				
-
-			return colorObject;
 		} else {
-			colorArray = [0, 0, 0, 0];
+			return this.arrayToColorObject("rgba", colorArray);
 		}
-		return this.arrayToColorObject("rgba", colorArray);
+		
+		
+		colorObject.setType("color");
+		var colorModel = colorObject.getModel();
+		
+		 //rgb hsl model to CHANGE rgba hsla
+		 //string -> number
+		switch(colorModel) {
+		case "rgb":
+			this.arrayToColorObject("rgba", colorObject);
+		case "rgba":
+			for(var i = 0; i < 3; ++i) {
+				colorArray[i] = parseInt(colorArray[i]);
+			}
+			break;
+		case "hsl":
+			this.arrayToColorObject("hsla", colorObject);
+		case "hsla":
+			for(var i = 1; i < 3; ++i) {
+				if(colorArray[i].indexOf("%") !== -1)
+					colorArray[i] = parseFloat(colorArray[i]) / 100;
+			}
+		}
+		
+		if(length === 4)
+			colorArray[3] = parseFloat(colorArray[3]);
+		else if(length === 3)
+			colorArray[3] = 1;
+			
+
+		return colorObject;
 	 },
 	 toBracketObject: function(a1) {
 	 	/*
@@ -146,7 +151,6 @@ var Util = Scene.Util = {
 			}
 		}
 		
-		
 		var object = new PropertyObject(v, ",");
 		object.setModel(colorModel);
 		object.setPrefix(a1.getPrefix());
@@ -169,6 +173,9 @@ var Util = Scene.Util = {
 		return obj;
 	 },
 	 dotObject: function(a1, a2, b1, b2) {
+	 	if(a1.getType() === "color")
+	 		return this.dotColor(a1, a2, b1, b2);
+	 		
 	 	var _a1 = a1.value;
 	 	var _a2 = a2.value;
 	 	var obj = this.dotArray(_a1, _a2, b1, b2);
@@ -182,28 +189,32 @@ var Util = Scene.Util = {
 		 a1과 a2를 b1과 b2에 대해 내적한다.
 		 a2 *  b1 / (b1 + b2) + a1 * b2 / (b1 + b2)
 	 */
-	 dot : function dot(a1, a2, b1, b2) {
+	 stringToObject: function(a1) {
+		 if(a1.indexOf("(") != -1) {//괄호가 들어갈 때
+ 			a1 = this.toBracketObject(a1);
+ 			if(Color.models.indexOf(a1.getModel()) != -1) 
+	 			return this.toColorObject(a1);
+ 		} else if(a1.indexOf(",") != -1) { //구분자가 ","
+	 		return new PropertyObject(a1, ",");
+	 	} else if(a1.indexOf(" ") != -1) { //구분자가 " "
+	 		return new PropertyObject(a1, " ");
+	 	} else if(a1.indexOf("#") === 0) {
+	 		return this.toColorObject(a1);
+	 	}
+	 	
+	 	return a1;
+	},
+	dot : function dot(a1, a2, b1, b2) {
 		 /*
 			 문자일 경우 ex) 0px, rgba(0,0), "1, 1", "0 0"
 		 */
 	 	if(typeof a1 == "string") {
 	 		a1 = a1.trim();
-	 		if(a1.indexOf("(") != -1) //괄호가 들어갈 때
-	 			return this.dot(this.toBracketObject(a1), a2, b1, b2);
-	 		else if(a1.indexOf(",") != -1) //구분자가 ","
-		 		return this.dot(new PropertyObject(a1, ","), a2, b1,b2);
-		 	else if(a1.indexOf(" ") != -1) //구분자가 " "
-		 		return this.dot(new PropertyObject(a1, " "), a2, b1,b2);
-		 	
+	 		a1 = this.stringToObject(a1);
 	 	}
 	 	if(typeof a2 == "string") {
 	 		a2 = a2.trim();
-	 		if(a2.indexOf("(") != -1)
-	 			return this.dot(a1, this.toBracketObject(a2), b1, b2);
-	 		else if(a2.indexOf(",") != -1)
-		 		return this.dot(a1, new PropertyObject(a2, ","), b1,b2);
-		 	else if(a2.indexOf(" ") != -1)
-		 		return this.dot(a1, new PropertyObject(a2, " "), b1,b2);
+	 		a2 = this.stringToObject(a2);
 	 	}
 	 		
 	 		
