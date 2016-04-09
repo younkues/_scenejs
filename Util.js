@@ -106,14 +106,20 @@ var Util = Scene.Util = {
 	 	 /*
 	 	 	배열을 PropertyObject로 변환		 	 
 	 	 */
+/*
  	 	if(a1 instanceof Array)
- 	 		return this.dotColor(this.arrayToRGBObject(a1), a2, b1, b2);
-		else if(a2 instanceof Array)
-			return this.dotColor(a1, this.arrayToRGBObject(a2), b1, b2);
-			 	 		
-		if(typeof a1 !== "object")
+ 	 		a1 = this.arrayToRGBObject(a1);
+		
+		if(a2 instanceof Array)
+			a2 = this.arrayToRGBObject(a2);
+			 	 
+*/		
+		/*
+			
+		*/
+		if(!(a1 instanceof PropertyObject))
 			a1 = this.toColorObject(a1);
-		if(typeof a2 !== "object")
+		if(!(a2 instanceof PropertyObject))
 			a2 = this.toColorObject(a2);
 		
 
@@ -212,10 +218,11 @@ var Util = Scene.Util = {
 	 	if(typeof a2 == "string")
 	 		a2 = this.stringToObject(a2.trim());
 	 		
-	 		
 	 	if(a1 instanceof PropertyObject)
 	 		return this.dotObject(a1, a2, b1, b2);
-
+	 	
+	 	
+	 	// 0일 경우 0으로 나누는 에러가 생긴다.
 	 	if(b1 + b2 == 0)
 	 		return a1;
 	 	
@@ -227,10 +234,10 @@ var Util = Scene.Util = {
 		var r1 = b1 / (b1 + b2);
 		var r2 = 1- r1;
 		var v;
+		
 		/*
 			숫자가 아닐경우 첫번째 값을 반환 b2가 0일경우 두번째 값을 반환
 		*/
-		
 		if(isNaN(v1.value)) {
 			if(r1 >=1)
 				return a2;
