@@ -132,7 +132,23 @@ var Util = Scene.Util = {
 			
 		var v = this.dotArray(a1v, a2v, b1, b2);
 		
+		var colorModel = a1.getModel();
+		switch(colorModel) {
+		case "rgba":
+			for(var i = 0; i < 3; ++i) {
+				v[i] = parseInt(v[i]);
+			}
+			break;
+		case "hsla":
+			for(var i = 1; i < 3; ++i) {
+				if(v[i].indexOf("%") !== -1)
+					v[i] = parseFloat(v[i]) / 100;
+			}
+		}
+		
+		
 		var object = new PropertyObject(v, ",");
+		object.setModel(colorModel);
 		object.setPrefix(a1.getPrefix());
 		object.setSuffix(")");
 		
