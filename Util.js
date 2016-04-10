@@ -80,6 +80,7 @@ var Util = Scene.Util = {
 			}
 			// hsl, hsla to rgba
 			colorArray = Color.hslToRGB(colorArray);
+			return this.arrayToColorObject("rgba", colorArray);
 		}
 		
 
@@ -201,13 +202,18 @@ var Util = Scene.Util = {
 		 a2 *  b1 / (b1 + b2) + a1 * b2 / (b1 + b2)
 	 */
 	 stringToObject: function(a1) {
-		 if(a1.indexOf("(") != -1) {//괄호가 들어갈 때
+	 	var r = a1.match(/\S*\([\s\S]*\)|\S+/g);
+	 	if(r.length != 1) {
+		 	var length = r.length;
+	 		for(var i = 0; i < length; ++i) {
+		 		r[i] = this.stringToObject(r[i]);
+	 		}
+	 		return this.toColorObject(r, " ");
+		} else if(a1.indexOf("(") != -1) {//괄호가 들어갈 때
  			if((a1 = this.toBracketObject(a1)) && Color.models.indexOf(a1.getModel()) != -1) 
 	 			return this.toColorObject(a1);
- 		} else if(a1.indexOf(",") != -1) { //구분자가 ","
+		}else if(a1.indexOf(",") != -1) { //구분자가 ","
 	 		return new PropertyObject(a1, ",");
-	 	} else if(a1.indexOf(" ") != -1) { //구분자가 " "
-	 		return new PropertyObject(a1, " ");
 	 	} else if(a1.indexOf("#") === 0) {
 	 		return this.toColorObject(a1);
 	 	}
