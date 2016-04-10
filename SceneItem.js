@@ -11,13 +11,12 @@ var SceneItem = Scene.SceneItem = function(element) {
 	this.animateFunction;	
 	
 	this.element = element;
-	this.newFrame(-1);
+	this.newFrame(DEFAULT_LAYOUT_TIME);
 	if(element) {
 		element.setAttribute("role", "item");
-		this.addStyleToFrame(-1);
+		this.addStyleToFrame(DEFAULT_LAYOUT_TIME);
 	}
 }
-
 var sceneItemPrototype = SceneItem.prototype;
 
 var addPropertyFunction = function(name, names) {
@@ -166,17 +165,17 @@ var getPrevFrameByProperty = function(sceneItem, time, property, func) {
 		value = getComputedStyle(element)[property];
 		if(value == "auto")
 			value = "0";
-		sceneItem.setProperty(-1, property, value);
+		sceneItem.setProperty(DEFAULT_LAYOUT_TIME, property, value);
 	}
 	else if(func === "getFilter") {
 		value = defaultProperties[property];
-		sceneItem.setFilter(-1, property, value);
+		sceneItem.setFilter(DEFAULT_LAYOUT_TIME, property, value);
 	}
 	else if(func === "getTransform") {
 		value = defaultProperties[property];
-		sceneItem.setTransform(-1, property, value);
+		sceneItem.setTransform(DEFAULT_LAYOUT_TIME, property, value);
 	}
-	return sceneItem.getFrame(-1);
+	return sceneItem.getFrame(DEFAULT_LAYOUT_TIME);
 }
 /*
 	getNextFrameByProperty, getNextFrameByTransform, getNextFrameByFilter

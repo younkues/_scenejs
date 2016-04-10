@@ -52,9 +52,15 @@ var Util = Scene.Util = {
 			return this.arrayToColorObject("rgba", colorArray);
 		}
 		
-		
+		if(length === 4)
+			colorArray[3] = parseFloat(colorArray[3]);
+		else if(length === 3)
+			colorArray[3] = 1;
+			
+			
 		colorObject.setType("color");
 		var colorModel = colorObject.getModel();
+		
 		
 		 //rgb hsl model to CHANGE rgba hsla
 		 //string -> number
@@ -67,18 +73,16 @@ var Util = Scene.Util = {
 			}
 			break;
 		case "hsl":
-			this.arrayToColorObject("hsla", colorObject);
 		case "hsla":
 			for(var i = 1; i < 3; ++i) {
 				if(colorArray[i].indexOf("%") !== -1)
 					colorArray[i] = parseFloat(colorArray[i]) / 100;
 			}
+			// hsl, hsla to rgba
+			colorArray = Color.hslToRGB(colorArray);
 		}
 		
-		if(length === 4)
-			colorArray[3] = parseFloat(colorArray[3]);
-		else if(length === 3)
-			colorArray[3] = 1;
+
 			
 
 		return colorObject;
@@ -119,6 +123,7 @@ var Util = Scene.Util = {
 		*/
 		if(!(a1 instanceof PropertyObject))
 			a1 = this.toColorObject(a1);
+			
 		if(!(a2 instanceof PropertyObject))
 			a2 = this.toColorObject(a2);
 		
