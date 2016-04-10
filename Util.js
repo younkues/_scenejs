@@ -119,9 +119,6 @@ var Util = Scene.Util = {
 			a2 = this.arrayToRGBObject(a2);
 			 	 
 */		
-		/*
-			
-		*/
 		if(!(a1 instanceof PropertyObject))
 			a1 = this.toColorObject(a1);
 			
@@ -148,8 +145,12 @@ var Util = Scene.Util = {
 			a2v[3] = 1;
 			
 		var v = this.dotArray(a1v, a2v, b1, b2);
-		
-		var colorModel = a1.getModel();
+		var colorModel = a1.getModel();		
+		for(var i = 0; i < 3; ++i) {
+			v[i] = parseInt(v[i]);
+		}
+/*
+
 		switch(colorModel) {
 		case "rgba":
 			for(var i = 0; i < 3; ++i) {
@@ -163,7 +164,9 @@ var Util = Scene.Util = {
 			}
 		}
 		
+*/
 		var object = new PropertyObject(v, ",");
+		object.setType("color");
 		object.setModel(colorModel);
 		object.setPrefix(a1.getPrefix());
 		object.setSuffix(")");
@@ -174,6 +177,7 @@ var Util = Scene.Util = {
 	 dotArray: function(a1, a2, b1, b2) {
 	 	var obj = {};
 	 	var v1, v2;
+	 				
 		for(var n in a1) {
 			v1 = a1[n];
 			if(!n in a2)
@@ -185,11 +189,18 @@ var Util = Scene.Util = {
 		return obj;
 	 },
 	 dotObject: function(a1, a2, b1, b2) {
-	 	if(a1.getType() === "color")
+	 var a1type = a1.getType();
+	 	if(a1type === "color")
 	 		return this.dotColor(a1, a2, b1, b2);
 	 		
 	 	var _a1 = a1.value;
 	 	var _a2 = a2.value;
+	 	var a2type = a2.getType();
+	 	if(a1type === "array" && a2type !== "array")
+	 		_a2 = {0:a2};
+	 	else if(a1type !== "array" && a2type === "array")
+	 		_a1 = {0:a1};
+	 		
 	 	var obj = this.dotArray(_a1, _a2, b1, b2);
 		var object = new PropertyObject(obj, a1.separator);
 		object.setPrefix(a1.getPrefix());
@@ -202,18 +213,25 @@ var Util = Scene.Util = {
 		 a2 *  b1 / (b1 + b2) + a1 * b2 / (b1 + b2)
 	 */
 	 stringToObject: function(a1) {
-	 	var r = a1.match(/\S*\([\s\S]*\)|\S+/g);
-	 	if(r.length != 1) {
-		 	var length = r.length;
+	 	var arr = a1.match(/\S*\([\s\S]*\)|\S+/g);
+	 	var result;
+	 	if(arr.length != 1) {
+		 	var length = arr.length;
 	 		for(var i = 0; i < length; ++i) {
-		 		r[i] = this.stringToObject(r[i]);
+		 		arr[i] = this.stringToObject(arr[i]);
 	 		}
-	 		return this.toColorObject(r, " ");
+	 		result = new PropertyObject(arr, " ");
+	 		result.setType("array");
+	 		
+	 		return result;
 		} else if(a1.indexOf("(") != -1) {//괄호가 들어갈 때
  			if((a1 = this.toBracketObject(a1)) && Color.models.indexOf(a1.getModel()) != -1) 
 	 			return this.toColorObject(a1);
 		}else if(a1.indexOf(",") != -1) { //구분자가 ","
-	 		return new PropertyObject(a1, ",");
+	 		var result = new PropertyObject(a1, ",");
+	 		result.setType("array");
+	 		
+	 		return result;
 	 	} else if(a1.indexOf("#") === 0) {
 	 		return this.toColorObject(a1);
 	 	}
@@ -223,12 +241,14 @@ var Util = Scene.Util = {
 		 /*
 			 문자일 경우 ex) 0px, rgba(0,0), "1, 1", "0 0"
 		 */
+/*
 	 	if(typeof a1 == "string")
 	 		a1 = this.stringToObject(a1.trim());
 
 	 	if(typeof a2 == "string")
 	 		a2 = this.stringToObject(a2.trim());
 	 		
+*/
 	 	if(a1 instanceof PropertyObject)
 	 		return this.dotObject(a1, a2, b1, b2);
 	 	
@@ -249,7 +269,7 @@ var Util = Scene.Util = {
 		/*
 			숫자가 아닐경우 첫번째 값을 반환 b2가 0일경우 두번째 값을 반환
 		*/
-		if(isNaN(v1.value)) {
+		if(isNaN(v1.value) || isNaN(v2.value)) {
 			if(r1 >=1)
 				return a2;
 			else

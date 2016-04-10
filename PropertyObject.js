@@ -18,12 +18,14 @@ defineGetterSetter(propertyObjectPrototype, "prefix");
 defineGetterSetter(propertyObjectPrototype, "suffix");
 
 propertyObjectPrototype.join = function() {
-		var rv = "";
+		var rv = "", v = "";
 		var s = false;
 		var arr = this.value, separator = this.separator;
 		for(var i in arr) {
 			if(s) rv += separator;
-			rv += arr[i];
+
+			v = arr[i];
+			rv += (v instanceof PropertyObject) ? v.toValue() : v;
 			s = true;
 		}
 		return rv;

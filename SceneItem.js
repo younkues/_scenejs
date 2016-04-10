@@ -46,6 +46,9 @@ var addPropertyFunction = function(name, names) {
 		if(!(frame = this.getFrame(time))) {
 			frame = this.newFrame(time);	
 		}
+		if(typeof value === "string") {
+			value = Util.stringToObject(value);
+		}
 		frame[setProperty](property, value);
 		return this;
 	}
