@@ -8,7 +8,8 @@ var Util = Scene.Util = {
 		return {unit:unit, value:value};
 		
 	 },
-	 arrayToColorObject: function(model, arr) {
+	 arrayToColorObject: function(arr) {
+	 	var model = "rgba";
 	 	if(arr instanceof PropertyObject) {
 	 		arr.setType("color");
 		 	arr.setModel(model);
@@ -19,9 +20,10 @@ var Util = Scene.Util = {
 	 		
 		if(arr.length === 3)
 			arr[3] = 1;
-		 
+		
 		var object = new PropertyObject(arr, ",");
-		object.getModel() = model;
+		object.setType("color")
+		object.setModel(model);
 		object.setPrefix(model + "(");
 		object.setSuffix(")");
 		
@@ -40,7 +42,7 @@ var Util = Scene.Util = {
 			} else if(v.length === 7) {
 				colorArray = Color.hexToRGB(v);
 			}
-			return this.arrayToColorObject("rgba", colorArray);
+			return this.arrayToColorObject(colorArray);
 		} else if(v.indexOf("(") !== -1) {		
 			colorObject = this.toBracketObject(v);
 			colorArray = colorObject.value;
@@ -49,7 +51,7 @@ var Util = Scene.Util = {
 				문자열을 숫자로 변환한다. 안하게 되면 내적에서 문제가 생긴다.
 			*/
 		} else {
-			return this.arrayToColorObject("rgba", colorArray);
+			return this.arrayToColorObject(colorArray);
 		}
 		
 		if(length === 4)
@@ -66,7 +68,7 @@ var Util = Scene.Util = {
 		 //string -> number
 		switch(colorModel) {
 		case "rgb":
-			this.arrayToColorObject("rgba", colorObject);
+			this.arrayToColorObject(colorObject);
 		case "rgba":
 			for(var i = 0; i < 3; ++i) {
 				colorArray[i] = parseInt(colorArray[i]);
@@ -80,7 +82,7 @@ var Util = Scene.Util = {
 			}
 			// hsl, hsla to rgba
 			colorArray = Color.hslToRGB(colorArray);
-			return this.arrayToColorObject("rgba", colorArray);
+			return this.arrayToColorObject(colorArray);
 		}
 		
 
@@ -198,7 +200,6 @@ var Util = Scene.Util = {
 	 	공백을 기준으로 나눈다. 자동으로 양쪽 끝 여백은 매칭하지 않는다.
 		 ex 1px solid rgb(1, 2, 3) => ["1px", "solid", "rgb(1, 2, 3)"]
 	 */
-	 //"0px, 1px 2px,3px".match(/(\w+(\,\s*)*)+/g); 
 	 	var arr = a1.match(/(\S*\([\s\S]*\)|(\S+(\s*,\s*))|\S+)+/g);
 	 	var result;
 	 	if(arr.length != 1) {
