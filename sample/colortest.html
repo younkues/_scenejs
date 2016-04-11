@@ -23,7 +23,6 @@
 	width: 100px;
 	height: 100px;
 	
-	-webkit-transition: all 2s ease;
 }
 #test_hsl:hover {
 	background:hsl(50, 30%, 30%);
@@ -42,7 +41,7 @@
 var scene = new Scene();
 var item = scene.addElement(test);
 item.setProperty(4, "background", "rgb(0,0,0)");
-//var item2 = scene.addElement(test_hsl);
-//item2.setProperty(4, "background", "hsl(360,1,1)");
+var item2 = scene.addElement(test_hsl);
+item2.setProperty(4, "background", "hsl(360,1,1)");
 scene.play();
 </script>

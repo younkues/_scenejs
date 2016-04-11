@@ -62,6 +62,8 @@ var Color = Scene.Color = {
 		var h = hsl[0], s = hsl[1], l = hsl[2];
 		if( h < 0)
 			h = h + parseInt((Math.abs(h) + 360) / 360) * 360;
+			
+		h = h % 360;
 		var c = (1- Math.abs(2 * l - 1)) * s;
 		var x = c * (1 - Math.abs((h/60) % 2 - 1));
 		var m = l - c / 2;
@@ -78,7 +80,8 @@ var Color = Scene.Color = {
 			rgb = [x, 0, c];
 		else if(h < 360)
 			rgb = [c, 0, x];
-			
+		
+		console.log(h, rgb);
 		var result = [(rgb[0] + m) * 255, (rgb[1] + m) * 255, (rgb[2] + m) * 255];
 	    if(hsl.length > 3)
 	    	result[3] = hsl[3];

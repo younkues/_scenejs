@@ -127,7 +127,7 @@ var getNowFrameByProperty = function(sceneItem, time, property, prevFunc, nextFu
 	if(prevTime < 0)
 		prevTime = 0;
 		
-		
+	// 전값과 나중값을 시간에 의해 내적을 한다.
 	value = _u.dot(prevValue, nextValue, time - prevTime, nextFrame.time - time);
 	return value;
 }
