@@ -49,7 +49,7 @@ var addPropertyFunction = function(name, names) {
 		
 
 		if(typeof value === "string") {
-			value = Util.stringToObject(value);
+			value = _u.stringToObject(value);
 		}
 		frame[setProperty](property, value);
 		return this;
@@ -128,10 +128,7 @@ var getNowFrameByProperty = function(sceneItem, time, property, prevFunc, nextFu
 		prevTime = 0;
 		
 		
-	if(property.indexOf("color") != -1)
-			value = Util.dotColor(prevValue, nextValue, time - prevTime, nextFrame.time - time);
-	else
-		value = Util.dot(prevValue, nextValue, time - prevTime, nextFrame.time - time);
+	value = _u.dot(prevValue, nextValue, time - prevTime, nextFrame.time - time);
 	return value;
 }
 /*

@@ -1,5 +1,5 @@
 
-var Util = Scene.Util = {
+var _u = Scene.Util = {
 	// ex) 100px unit:px, value: 100
 	splitUnit: function splitUnit(v) {
 		v = v + "";
