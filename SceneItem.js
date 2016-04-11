@@ -46,6 +46,8 @@ var addPropertyFunction = function(name, names) {
 		if(!(frame = this.getFrame(time))) {
 			frame = this.newFrame(time);	
 		}
+		
+
 		if(typeof value === "string") {
 			value = Util.stringToObject(value);
 		}
@@ -57,13 +59,9 @@ var addPropertyFunction = function(name, names) {
 	*/
 	
 	sceneItemPrototype[setProperties] = function(time, properties) {
-		var frame;
-		if(!(frame = this.getFrame(time))) {
-			frame = this.newFrame(time);	
+		for(var property in properties) {
+			this[setProperty](time, property, properties[property]);
 		}
-		frame[setProperties](properties);
-		
-	
 		return this;
 	}
 	/*

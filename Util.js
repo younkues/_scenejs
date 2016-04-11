@@ -128,15 +128,6 @@ var Util = Scene.Util = {
 
 		var a1v = a1.value, a2v = a2.value;
 		
-		var a1Prefix = a1.getPrefix(), a2Prefix = a2.getPrefix();
-		var fromModel, toModel;
-		
-		try {
-			if(a1Prefix !== a2Prefix)
-				a2v = Color.change[a2.getModel()][a1.getModel()](a2v);
-		} catch (e) {
-			//Not Support Model;
-		}
 
 		if(a1v.length === 3)
 			a1v[3] = 1;
@@ -149,22 +140,7 @@ var Util = Scene.Util = {
 		for(var i = 0; i < 3; ++i) {
 			v[i] = parseInt(v[i]);
 		}
-/*
 
-		switch(colorModel) {
-		case "rgba":
-			for(var i = 0; i < 3; ++i) {
-				v[i] = parseInt(v[i]);
-			}
-			break;
-		case "hsla":
-			for(var i = 1; i < 3; ++i) {
-				if(v[i].indexOf("%") !== -1)
-					v[i] = parseFloat(v[i]) / 100;
-			}
-		}
-		
-*/
 		var object = new PropertyObject(v, ",");
 		object.setType("color");
 		object.setModel(colorModel);
@@ -195,7 +171,12 @@ var Util = Scene.Util = {
 	 		
 	 	var _a1 = a1.value;
 	 	var _a2 = a2.value;
-	 	var a2type = a2.getType();
+	 	try {
+		 	var a2type = a2.getType();
+		 } catch(e) {
+			 // a1 => PropertyObject, a2 => String, Others....
+			 return a1;
+		 }
 	 	if(a1type === "array" && a2type !== "array")
 	 		_a2 = {0:a2};
 	 	else if(a1type !== "array" && a2type === "array")
@@ -213,7 +194,12 @@ var Util = Scene.Util = {
 		 a2 *  b1 / (b1 + b2) + a1 * b2 / (b1 + b2)
 	 */
 	 stringToObject: function(a1) {
-	 	var arr = a1.match(/\S*\([\s\S]*\)|\S+/g);
+	 /*
+	 	공백을 기준으로 나눈다. 자동으로 양쪽 끝 여백은 매칭하지 않는다.
+		 ex 1px solid rgb(1, 2, 3) => ["1px", "solid", "rgb(1, 2, 3)"]
+	 */
+	 //"0px, 1px 2px,3px".match(/(\w+(\,\s*)*)+/g); 
+	 	var arr = a1.match(/(\S*\([\s\S]*\)|(\S+(\s*,\s*))|\S+)+/g);
 	 	var result;
 	 	if(arr.length != 1) {
 		 	var length = arr.length;
@@ -238,17 +224,8 @@ var Util = Scene.Util = {
 	 	return a1;
 	},
 	dot : function dot(a1, a2, b1, b2) {
-		 /*
-			 문자일 경우 ex) 0px, rgba(0,0), "1, 1", "0 0"
-		 */
-/*
-	 	if(typeof a1 == "string")
-	 		a1 = this.stringToObject(a1.trim());
 
-	 	if(typeof a2 == "string")
-	 		a2 = this.stringToObject(a2.trim());
-	 		
-*/
+		// PropertyObject일 경우 Object끼리 내적을 한다.
 	 	if(a1 instanceof PropertyObject)
 	 		return this.dotObject(a1, a2, b1, b2);
 	 	
@@ -257,18 +234,14 @@ var Util = Scene.Util = {
 	 	if(b1 + b2 == 0)
 	 		return a1;
 	 	
-	 	/*
-		 	값과 단위를 나눠준다.
-	 	*/	
+		// 값과 단위를 나눠준다.	
 		var v1 = this.splitUnit(a1);
 		var v2 = this.splitUnit(a2);
 		var r1 = b1 / (b1 + b2);
 		var r2 = 1- r1;
 		var v;
 		
-		/*
-			숫자가 아닐경우 첫번째 값을 반환 b2가 0일경우 두번째 값을 반환
-		*/
+		// 숫자가 아닐경우 첫번째 값을 반환 b2가 0일경우 두번째 값을 반환
 		if(isNaN(v1.value) || isNaN(v2.value)) {
 			if(r1 >=1)
 				return a2;
