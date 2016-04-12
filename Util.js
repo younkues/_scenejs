@@ -38,9 +38,9 @@ var _u = Scene.Util = {
 			var length = colorArray.length;
 	 	} else if(v.charAt(0) === "#")  {
 			if(v.length === 4) {
-				colorArray = Color.hexToRGB(Color.hex4to6(v));
+				colorArray = _c.hexToRGB(_c.hex4to6(v));
 			} else if(v.length === 7) {
-				colorArray = Color.hexToRGB(v);
+				colorArray = _c.hexToRGB(v);
 			}
 			return this.arrayToColorObject(colorArray);
 		} else if(v.indexOf("(") !== -1) {		
@@ -81,7 +81,7 @@ var _u = Scene.Util = {
 					colorArray[i] = parseFloat(colorArray[i]) / 100;
 			}
 			// hsl, hsla to rgba
-			colorArray = Color.hslToRGB(colorArray);
+			colorArray = _c.hslToRGB(colorArray);
 			return this.arrayToColorObject(colorArray);
 		}
 		
@@ -94,16 +94,50 @@ var _u = Scene.Util = {
 	 	/*
 			[prefix, value, other]
 		*/
-		var _a1 = a1.split(/\(|\)/g);
-		if(_a1.length < 3)
+		var value = a1;
+		var _a1 = value.split("(");
+		var model = _a1[0];
+		value = value.replace(model + "(", "");
+		_a1 = value.split(")");
+		
+		var length = _a1.length;
+		if(length < 2)
 			return a1;
 		
-		var prefix = _a1[0] + "(";
+		value = "";
+		for(var i = 0; i < length - 2; ++i) {
+			value += _a1[i] +")";
+		}
+		value  += _a1[length - 2];
 		
-		var v = _a1[1].trim();
-		var suffix = ")";
-		var object = new PropertyObject(v, ",");
-		object.setModel(_a1[0]);
+		var prefix = model + "(";
+		var suffix = ")" + _a1[length - 1];
+		
+		var v = value.split(/\s*\,\s*|(\S*\([\s\S]*\))/g);
+		var arr = [];
+		length = v.length;
+		var s, s2, index = 0;
+		for(var i = 0; i < length; ++i) {
+			s = v[i];
+			if(typeof s === "undefined") {
+				++index;
+				continue;
+			} else if(s === "") {
+				continue;
+			}
+			s2 = arr[index];
+			arr[index] = s2 ? s2 + s : s;
+		}
+		length = arr.length;
+		
+
+		for(i = 0; i < length; ++i) {
+			arr[i] = this.stringToObject(arr[i]);
+		}
+		
+
+		var object = new PropertyObject(arr, ",");
+		object.setModel(model);
 		object.setPrefix(prefix);
 		object.setSuffix(suffix);
 		
@@ -172,7 +206,7 @@ var _u = Scene.Util = {
 		return obj;
 	 },
 	 dotObject: function(a1, a2, b1, b2) {
-	 var a1type = a1.getType();
+		 var a1type = a1.getType();
 	 	if(a1type === "color")
 	 		return this.dotColor(a1, a2, b1, b2);
 	 		
@@ -201,6 +235,9 @@ var _u = Scene.Util = {
 	 	공백을 기준으로 나눈다. 자동으로 양쪽 끝 여백은 매칭하지 않는다.
 		 ex 1px solid rgb(1, 2, 3) => ["1px", "solid", "rgb(1, 2, 3)"]
 	 */
+		if(typeof a1 !== "string")
+			return a1;
+			
 	 	var arr = a1.match(/(\S*\([\s\S]*\)|(\S+(\s*,\s*))|\S+)+/g);
 	 	var result, length;
 	 	if(arr.length != 1) {
@@ -213,7 +250,7 @@ var _u = Scene.Util = {
 	 		
 	 		return result;
 		} else if(a1.indexOf("(") != -1) {//괄호가 들어갈 때
- 			if((a1 = this.toBracketObject(a1)) && Color.models.indexOf(a1.getModel()) != -1) 
+ 			if((a1 = this.toBracketObject(a1)) && _c.models.indexOf(a1.getModel()) != -1) 
 	 			return this.toColorObject(a1);
 	 		
 	 		arr = a1.value;

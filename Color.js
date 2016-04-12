@@ -1,4 +1,4 @@
-var Color = Scene.Color = {
+var _c = Scene.Color = {
 	models : ["rgb", "rgba", "hsl", "hsla"],
 	nameToRGB : function(name){
 		var rgb = this.rgbCodes[name];
