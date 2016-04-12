@@ -129,8 +129,13 @@ var _u = Scene.Util = {
 		
 
 		var a1v = a1.value, a2v = a2.value;
-		
-
+		/*
+			컬러 모델이 다르면 내적이 불가능
+		*/
+		var a1m = a1.model, a2m = a2.model;
+		if(a1m !== a2m)
+			return this.dot(a1.toValue(), a2.toValue(), b1, b2);
+			
 		if(a1v.length === 3)
 			a1v[3] = 1;
 			
@@ -191,19 +196,15 @@ var _u = Scene.Util = {
 		
 		return object;
 	 },	 
-	 /*
-		 a1과 a2를 b1과 b2에 대해 내적한다.
-		 a2 *  b1 / (b1 + b2) + a1 * b2 / (b1 + b2)
-	 */
 	 stringToObject: function(a1) {
 	 /*
 	 	공백을 기준으로 나눈다. 자동으로 양쪽 끝 여백은 매칭하지 않는다.
 		 ex 1px solid rgb(1, 2, 3) => ["1px", "solid", "rgb(1, 2, 3)"]
 	 */
 	 	var arr = a1.match(/(\S*\([\s\S]*\)|(\S+(\s*,\s*))|\S+)+/g);
-	 	var result;
+	 	var result, length;
 	 	if(arr.length != 1) {
-		 	var length = arr.length;
+		 	length = arr.length;
 	 		for(var i = 0; i < length; ++i) {
 		 		arr[i] = this.stringToObject(arr[i]);
 	 		}
@@ -214,8 +215,15 @@ var _u = Scene.Util = {
 		} else if(a1.indexOf("(") != -1) {//괄호가 들어갈 때
  			if((a1 = this.toBracketObject(a1)) && Color.models.indexOf(a1.getModel()) != -1) 
 	 			return this.toColorObject(a1);
+	 		
+	 		arr = a1.value;
+	 		length = arr.length;
+	 		for(var i = 0; i < length; ++i) {
+		 		arr[i] = this.stringToObject(arr[i]);
+	 		}	
+	 		
 		}else if(a1.indexOf(",") != -1) { //구분자가 ","
-	 		var result = new PropertyObject(a1, ",");
+	 		result = new PropertyObject(a1, ",");
 	 		result.setType("array");
 	 		
 	 		return result;
@@ -224,6 +232,10 @@ var _u = Scene.Util = {
 	 	}
 	 	return a1;
 	},
+	 /*
+		 a1과 a2를 b1과 b2에 대해 내적한다.
+		 a2 *  b1 / (b1 + b2) + a1 * b2 / (b1 + b2)
+	 */
 	dot : function dot(a1, a2, b1, b2) {
 
 		// PropertyObject일 경우 Object끼리 내적을 한다.

@@ -23,11 +23,12 @@ var defaultProperties = {
 }
 
 var Frame = Scene.Frame = function Frame(sceneItem, time) {
-	this.sceneItem = sceneItem;
-	this.transforms = {};
-	this.properties = {};
-	this.filters = {};
-	this.time = time;
+	var frame = this;
+	frame.sceneItem = sceneItem;
+	frame.transforms = {};
+	frame.properties = {};
+	frame.filters = {};
+	frame.time = time;
 }
 var framePrototype = Frame.prototype;
 defineAll(framePrototype, "property", "properties");
@@ -48,10 +49,11 @@ var setPropertyFunction = function(name, names) {
 		return this;
 	});
 	framePrototype[setProperties] = function(properties) {
+		var frame = this;
 		for(var property in properties) {
-			this[setProperty](property, properties[property]);
+			frame[setProperty](property, properties[property]);
 		}
-		return this;
+		return frame;
 	}
 	framePrototype[removeProperty] = addFunction(framePrototype.removeProperty, function(property) {
 		var sceneItem = this.getSceneItem();
@@ -76,14 +78,14 @@ framePrototype.copy = function() {
 }
 //다른 프레임과 합치다.
 framePrototype.merge = function(frame) {
-
+	var frame = this;
 	var properties = frame.properties;
 	var transforms = frame.transforms;
 	var filters = frame.filters;
 	
-	this.setProperties(properties);
-	this.setTransforms(transforms);
-	this.setFilters(filters);
+	frame.setProperties(properties);
+	frame.setTransforms(transforms);
+	frame.setFilters(filters);
 
 }
 

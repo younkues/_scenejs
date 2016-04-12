@@ -13,19 +13,23 @@
 
 
 <style>
-#test {
+.box {
 	width: 100px;
 	height: 100px;
+}
+#test {
 	background: #eee;
 }
 #test_hsl {
 	background: hsl(0, 30%, 30%);
-	width: 100px;
-	height: 100px;
 	
 }
 #test_hsl:hover {
 	background:hsl(50, 30%, 30%);
+}
+
+#gra {
+	background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%)
 }
 </style>
 
@@ -33,8 +37,9 @@
             
 <body>
 
-<div id="test"></div>
-<div id="test_hsl"></div>
+<div id="test" class="box"></div>
+<div id="test_hsl" class="box"></div>
+<div id="gra" class="box"></div>
 </body>
 
 <script>
@@ -43,5 +48,9 @@ var item = scene.addElement(test);
 item.setProperty(4, "background", "rgb(0,0,0)");
 var item2 = scene.addElement(test_hsl);
 item2.setProperty(4, "background", "hsl(360,1,1)");
+
+var item3 = scene.addElement(gra);
+item3.setProperty(0, "background", "linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%)");
+item3.setProperty(4, "background", "linear-gradient(360deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%)");
 scene.play();
 </script>
