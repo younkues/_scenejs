@@ -94,42 +94,43 @@ var _u = Scene.Util = {
 	 	/*
 			[prefix, value, other]
 		*/
-		var value = a1;
-		var _a1 = value.split("(");
+		var _a1 = a1.split("(");
 		var model = _a1[0];
-		value = value.replace(model + "(", "");
-		_a1 = value.split(")");
+		_a1 = a1;
+		_a1 = _a1.replace(model + "(", "").split(")");
 		
 		var length = _a1.length;
 		if(length < 2)
 			return a1;
+			
+			
+		var prefix = model +"(", suffix;
+		var value = "", arr = [];
+		var _value, arrValue, index = 0;
 		
-		value = "";
 		for(var i = 0; i < length - 2; ++i) {
 			value += _a1[i] +")";
 		}
 		value  += _a1[length - 2];
 		
-		var prefix = model + "(";
-		var suffix = ")" + _a1[length - 1];
+
+		suffix = ")" + _a1[length - 1];
 		
-		var v = value.split(/\s*\,\s*|(\S*\([\s\S]*\))/g);
-		var arr = [];
-		length = v.length;
-		var s, s2, index = 0;
-		for(var i = 0; i < length; ++i) {
-			s = v[i];
-			if(typeof s === "undefined") {
+		value = value.split(/\s*\,\s*|(\S*\([\s\S]*\))/g);
+		length = value.length;
+
+		for(i = 0; i < length; ++i) {
+			_value = value[i];
+			if(typeof _value === "undefined") {
 				++index;
 				continue;
-			} else if(s === "") {
+			} else if(_value === "") {
 				continue;
 			}
-			s2 = arr[index];
-			arr[index] = s2 ? s2 + s : s;
+			arrValue = arr[index];
+			arr[index] = arrValue ? arrValue + _value : _value;
 		}
 		length = arr.length;
-		
 
 		for(i = 0; i < length; ++i) {
 			arr[i] = this.stringToObject(arr[i]);
