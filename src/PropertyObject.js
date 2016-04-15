@@ -33,4 +33,4 @@ propertyObjectPrototype.join = function() {
 
 propertyObjectPrototype.toValue = function() {
 	return this.prefix + this.join() + this.suffix;
-}
+};
