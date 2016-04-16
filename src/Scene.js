@@ -13,11 +13,13 @@ var scenePrototype = Scene.prototype;
 defineGetterSetter(scenePrototype, "playSpeed");
 
 scenePrototype.addItem = function(id, sceneItem) {
+	if(this.sceneItems[id])
+		return;
 	this.sceneItems[id] = sceneItem;
 	return sceneItem;
 }
 scenePrototype.addElement = function(id, element) {
-	var length = attributes.length;
+	var length = arguments.length;
 	if(length === 0) {
 		return;
 	} else if(length === 1) {
@@ -29,18 +31,21 @@ scenePrototype.addElement = function(id, element) {
 			id = id ? id : "item" + parseInt(Math.random() * 10000);
 			element.setAttribute("item-id", id);
 		}
-	
+		else if(!id)
+			id = _id;
 	var item = new SceneItem(element);
 	return this.addItem(id, item);
 }
 scenePrototype.synchronize = function synchronize(time, isPlay) {
 	var sceneItems = this.sceneItems;
 	var item;
-	var itemsLength = sceneItems.length;
+	var itemsLength = 0;
 	var finishCount = 0;
 		
-	for(var i = 0; i < itemsLength; ++i) {
-		item = sceneItems[i];
+	for(var id in sceneItems) {
+		++itemsLength;
+		
+		item = sceneItems[id];
 		item.synchronize(time, isPlay);
 		if(item.isFinish())
 			++finishCount;

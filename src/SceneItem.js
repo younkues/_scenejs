@@ -111,7 +111,9 @@ var getNowFrameByProperty = function(sceneItem, time, property, prevFunc, nextFu
 		return;
 		
 	var prevValue = prevFrame[func](property);
-	
+	if(typeof prevValue === "undefined")
+		return;
+		
 	if(!nextFrame)
 		return prevValue;
 		
@@ -165,14 +167,18 @@ var getPrevFrameByProperty = function(sceneItem, time, property, func) {
 			value = "0";
 		sceneItem.setProperty(DEFAULT_LAYOUT_TIME, property, value);
 	}
+/*
 	else if(func === "getFilter") {
 		value = defaultProperties[property];
-		sceneItem.setFilter(DEFAULT_LAYOUT_TIME, property, value);
+		if(typeof value !== "undefined")
+			sceneItem.setFilter(DEFAULT_LAYOUT_TIME, property, value);
 	}
 	else if(func === "getTransform") {
 		value = defaultProperties[property];
-		sceneItem.setTransform(DEFAULT_LAYOUT_TIME, property, value);
+		if(typeof value !== "undefined")
+			sceneItem.setTransform(DEFAULT_LAYOUT_TIME, property, value);
 	}
+*/
 	return sceneItem.getFrame(DEFAULT_LAYOUT_TIME);
 }
 /*
@@ -259,6 +265,8 @@ sceneItemPrototype.getNowFrame = function(time) {
 	for(var i = 0; i < transformNames.length; ++i) {
 		transform = transformNames[i];
 		value = this.getNowFrameByTransform(time, transform);
+		if(typeof value === "undefined")
+			continue;
 		frame.setTransform(transform, value);
 	}
 	for(var i = 0; i < filterNames.length; ++i) {
