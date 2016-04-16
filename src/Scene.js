@@ -1,7 +1,7 @@
 
 
 var Scene = function Scene() {
-	this.sceneItems = [];
+	this.sceneItems = {};
 	this.startTime = this.prevTime = this.nowTime = 0;
 	this.isStart = this.isFinish = this.isPause = false;
 	this.playSpeed = 1;
@@ -13,10 +13,14 @@ var scenePrototype = Scene.prototype;
 defineGetterSetter(scenePrototype, "playSpeed");
 
 scenePrototype.addItem = function(sceneItem) {
-	this.sceneItems.push(sceneItem);
+	this.sceneItems[] = sceneItem;
 	return sceneItem;
 }
 scenePrototype.addElement = function(element) {
+	var id = element.getAttribute("item-id");
+	if(!id)
+		id = "item" + parseInt(Math.random() * 10000);
+	element.setAttribute("item-id", id);
 	var item = new SceneItem(element);
 	return this.addItem(item);
 }
