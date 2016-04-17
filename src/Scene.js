@@ -14,12 +14,14 @@ defineGetterSetter(scenePrototype, "playSpeed");
 
 scenePrototype.addItem = function(id, sceneItem) {
 	if(this.sceneItems[id])
-		return;
+		return this.sceneItems[id];
+		
 	this.sceneItems[id] = sceneItem;
 	return sceneItem;
 }
 scenePrototype._addElement = function(elements) {
 	var length = elements.length, i;
+
 	var arr = [];
 	for( i = 0; i < length; ++i) {
 		arr[i] = this.addElement(elements[i]);
@@ -43,15 +45,25 @@ scenePrototype.addElement = function(id, element) {
 			return this._addElement(element);
 		}
 	}
-		_id = element.getAttribute("item-id");
+		_id = element.getAttribute(ATTR_ITEM_ID);
 		if(!_id) {
 			id = id ? id : "item" + parseInt(Math.random() * 10000);
-			element.setAttribute("item-id", id);
+			element.setAttribute(ATTR_ITEM_ID, id);
 		}
 		else if(!id)
 			id = _id;
 	var item = new SceneItem(element);
 	return this.addItem(id, item);
+}
+scenePrototype.getItem = function(id) {
+	var type = typeof id;
+	try {
+		if(type === "string")
+			return this.sceneItems[id];
+		else 
+			return this.sceneItems[id.getAttribute(ATTR_ITEM_ID)];
+	} catch(e) {}
+	return;
 }
 scenePrototype.synchronize = function synchronize(time, isPlay) {
 	var sceneItems = this.sceneItems;
