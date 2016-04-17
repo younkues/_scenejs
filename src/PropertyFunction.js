@@ -1,6 +1,6 @@
 (function() {
 	var sp = SceneItem.prototype;
-	var properties = ["opacity", "width", "height"];
+	var properties = ["opacity", "width", "height","left", "top"];
 	l = properties.length;
 	for(var i = 0; i < l; ++i) {
 		var property = properties[i];
@@ -11,7 +11,7 @@
 		})(property);
 	}	
 	
-	var transformProperties = ["scale", "translate", "rotate"];
+	var transformProperties = ["scale", "translate", "rotate", "skew", "translateX", "translateY"];
 	l = transformProperties.length;
 
 	for(var i = 0; i < l; ++i) {

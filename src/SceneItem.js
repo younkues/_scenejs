@@ -97,7 +97,12 @@ addPropertyFunction("property", "properties");
 addPropertyFunction("transform", "transforms");
 addPropertyFunction("filter", "filters");
 
-
+sceneItemPrototype.setDefaultTransform = function(time, property) {
+	
+}
+sceneItemPrototype.setDefaultFilter = function(time, property) {
+	
+}
 /*
 	getNowFrameByProperty, getNowFrameByTransform, getNowFrameByFilter
 	time에 해당하는 Frame을 가져온다.
