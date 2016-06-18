@@ -252,12 +252,14 @@ sceneItemPrototype.getNowFrame = function(time) {
 	var frame = new Frame(self, time);
 	var value, property, transform, filter;
 	var _roles = _roles, length = _roles.length;
-	
+	var capital;
 	for(var i = 0; i < length; ++i) {
-		vNames = self[_roles[i]["capitalize"]];
+		capital = _roles[i]["capitalize"];
+		vNames = self[capital];
 		var nameLength = vName.length;
 		for(var j = 0; j < nameLength; ++j) {
-			
+			value = self["getNowFrameBy" + capital]time, property);
+			frame["set" + capital](property, value);	
 		}
 	}
 /*

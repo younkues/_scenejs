@@ -18,8 +18,11 @@ Scene.addRole = function(name, plural) {
 	_roles.push({"name":name, "plural":plural, "capitilize":camel(" " + name)]);
 	addPropertyFunction(name, plural);
 	addGetFramePropertyFunction(name);
+	setPropertyFunction(name, plural);
 }
-
+Scene.addRule = function(name, func, preOrSuf) {
+	
+}
 
 var scenePrototype = Scene.prototype;
 
