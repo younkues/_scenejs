@@ -1,10 +1,23 @@
 
-
 var Scene = function Scene() {
 	this.sceneItems = {};
 	this.startTime = this.prevTime = this.nowTime = 0;
 	this.isStart = this.isFinish = this.isPause = false;
 	this.playSpeed = 1;
+}
+var _roles = Scene._roles = [
+	["property","properties"],
+	["transform", "trnasforms"],
+	["filter", "filters"]
+	];
+
+
+Scene.addRole = function(name, plural) {
+	var _roles = _roles;
+
+	_roles.push({"name":name, "plural":plural, "capitilize":camel(" " + name)]);
+	addPropertyFunction(name, plural);
+	addGetFramePropertyFunction(name);
 }
 
 
@@ -137,6 +150,7 @@ scenePrototype.stop = function stop() {
 	this.isFinish = true;
 	this.isPause = false;
 }
+
 scenePrototype.addTimingFunction = function addTimingFunction(startTime, endTime, curveArray) {
 	var sceneItems = this.sceneItems;
 	var item;

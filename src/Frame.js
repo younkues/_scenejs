@@ -31,8 +31,8 @@ var Frame = Scene.Frame = function Frame(sceneItem, time) {
 	_frame.time = time;
 }
 var framePrototype = Frame.prototype;
-defineAll(framePrototype, "property", "properties");
 defineAll(framePrototype, "sceneItem");
+defineAll(framePrototype, "property", "properties");
 defineAll(framePrototype, "transform", "transforms");
 defineAll(framePrototype, "filter", "filters");
 

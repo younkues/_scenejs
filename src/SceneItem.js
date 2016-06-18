@@ -1,20 +1,27 @@
 var SceneItem = Scene.SceneItem = function(element) {
-	this.element = element;
-	this.time = 0;
-	this.times = [];
-	this.frames = {};// 프레임의 모음
-	this.transformNames =[]; // 트랜스폼이 적용된 이름들
-	this.propertyNames = [];
-	this.filterNames = [];
-	this.timingFunctions = [];
-	this.nowTimingFunction;
-	this.animateFunction;	
+	var self = this;
+	self.element = element;
+	self.time = 0;
+	self.times = [];
+	self.frames = {};// 프레임의 모음
 	
-	this.element = element;
-	this.newFrame(DEFAULT_LAYOUT_TIME);
+	
+	var _roles = _roles, length = _roles.length;
+	for(var i = 0; i < length; ++i) {
+		self[_roles + "Names"] = []; //속성의 이름을 가진 배열 초기화
+	}
+	
+	self.timingFunctions = [];
+	self.nowTimingFunction;
+	self.animateFunction;	
+	
+	self.element = element;
+	self.newFrame(DEFAULT_LAYOUT_TIME);
+	
+	/* !!수정필요 View 속성 Rule로 초기화 필요*/
 	if(element) {
 		element.setAttribute("role", "item");
-		this.addStyleToFrame(DEFAULT_LAYOUT_TIME);
+		self.addStyleToFrame(DEFAULT_LAYOUT_TIME);
 	}
 }
 var sceneItemPrototype = SceneItem.prototype;
@@ -93,9 +100,6 @@ var addPropertyFunction = function(name, names) {
 		return false;
 	}
 }
-addPropertyFunction("property", "properties");
-addPropertyFunction("transform", "transforms");
-addPropertyFunction("filter", "filters");
 
 sceneItemPrototype.setDefaultTransform = function(time, property) {
 	
@@ -172,18 +176,7 @@ var getPrevFrameByProperty = function(sceneItem, time, property, func) {
 			value = "0";
 		sceneItem.setProperty(DEFAULT_LAYOUT_TIME, property, value);
 	}
-/*
-	else if(func === "getFilter") {
-		value = defaultProperties[property];
-		if(typeof value !== "undefined")
-			sceneItem.setFilter(DEFAULT_LAYOUT_TIME, property, value);
-	}
-	else if(func === "getTransform") {
-		value = defaultProperties[property];
-		if(typeof value !== "undefined")
-			sceneItem.setTransform(DEFAULT_LAYOUT_TIME, property, value);
-	}
-*/
+
 	return sceneItem.getFrame(DEFAULT_LAYOUT_TIME);
 }
 /*
@@ -221,9 +214,6 @@ function getFramePropertyFunction(name) {
 	}
 }
 
-getFramePropertyFunction("property");
-getFramePropertyFunction("transform");
-getFramePropertyFunction("filter");
 
 /*
 	Element의 현재 Style을 해당 time의 Frame에 저장한다.
@@ -256,12 +246,21 @@ sceneItemPrototype.getTimeIndex = function(time) {
 	Frame과 Frame 사이를 시간에 대해 내적해서 얻은 Frame을 얻어냄
 */
 sceneItemPrototype.getNowFrame = function(time) {
-	var times = this.times;
-	var propertyNames = this.propertyNames;
-	var transformNames = this.transformNames;
-	var filterNames = this.filterNames;
-	var frame = new Frame(this, time);
+	var self = this;
+	var times = self.times;
+	var names, vNames;
+	var frame = new Frame(self, time);
 	var value, property, transform, filter;
+	var _roles = _roles, length = _roles.length;
+	
+	for(var i = 0; i < length; ++i) {
+		vNames = self[_roles[i]["capitalize"]];
+		var nameLength = vName.length;
+		for(var j = 0; j < nameLength; ++j) {
+			
+		}
+	}
+/*
 	for(var i = 0; i < propertyNames.length; ++i) {
 		property = propertyNames[i];
 		value = this.getNowFrameByProperty(time, property);
@@ -279,6 +278,7 @@ sceneItemPrototype.getNowFrame = function(time) {
 		value = this.getNowFrameByFilter(time, filter);
 		frame.setFilter(filter, value);
 	}
+*/
 	return frame;
 }
 /*
