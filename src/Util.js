@@ -304,5 +304,39 @@ var _u = Scene.Util = {
 		
 		var unit = v1.unit || v2.unit || "";	
 		return v + unit.trim();
+	},
+	/*
+		add Function 
+		함수를 추가한다. 점두사 접미사에 붙힐 수 있거나 새로운 함수를 만들 수 있다.
+	*/
+	addFunction: function (target, name, func, opt) {
+		isInFunc = !!target[name];
+		if(!isInFunc) {
+			target[name] = func;
+			return;
+		}
+		var newfunc = (function(_func, func, chkfunc, _isRV, isRV) {
+			return function() {
+				var args = arguments;
+				var _rv, rv;
+				_rv = _func.apply(this, args);
+				if(chkfunc && chkfunc(_rv) || !chkfunc) {
+					rv = func.apply(this, args);
+				}
+					
+				
+				if(_isRV)
+					return _rv;
+				else
+					return rv;
+			};
+		});
+		var _func = target[name];
+		var chkfunc = opt.checkFunction;
+		var isRV = opt.isReturnValue;
+		if(opt.isPrefix)
+			target[name] = newfunc(func, _func, chkfunc, isRV, !isRV);
+		else
+			target[name] = newfunc(_func, , func, chkfunc, !isRV, isRV);
 	}
 };

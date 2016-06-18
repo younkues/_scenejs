@@ -5,11 +5,7 @@ var Scene = function Scene() {
 	this.isStart = this.isFinish = this.isPause = false;
 	this.playSpeed = 1;
 }
-var _roles = Scene._roles = [
-	["property","properties"],
-	["transform", "trnasforms"],
-	["filter", "filters"]
-	];
+var _roles = Scene._roles = [];
 
 
 Scene.addRole = function(name, plural) {
@@ -19,9 +15,6 @@ Scene.addRole = function(name, plural) {
 	addPropertyFunction(name, plural);
 	addGetFramePropertyFunction(name);
 	setPropertyFunction(name, plural);
-}
-Scene.addRule = function(name, func, preOrSuf) {
-	
 }
 
 var scenePrototype = Scene.prototype;

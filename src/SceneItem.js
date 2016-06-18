@@ -339,19 +339,6 @@ sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
 		/*Error on TimingFunction*/
 	}
 	
-	var frame = this.getNowFrame(time);
-
-
-	if(this.animateFunction)
-		this.animateFunction(time);
-		
-		
-	var cssText = frame.getCSSText();
-	
-	if(!this.element)
-		return false;
-	
-	this.element.style.cssText = cssText;
 	
 	return true;
 }
