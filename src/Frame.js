@@ -75,11 +75,11 @@ framePrototype.copy = function() {
 framePrototype.merge = function(frame) {
 	
 	var _frame = this;
-	var _roles = _roles, length = _roles.length;
+	var _roles = Scene._roles, length = _roles.length;
 	var properties, capital;
 	for(var i = 0; i < length; ++i) {
-		properties = frame[_roles[i]["piral"]];
-		capital = camelize(" " + _roles[i]["piral"]);
+		capital = camelize(" " + _roles[i]["plural"]);
+		properties = frame[_roles[i]["plural"]];
 		_frame["set" + capital](properties);
 	}
 }

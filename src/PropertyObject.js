@@ -29,7 +29,7 @@ propertyObjectPrototype.join = function() {
 			s = true;
 		}
 		return rv;
-	}
+	};
 
 propertyObjectPrototype.toValue = function() {
 	return this.prefix + this.join() + this.suffix;

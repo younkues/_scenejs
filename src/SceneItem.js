@@ -6,9 +6,9 @@ var SceneItem = Scene.SceneItem = function(element) {
 	self.frames = {};// 프레임의 모음
 	
 	
-	var _roles = _roles, length = _roles.length;
+	var _roles = Scene._roles, length = _roles.length;
 	for(var i = 0; i < length; ++i) {
-		self[_roles + "Names"] = []; //속성의 이름을 가진 배열 초기화
+		self[_roles[i]["name"] + "Names"] = []; //속성의 이름을 가진 배열 초기화
 	}
 	
 	self.timingFunctions = [];
@@ -251,12 +251,12 @@ sceneItemPrototype.getNowFrame = function(time) {
 	var names, vNames;
 	var frame = new Frame(self, time);
 	var value
-	var _roles = _roles, length = _roles.length;
+	var _roles = Scene._roles, length = _roles.length;
 	var capital;
 	for(var i = 0; i < length; ++i) {
 		capital = _roles[i]["capitalize"];
-		vNames = self[capital];
-		var nameLength = vName.length;
+		vNames = self[_roles[i]["name"] + "Names"];
+		var nameLength = vNames.length;
 		for(var j = 0; j < nameLength; ++j) {
 			value = self["getNowFrameBy" + capital](time, property);
 			frame["set" + capital](property, value);	
