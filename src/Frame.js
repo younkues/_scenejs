@@ -32,9 +32,6 @@ var Frame = Scene.Frame = function Frame(sceneItem, time) {
 }
 var framePrototype = Frame.prototype;
 defineAll(framePrototype, "sceneItem");
-defineAll(framePrototype, "property", "properties");
-defineAll(framePrototype, "transform", "transforms");
-defineAll(framePrototype, "filter", "filters");
 
 var setPropertyFunction = function(name, names) {
 	var setProperty = camelize("set " + name);
@@ -64,9 +61,7 @@ var setPropertyFunction = function(name, names) {
 	});
 
 }
-setPropertyFunction("property", "properties");
-setPropertyFunction("transform", "transforms");
-setPropertyFunction("filter", "filters");
+
 
 
 // 프레임 복사본을 만든다.
@@ -78,77 +73,13 @@ framePrototype.copy = function() {
 }
 //다른 프레임과 합치다.
 framePrototype.merge = function(frame) {
+	
 	var _frame = this;
-	var properties = frame.properties;
-	var transforms = frame.transforms;
-	var filters = frame.filters;
-	
-	_frame.setProperties(properties);
-	_frame.setTransforms(transforms);
-	_frame.setFilters(filters);
-
-}
-
-
-
-framePrototype.getCSSObject = function() {
-	var transforms = this.transforms, filters = this.filters, properties = this.properties;
-	var value;
-	var cssObject = {}, cssTransform = "", cssFilter = "";
-	/*transform css*/
-	for(var transformName in transforms) {
-		value = transforms[transformName];
-		try {
-			if(value instanceof Object)
-				value = value.toValue();
-			cssTransform += transformName + "(" + value + ")";
-			cssTransform += " ";
-		} catch(e) {}
+	var _roles = _roles, length = _roles.length;
+	var properties, capital;
+	for(var i = 0; i < length; ++i) {
+		properties = frame[_roles[i]["piral"]];
+		capital = camelize(" " + _roles[i]["piral"]);
+		_frame["set" + capital](properties);
 	}
-	cssObject["transform"] = cssTransform;
-	/*filter css*/
-	for(var filterName in filters) {
-		value = filters[filterName];
-		try {
-			if(value instanceof Object)
-				value = value.toValue();
-			cssFilter += filterName + "(" + value + ")";
-			cssFilter += " ";
-		} catch(e){}
-	}
-	cssObject["filter"] = cssFilter;
-	/*property css*/
-	for(var propertyName in properties) {
-		value = properties[propertyName];
-		try {
-			if(value instanceof Object)
-				value = value.toValue();
-			cssObject[propertyName] = value;
-		} catch(e) {}
-	}
-	return cssObject;
-}
-/*
-	크로스 브라우징 접두사를 추가시켜준다.
-*/
-var convertCrossBrowserCSSObject = function(cssObject, property) {
-	cssObject["-moz-" + property] =
-	cssObject["-ms-" + property] =
-	cssObject["-o-" + property] =
-	cssObject["-webkit-" + property] = cssObject[property];
-}
-/*
-	CSSObject를 cssText로 바꿔준다.
-*/
-framePrototype.getCSSText = function() {
-	var cssObject = this.getCSSObject();
-	var cssText = "", value, property;
-	convertCrossBrowserCSSObject(cssObject, "transform");
-	convertCrossBrowserCSSObject(cssObject, "filter");
-	
-	for(property in cssObject) {
-		cssText += property + ":" + cssObject[property] +";";
-	}
-
-	return cssText;
 }

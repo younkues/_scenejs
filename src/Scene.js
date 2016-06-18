@@ -9,12 +9,13 @@ var _roles = Scene._roles = [];
 
 
 Scene.addRole = function(name, plural) {
-	var _roles = _roles;
+	var _roles = Scene._roles;
 
-	_roles.push({"name":name, "plural":plural, "capitilize":camel(" " + name)]);
+	_roles.push({"name":name, "plural":plural, "capitilize":camelize(" " + name)});
 	addPropertyFunction(name, plural);
 	addGetFramePropertyFunction(name);
 	setPropertyFunction(name, plural);
+	defineAll(framePrototype, name, plural);
 }
 
 var scenePrototype = Scene.prototype;

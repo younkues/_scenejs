@@ -337,6 +337,6 @@ var _u = Scene.Util = {
 		if(opt.isPrefix)
 			target[name] = newfunc(func, _func, chkfunc, isRV, !isRV);
 		else
-			target[name] = newfunc(_func, , func, chkfunc, !isRV, isRV);
+			target[name] = newfunc(_func , func, chkfunc, !isRV, isRV);
 	}
 };

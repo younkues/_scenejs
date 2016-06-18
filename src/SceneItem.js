@@ -201,7 +201,7 @@ var getNextFrameByProperty = function(sceneItem, time, property, func) {
 	}
 	return;
 }
-function getFramePropertyFunction(name) {
+function addGetFramePropertyFunction(name) {
 	var Property = camelize(" " + name);
 	sceneItemPrototype["getNowFrameBy" + Property] = function(time, property) {
 		return getNowFrameByProperty(this, time, property, "getPrevFrameBy" + Property, "getNextFrameBy" + Property, "get" + Property);
@@ -250,7 +250,7 @@ sceneItemPrototype.getNowFrame = function(time) {
 	var times = self.times;
 	var names, vNames;
 	var frame = new Frame(self, time);
-	var value, property, transform, filter;
+	var value
 	var _roles = _roles, length = _roles.length;
 	var capital;
 	for(var i = 0; i < length; ++i) {
@@ -258,7 +258,7 @@ sceneItemPrototype.getNowFrame = function(time) {
 		vNames = self[capital];
 		var nameLength = vName.length;
 		for(var j = 0; j < nameLength; ++j) {
-			value = self["getNowFrameBy" + capital]time, property);
+			value = self["getNowFrameBy" + capital](time, property);
 			frame["set" + capital](property, value);	
 		}
 	}
