@@ -1,10 +1,16 @@
 /*
 	Frame
-	TransitionFrame for Transition
-	TemporaryFrame for execute Query or 
-	
 */
-var _defaultProperties = Frame.defaultProperties = {
+
+var Frame = Scene.Frame = function Frame(sceneItem, time) {
+	var _frame = this;
+	_frame.sceneItem = sceneItem;
+	_frame.transforms = {};
+	_frame.properties = {};
+	_frame.filters = {};
+	_frame.time = time;
+}
+var _defaultProperties = Frame._defaultProperties = {
 	"translate" : "0, 0",
 	"opacity" : 1,
 	"scale" : "1, 1",
@@ -22,14 +28,7 @@ var _defaultProperties = Frame.defaultProperties = {
 	
 }
 
-var Frame = Scene.Frame = function Frame(sceneItem, time) {
-	var _frame = this;
-	_frame.sceneItem = sceneItem;
-	_frame.transforms = {};
-	_frame.properties = {};
-	_frame.filters = {};
-	_frame.time = time;
-}
+
 var framePrototype = Frame.prototype;
 defineAll(framePrototype, "sceneItem");
 
