@@ -4,11 +4,11 @@ var SceneItem = Scene.SceneItem = function(element) {
 	self.time = 0;
 	self.times = [];
 	self.frames = {};// 프레임의 모음
-	
+	self.names = {};
 	
 	var _roles = Scene._roles, length = _roles.length;
 	for(var i = 0; i < length; ++i) {
-		self[_roles[i]["name"] + "Names"] = []; //속성의 이름을 가진 배열 초기화
+		self.names[_roles[i]["name"]] = []; //속성의 이름을 가진 배열 초기화
 	}
 	
 	self.timingFunctions = [];
@@ -37,10 +37,11 @@ var addPropertyFunction = function(name, names) {
 	/*
 		property 이름을 추가한다.
 	*/
-	sceneItemPrototype[addPropertyName] = function(name) {
-		if(this[propertyNames].indexOf(name) != -1)
+	sceneItemPrototype[addPropertyName] = function(propertyName) {
+
+		if(this.names[name].indexOf(propertyName) != -1)
 			return;
-		this[propertyNames].push(name);	
+		this.names[name].push(propertyName);	
 		
 		return this;
 	}
@@ -75,12 +76,12 @@ var addPropertyFunction = function(name, names) {
 		property가 어느 시간에도 없을 때 제거한다.
 	*/
 	sceneItemPrototype[removeProperty] = function(property) {
-		var index = this[propertyNames].indexOf(property);
+		var index = this.names[name].indexOf(property);
 		if(index == -1)
 			return this;
 		
 		if(!this[isInProperty](property))
-			this.propertyNames.splice(index, 1);
+			this.names[name].splice(index, 1);
 			
 		return this;
 	}
@@ -255,7 +256,7 @@ sceneItemPrototype.getNowFrame = function(time) {
 	var capital;
 	for(var i = 0; i < length; ++i) {
 		capital = _roles[i]["capitalize"];
-		vNames = self[_roles[i]["name"] + "Names"];
+		vNames = self.names[_roles[i]["name"]];
 		var nameLength = vNames.length;
 		for(var j = 0; j < nameLength; ++j) {
 			property = vNames[j];
