@@ -250,7 +250,7 @@ sceneItemPrototype.getNowFrame = function(time) {
 	var times = self.times;
 	var names, vNames;
 	var frame = new Frame(self, time);
-	var value
+	var value, property;
 	var _roles = Scene._roles, length = _roles.length;
 	var capital;
 	for(var i = 0; i < length; ++i) {
@@ -258,6 +258,7 @@ sceneItemPrototype.getNowFrame = function(time) {
 		vNames = self[_roles[i]["name"] + "Names"];
 		var nameLength = vNames.length;
 		for(var j = 0; j < nameLength; ++j) {
+			property = vNames[j];
 			value = self["getNowFrameBy" + capital](time, property);
 			frame["set" + capital](property, value);	
 		}
@@ -340,7 +341,7 @@ sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
 	}
 	
 	
-	return true;
+	return time;
 }
 
 

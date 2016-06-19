@@ -4,7 +4,7 @@
 	TemporaryFrame for execute Query or 
 	
 */
-var defaultProperties = {
+var _defaultProperties = Frame.defaultProperties = {
 	"translate" : "0, 0",
 	"opacity" : 1,
 	"scale" : "1, 1",
