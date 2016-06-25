@@ -22,7 +22,10 @@ Scene.addRole = function(name, plural) {
 var scenePrototype = Scene.prototype;
 
 defineGetterSetter(scenePrototype, "playSpeed");
-
+scenePrototype.newItem = function(id) {
+	var item = new SceneItem();
+	return this.addItem(id, item);
+}
 scenePrototype.addItem = function(id, sceneItem) {
 	if(this.sceneItems[id])
 		return this.sceneItems[id];
@@ -49,7 +52,11 @@ scenePrototype.addElement = function(id, element) {
 		
 		var type = typeof element;
 		
-		if(type === "string") {
+		if(type === "undefined") {
+			var item = new SceneItem();
+			return this.addItem(id, item);
+		}
+		else if(type === "string") {
 			return this._addElement(document.querySelectorAll(element));
 		}
 		else if(element instanceof Array || element instanceof NodeList) {

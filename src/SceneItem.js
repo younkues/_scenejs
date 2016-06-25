@@ -25,6 +25,7 @@ var SceneItem = Scene.SceneItem = function(element) {
 	}
 }
 var sceneItemPrototype = SceneItem.prototype;
+defineGetterSetter(sceneItemPrototype, "element");
 
 var addPropertyFunction = function(name, names) {
 	var setProperty = camelize("set " + name);
@@ -32,7 +33,6 @@ var addPropertyFunction = function(name, names) {
 	var removeProperty = camelize("remove " + names);
 	var addPropertyName = camelize("add " + name) + "Name";
 	var isInProperty = camelize("isIn " + name);
-	var propertyNames = name + "Names";
 
 	/*
 		property 이름을 추가한다.

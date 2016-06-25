@@ -241,7 +241,7 @@ var _u = Scene.Util = {
 			
 	 	var arr = a1.match(/(\S*\([\s\S]*\)|(\S+(\s*,\s*))|\S+)+/g);
 	 	var result, length;
-	 	if(arr.length != 1) {
+	 	if(arr && arr.length != 1) {
 		 	length = arr.length;
 	 		for(var i = 0; i < length; ++i) {
 		 		arr[i] = this.stringToObject(arr[i]);

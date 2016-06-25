@@ -6,6 +6,7 @@ var _synchronize = sceneItemPrototype.synchronize;
 sceneItemPrototype.synchronize = (function(_synchronize) {
 	return function(time) {
 	var time = _synchronize.call(this, time);
+	
 	if(time === false)
 		return false;
 	var frame = this.getNowFrame(time);
