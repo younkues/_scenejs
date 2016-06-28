@@ -4,6 +4,11 @@ var Scene = function Scene() {
 	this.startTime = this.prevTime = this.nowTime = 0;
 	this.isStart = this.isFinish = this.isPause = false;
 	this.playSpeed = 1;
+	this.playCount = 0;
+	this.iterationCount = 1;
+	/*iterationCount = 1, 2, 3, 4, infinite*/
+	this.direction = "normal";
+	/*normal, reverse, alternate, alternate-reverse*/
 }
 var _roles = Scene._roles = [];
 
@@ -22,6 +27,10 @@ Scene.addRole = function(name, plural) {
 var scenePrototype = Scene.prototype;
 
 defineGetterSetter(scenePrototype, "playSpeed");
+defineGetterSetter(scenePrototype, "playCount");
+defineGetterSetter(scenePrototype, "iterationCount");
+defineGetterSetter(scenePrototype, "direction");
+
 scenePrototype.newItem = function(id) {
 	var item = new SceneItem();
 	return this.addItem(id, item);
