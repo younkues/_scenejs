@@ -120,9 +120,22 @@ scenePrototype.synchronize = function synchronize(time, isPlay) {
 	try {
 		if(this.animateFunction)
 			this.animateFunction(time, isFinish);
-	} catch(e) {}
-	if(isFinish)
+	} catch(e) {
+		//No Function
+	} 
+	
+	if(isFinish) {
+		this.isStart = false;
+		this.isFinish = true;
+		this.isPause = false;
+		var ic = this.getIterationCount(), pc = this.getPlayCount();
+		this.setPlayCount(++pc);
+		
+		if(ic === "infinite" || pc < ic) {
+			this.play();	
+		}
 		return false;
+	}
 	
 	return true;
 };
@@ -150,6 +163,9 @@ scenePrototype.play = function play (){
 	console.log("PLAY");
 	this.startTime = this.prevTime = Date.now();
 	this.nowTime = this.spendTime = 0;
+	
+	
+	this.setPlayCount(0);
 
 	this.isStart = true;
 	this.isFinish = false;
