@@ -335,14 +335,22 @@ sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
 		}
 	}
 	
+	
 	try {
 		time = nowTimingFunction && nowTimingFunction.cubicBezier(time) || time;
 	} catch(e) {
 		/*Error on TimingFunction*/
 	}
 	
+	try {
+		if(this.animateFunction)
+			this.animateFunction(time, frame);
+	} catch(e) {
+		//No Function
+	}
 	
-	return time;
+	
+	return frame;
 }
 
 

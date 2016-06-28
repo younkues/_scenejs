@@ -43,48 +43,7 @@ scenePrototype.addItem = function(id, sceneItem) {
 	this.sceneItems[id] = sceneItem;
 	return sceneItem;
 }
-scenePrototype._addElement = function(elements) {
-	var length = elements.length, i;
 
-	var arr = [];
-	for( i = 0; i < length; ++i) {
-		arr[i] = this.addElement(elements[i]);
-	}
-	return arr;
-}
-scenePrototype.addElement = function(id, element) {
-	var length = arguments.length;
-	if(length === 0) {
-		return;
-	} else if(length === 1) {
-		element = id;
-		id = "";
-		
-		var type = typeof element;
-		
-		if(type === "undefined") {
-			var item = new SceneItem();
-			return this.addItem(id, item);
-		}
-		else if(type === "string") {
-			return this._addElement(document.querySelectorAll(element));
-		}
-		else if(element instanceof Array || element instanceof NodeList) {
-			return this._addElement(element);
-		}
-	}
-	
-	_id = element.getAttribute(ATTR_ITEM_ID);
-	if(!_id) {
-		id = id ? id : "item" + parseInt(Math.random() * 10000);
-		element.setAttribute(ATTR_ITEM_ID, id);
-	}
-	else if(!id)
-		id = _id;
-	var item = new SceneItem(element);
-
-	return this.addItem(id, item);
-}
 scenePrototype.getItem = function(id) {
 	// string(id), object(element)
 	var type = typeof id;
