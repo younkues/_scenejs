@@ -29,7 +29,6 @@ var scenePrototype = Scene.prototype;
 defineGetterSetter(scenePrototype, "playSpeed");
 defineGetterSetter(scenePrototype, "playCount");
 defineGetterSetter(scenePrototype, "iterationCount");
-
 defineGetterSetter(scenePrototype, "direction");
 
 scenePrototype.newItem = function(id) {
