@@ -342,6 +342,7 @@ sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
 		/*Error on TimingFunction*/
 	}
 	
+	frame = this.getNowFrame(time);
 	try {
 		if(this.animateFunction)
 			this.animateFunction(time, frame);

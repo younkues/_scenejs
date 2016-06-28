@@ -51,6 +51,8 @@ sceneItemPrototype.synchronize = (function(_synchronize) {
 	return function(time) {
 	var frame = _synchronize.call(this, time);
 	
+	
+
 	if(!frame)
 		return false;
 
