@@ -6,6 +6,7 @@ var Scene = function Scene() {
 	this.playSpeed = 1;
 	this.playCount = 0;
 	this.iterationCount = 1;
+	this.name = "";
 	/*iterationCount = 1, 2, 3, 4, infinite*/
 	this.direction = "normal";
 	/*normal, reverse, alternate, alternate-reverse*/
@@ -25,7 +26,7 @@ Scene.addRole = function(name, plural) {
 }
 
 var scenePrototype = Scene.prototype;
-
+defineGetterSetter(scenePrototype, "name");
 defineGetterSetter(scenePrototype, "playSpeed");
 defineGetterSetter(scenePrototype, "playCount");
 defineGetterSetter(scenePrototype, "iterationCount");
