@@ -87,7 +87,8 @@ framePrototype.getCSSObject = function() {
 			cssTransform += " ";
 		} catch(e) {}
 	}
-	cssObject["transform"] = cssTransform;
+	if(cssTransform)
+		cssObject["transform"] = cssTransform;
 	/*filter css*/
 	for(var filterName in filters) {
 		value = filters[filterName];
@@ -100,7 +101,8 @@ framePrototype.getCSSObject = function() {
 			cssFilter += " ";
 		} catch(e){}
 	}
-	cssObject["filter"] = cssFilter;
+	if(cssFilter)
+		cssObject["filter"] = cssFilter;
 	/*property css*/
 	for(var propertyName in properties) {
 		value = properties[propertyName];
