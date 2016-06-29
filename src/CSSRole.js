@@ -131,8 +131,10 @@ var convertCrossBrowserCSSObject = function(cssObject, property) {
 framePrototype.getCSSText = function() {
 	var cssObject = this.getCSSObject();
 	var cssText = "", value, property;
-	convertCrossBrowserCSSObject(cssObject, "transform");
-	convertCrossBrowserCSSObject(cssObject, "filter");
+	if(cssObject.transform)
+		convertCrossBrowserCSSObject(cssObject, "transform");
+	if(cssObject.filter)
+		convertCrossBrowserCSSObject(cssObject, "filter");
 	
 	for(property in cssObject) {
 		cssText += property + ":" + cssObject[property] +";";
