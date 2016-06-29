@@ -93,9 +93,10 @@ scenePrototype.synchronize = function synchronize(time, isPlay) {
 		this.setPlayCount(++pc);
 		
 		if(ic === "infinite" || pc < ic) {
-			this.play();	
-		}
+			this.play();
+		} else {
 		return false;
+		}
 	}
 	
 	return true;
@@ -124,7 +125,6 @@ scenePrototype.play = function play (){
 	console.log("PLAY");
 	this.startTime = this.prevTime = Date.now();
 	this.nowTime = this.spendTime = 0;
-	
 	
 	this.setPlayCount(0);
 

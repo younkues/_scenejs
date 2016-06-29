@@ -142,7 +142,9 @@ var getNowFrameByProperty = function(sceneItem, time, property, prevFunc, nextFu
 		prevTime = 0;
 		
 	// 전값과 나중값을 시간에 의해 내적을 한다.
+
 	value = _u.dot(prevValue, nextValue, time - prevTime, nextFrame.time - time);
+	
 	return value;
 }
 /*
@@ -341,7 +343,6 @@ sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
 	try {
 		time = nowTimingFunction && nowTimingFunction.cubicBezier(time) || time;
 	} catch(e) {
-		/*Error on TimingFunction*/
 	}
 	
 	frame = this.getNowFrame(time);
@@ -361,10 +362,15 @@ sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
 	해당시간에 새로운 Frame을 만든다. 이미 있다면 만들지 않고 병합을 한다.
 */
 sceneItemPrototype.addFrame = function(time, frame) {
+	//if String Error "5" > "10"
+	time = parseFloat(time);
+	
 	//ctrace("--- addFrame", time + "s");
 	//해당 시간에 프레임이 있는지 확인 없으면 추가 있으면 에러 제공
 	
 	//해당 프레임이 이미 존재하면 합친다. 
+	
+	
 	var _frame = this.getFrame(time);
 	if(_frame) {
 		_frame.merge(frame);
