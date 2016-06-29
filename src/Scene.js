@@ -37,6 +37,7 @@ scenePrototype.newItem = function(id) {
 	return this.addItem(id, item);
 }
 scenePrototype.addItem = function(id, sceneItem) {
+	sceneItem.setId(id);
 	if(this.sceneItems[id])
 		return this.sceneItems[id];
 		

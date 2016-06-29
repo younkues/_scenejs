@@ -1,5 +1,6 @@
 var SceneItem = Scene.SceneItem = function(element) {
 	var self = this;
+	self.id = "";
 	self.element = element;
 	self.time = 0;
 	self.times = [];
@@ -26,6 +27,7 @@ var SceneItem = Scene.SceneItem = function(element) {
 }
 var sceneItemPrototype = SceneItem.prototype;
 defineGetterSetter(sceneItemPrototype, "element");
+defineGetterSetter(sceneItemPrototype, "id");
 
 var addPropertyFunction = function(name, names) {
 	var setProperty = camelize("set " + name);
