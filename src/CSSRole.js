@@ -153,17 +153,18 @@ sceneItemPrototype.setFrameToCSSRule = function(finishTime, count) {
 	var css = "";
 
 //**임시
+	var id = this.selector.match(/[0-9a-zA-Z]+/g).join() + this.id;
 	var _CSS_ANIMATION_START_RULE = replaceAll(CSS_ANIMATION_START_RULE, "{prefix}", "");
 	 _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{time}", finishTime);
 	 _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{type}", "linear");
 	  _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{count}", count);
-	  _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{id}", this.id);
+	  _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{id}", id);
 	for(var i = 0; i < length; ++i) {
 		css += replaceAll(_CSS_ANIMATION_START_RULE, "{selector}", selectors[i]);
 	}
 	
 	
-	var keyframeCss = "@keyframes scenejs_animation_" + this.id +"{";
+	var keyframeCss = "@keyframes scenejs_animation_" + id +"{";
 	var times = this.times, time;
 	legnth = times.length;
 	var percentage;
