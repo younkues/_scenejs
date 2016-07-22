@@ -46,7 +46,7 @@ http://daybrush.com/Scene.js/sample/circleburst.html
 ## Usage
 
 ```HTML
-<script src="scene.all.js"></script>
+<script src="Scene.js"></script>
 
 ```
  

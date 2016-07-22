@@ -1,3 +1,9 @@
+function replaceAll(text, from, to) {
+	if(!text)
+		return "";
+	return text.split(from).join(to);
+}
+
 Scene.addRole("property", "properties");
 Scene.addRole("transform", "transforms");
 Scene.addRole("filter", "filters");
@@ -57,9 +63,6 @@ sceneItemPrototype.synchronize = (function(_synchronize) {
 	if(!frame)
 		return false;
 
-
-		
-		
 	var cssText = frame.getCSSText();
 
 	
@@ -71,34 +74,92 @@ sceneItemPrototype.synchronize = (function(_synchronize) {
 	
 	return true;
 };})(_synchronize);
+scenePrototype.playCSS = function play (){
+	if(this.isStart)
+		return this;
+		
+	this.startTime = this.prevTime = Date.now();
+	this.nowTime = this.spendTime = 0;
+	
+	this.setPlayCount(0);
+
+	this.isStart = true;
+	this.isFinish = false;
+	this.isPause = false;	
+
+	var sceneItems = this.sceneItems;
+	var item;
+	var selector;
+	var elements, i, length;
+	
+	for(var id in sceneItems) {
+		item = sceneItems[id];
+		selector = item.getSelector();
+		elements = document.querySelectorAll(selector);
+		length = elements.length;
+		for(i = 0; i < length; ++i) {
+			elements[i].className += " startAnimation";
+		}
+	}
+	return this;	
+}
+scenePrototype.stopCSS = function stop() {
+	console.log("STOP");
+	this.isStart = false;
+	this.isFinish = true;
+	this.isPause = false;
+	
+	var sceneItems = this.sceneItems;
+	var item;
+	var selector;
+	var elements, i, length;
+	for(var id in sceneItems) {
+		item = sceneItems[id];
+		selector = item.getSelector();
+		elements = document.querySelectorAll(selector);
+		length = elements.length;
+		for(i = 0; i < length; ++i) {
+			elements[i].className = replaceAll(elements[i].className , "startAnimation" ,"");
+		}
+	}
+}
+
 
 /*export CSS STYLE*/
 scenePrototype.setFrameToCSSRule = function() {
 	var sceneItems = this.sceneItems;
 	var sceneItem;
+	var finishTime = this.getFinishTime();
+	var count = this.getIterationCount();
 	css = "";
 	for(var id in sceneItems) {
 		sceneItem = sceneItems[id];
-		css += sceneItem.setFrameToCSSRule();
+		css += sceneItem.setFrameToCSSRule(finishTime, count);
 	}
-
 	
-	
-	
-	return css;
+	var style = "<style>" + css +"</style>";
+	document.head.insertAdjacentHTML("afterbegin", style);
+	return this;
 }
-sceneItemPrototype.setFrameToCSSRule = function(finishTime) {
+var CSS_ANIMATION_RULE = "";
+var CSS_ANIMATION_START_RULE = "{selector}.startAnimation{{prefix}animation: scenejs_animation_{id} {time}s {type};{prefix}animation-fill-mode: forwards;{prefix}animation-iteration-count:{count};}"
+sceneItemPrototype.setFrameToCSSRule = function(finishTime, count) {
 	if(!this.getSelector())
 		return "";
 		
 	var selectors = this.getSelector().split(","), length = selectors.length;
-	var finishTime = finishTime || this.getFinishTime();
+	finishTime = finishTime || this.getFinishTime();
+	count = count || 1;
 	var css = "";
 
+//**임시
+	var _CSS_ANIMATION_START_RULE = replaceAll(CSS_ANIMATION_START_RULE, "{prefix}", "");
+	 _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{time}", finishTime);
+	 _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{type}", "linear");
+	  _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{count}", count);
+	  _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{id}", this.id);
 	for(var i = 0; i < length; ++i) {
-		css += selectors[i] +"{animation-name:scenejs_animation_" + this.id+ ";";
-		css+= "animation-duration:" + finishTime + "s;";
-		css +="}";
+		css += replaceAll(_CSS_ANIMATION_START_RULE, "{selector}", selectors[i]);
 	}
 	
 	
@@ -109,7 +170,7 @@ sceneItemPrototype.setFrameToCSSRule = function(finishTime) {
 	for(var i = 0; i < legnth; ++i) {
 		time = times[i];
 		percentage = (time / finishTime * 100) + "% "; 
-		keyframeCss += percentage + "{" + this.getFrame(time).getCSSText() + "}\n";
+		keyframeCss += percentage + "{" + this.getNowFrame(time).getCSSText() + "}\n";
 	}
 	keyframeCss += "}\n";
 	css+= keyframeCss;

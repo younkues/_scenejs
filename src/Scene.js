@@ -157,11 +157,10 @@ scenePrototype.stop = function stop() {
 scenePrototype.addTimingFunction = function addTimingFunction(startTime, endTime, curveArray) {
 	var sceneItems = this.sceneItems;
 	var item;
-	var itemsLength = sceneItems.length;
-	var finishCount = 0;
 		
-	for(var i = 0; i < itemsLength; ++i) {
-		sceneItems[i].addTimingFunction(startTime, endTime, curveArray);
+	for(var id in sceneItems) {
+		item = sceneItems[id];
+		item.addTimingFunction(startTime, endTime, curveArray);
 	}
 	return this;
 }
