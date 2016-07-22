@@ -7,16 +7,17 @@ Scene.js is an Javascript Aniamtion Library
 <img src="model/model.png">
 
 ## Component
-* **Scene** : @@@
-* **SceneItem** : @@@
-* **Frame** : @@@
-* **TimingFunction** : @@@
+* **Scene** : Control SceneItem, Speed & Count, Play & Stop
+* **SceneItem** : Add & Manage Frame
+* **Frame** : Set Property & getCSSText
+* **TimingFunction** : Set Transition Timing Function in Scene time zone.
+	+ ex) sceneItem.addTimingFunction(startTime, endTime, ease);
 * **Util** : dot product with array, object, number, color, PropertyObject
 * **PropertyObject** : Make String to Property Object for the dot product
 	+ ex) Util.stringToObject("rgba(200, 100, 20, 10)") to {prefix: "rgba(", suffix: ")", arr: [200,100, 20,10], separator: ","}
 	+ ex) Util.stringToObject("a b c d") to {prefix: "", suffix: "", arr: ["a","b", "c", "d"], separator: " "}
 
-* **Curve** : Make Transition Type with Bezier Curve.
+* **Curve** : Make Transition Function with Bezier Curve.
 * **Scene.Color** : Convert RGB, HSL HEX4, HEX6 to RGBA Model.
 	+ ex) Color.hexToRGB("#123456") to [18, 52, 86]
 	+ ex) Color.hslToRGB([240, 0.5, 0.5]) to [63, 63, 191]
