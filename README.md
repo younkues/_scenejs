@@ -18,8 +18,8 @@ Scene.js is an Javascript Aniamtion Library
 
 * **Curve** : Make Transition Type with Bezier Curve.
 * **Scene.Color** : Convert RGB, HSL HEX4, HEX6 to RGBA Model.
-> + ex) Color.hexToRGB("#123456") to [18, 52, 86]
-> + ex) Color.hslToRGB([240, 0.5, 0.5]) to [63, 63, 191]
+> * ex) Color.hexToRGB("#123456") to [18, 52, 86]
+> * ex) Color.hslToRGB([240, 0.5, 0.5]) to [63, 63, 191]
 
 ## Support Browser
 **Default**
