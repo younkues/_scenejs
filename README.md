@@ -49,17 +49,19 @@ Scene.js is an Javascript Aniamtion Library
 http://daybrush.com/Scene.js/sample/circleburst.html
 
 
-## Usage
+## How to use?
+
+Only load Scene,js
 
 ```HTML
 <script src="Scene.js"></script>
 
 ```
  
-## How to use?
+Ready to start using Scene.js! Scene.js has Scene namespace and can be used as below example.
 
 ```javascript
-var element = document.querySelect(".sample")
+var element = document.querySelector(".sample")
 var scene = new Scene();
 var sceneItem = scene.addElement(element); // add Item
 
@@ -88,13 +90,21 @@ var scene = new Scene({
 		0 : {width: "30px", height: "20px", property:value},
 		2 : {width: "50px", property:value},
 		6.5:{height: "200px", property:value},
+		selector: ".item1"
 	},
 	"item2" : {
 		0 : {transform:{scale:0.5}, property:value},
 		2 : {transform:{scale:1.5, rotate:"0deg"}, width: "50px", property:value},
 		6.5: {transform:{scale:1, rotate:"50deg"}, width: "10px", property:value},
+		selector: ".item2"
 	},
 });
+
+//scene.playCSS(); set CSS Rule to Play
+//scene.stopCSS();
+
+
+scene.play();
 
 ```
 
