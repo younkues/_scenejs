@@ -45,6 +45,7 @@ scenePrototype.addElement = function(id, element) {
 	return this.addItem(id, item);
 }
 
+defineGetterSetter(sceneItemPrototype, "selector");
 
 var _synchronize = sceneItemPrototype.synchronize;
 sceneItemPrototype.synchronize = (function(_synchronize) {
@@ -70,6 +71,52 @@ sceneItemPrototype.synchronize = (function(_synchronize) {
 	
 	return true;
 };})(_synchronize);
+
+/*export CSS STYLE*/
+scenePrototype.setFrameToStyle = function() {
+	var sceneItems = this.sceneItems;
+	var sceneItem;
+	css = "";
+	for(var id in sceneItems) {
+		sceneItem = sceneItems[id];
+		css += sceneItem.setFrameToStyle();
+	}
+
+	
+	
+	
+	return css;
+}
+sceneItemPrototype.setFrameToStyle = function(finishTime) {
+	if(!this.getSelector())
+		return "";
+		
+	var selectors = this.getSelector().split(","), length = selectors.length;
+	var finishTime = this.getFinishTime();
+	var css = "";
+
+	for(var i = 0; i < length; ++i) {
+		css += selectors[i] +"{animation-name:scenejs_animation_" + this.id+ ";";
+		css+= "animation-duration:" + finishTime + "s;";
+		css +="}";
+	}
+	
+	
+	var keyframeCss = "@keyframes scenejs_animation_" + this.id +"{";
+	var times = this.times, time;
+	legnth = times.length;
+	var percentage;
+	for(var i = 0; i < legnth; ++i) {
+		time = times[i];
+		percentage = (time / finishTime * 100) + "% "; 
+		keyframeCss += percentage + "{" + this.getFrame(time).getCSSText() + "}\n";
+	}
+	keyframeCss += "}\n";
+	css+= keyframeCss;
+	
+	return css;
+}
+
 
 framePrototype.getCSSObject = function() {
 	var transforms = this.transforms, filters = this.filters, properties = this.properties;
@@ -128,7 +175,7 @@ var convertCrossBrowserCSSObject = function(cssObject, property) {
 /*
 	CSSObject를 cssText로 바꿔준다.
 */
-framePrototype.getCSSText = function() {
+framePrototype.getCSSText = function(prefix) {
 	var cssObject = this.getCSSObject();
 	var cssText = "", value, property;
 	if(cssObject.transform)
