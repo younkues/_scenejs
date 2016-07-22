@@ -8,16 +8,16 @@ Scene.js is an Javascript Aniamtion Library
 
 ## Component
 * **Scene** : Control SceneItem, Speed & Count, Play & Stop
-* **SceneItem** : Add & Manage Frame
-* **Frame** : Set Property & getCSSText
-* **TimingFunction** : Set Transition Timing Function in Scene time zone.
+* **Scene.SceneItem** : Add & Manage Frame
+* **Scene.Frame** : Set Property & ge tCSSText
+* **Scene.TimingFunction** : Set Transition Timing Function in Scene time zone.
 	+ ex) sceneItem.addTimingFunction(startTime, endTime, ease);
-* **Util** : dot product with array, object, number, color, PropertyObject
-* **PropertyObject** : Make String to Property Object for the dot product
+* **Scene.Util** : dot product with array, object, number, color, PropertyObject
+* **Scene.PropertyObject** : Make String to Property Object for the dot product
 	+ ex) Util.stringToObject("rgba(200, 100, 20, 10)") to {prefix: "rgba(", suffix: ")", arr: [200,100, 20,10], separator: ","}
 	+ ex) Util.stringToObject("a b c d") to {prefix: "", suffix: "", arr: ["a","b", "c", "d"], separator: " "}
 
-* **Curve** : Make Transition Function with Bezier Curve.
+* **Scene.Curve** : Make Transition Function with Bezier Curve.
 * **Scene.Color** : Convert RGB, HSL HEX4, HEX6 to RGBA Model.
 	+ ex) Color.hexToRGB("#123456") to [18, 52, 86]
 	+ ex) Color.hslToRGB([240, 0.5, 0.5]) to [63, 63, 191]
@@ -56,7 +56,7 @@ http://daybrush.com/Scene.js/sample/circleburst.html
 
 ```
  
-## Example
+## How to use?
 
 ```javascript
 var element = document.querySelect(".sample")
@@ -79,3 +79,23 @@ sceneItem.addTimingFunction(startTime, endTime, ease);
 scene.play();
         
 ```
+
+or
+
+```javascript
+var scene = new Scene({
+	"item1" : {
+		0 : {width: "30px", height: "20px", property:value},
+		2 : {width: "50px", property:value},
+		6.5:{height: "200px", property:value},
+	},
+	"item2" : {
+		0 : {transform:{scale:0.5}, property:value},
+		2 : {transform:{scale:1.5, rotate:"0deg"}, width: "50px", property:value},
+		6.5: {transform:{scale:1, rotate:"50deg"}, width: "10px", property:value},
+	},
+});
+
+```
+
+
