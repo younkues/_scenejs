@@ -1,4 +1,19 @@
-
+var _defaultProperties = Frame._defaultProperties = {
+	"translate" : "0, 0",
+	"opacity" : 1,
+	"scale" : "1, 1",
+	rotateY :"0deg",
+	rotateX : "0deg",
+	rotateZ : "0deg",
+	rotate : "0deg",
+	blur: "0px",
+	grayscale : "0%",
+	contrast : "0%",
+	brightness : "0%",
+	invert : "0%",
+	saturate : "0%",
+	sepia : "0%"
+	
 
 Scene.addRole("property", "properties");
 Scene.addRole("transform", "transforms");
@@ -91,6 +106,37 @@ sceneItemPrototype.synchronize = (function(_synchronize) {
 	
 	return true;
 };})(_synchronize);
+
+sceneItemPrototype.init = function() {
+	if(this.element) {
+		this.element.setAttribute("role", "item");
+		this.addStyleToFrame(DEFAULT_LAYOUT_TIME);
+	}
+}
+
+/*
+	Element의 현재 Style을 해당 time의 Frame에 저장한다.
+*/
+sceneItemPrototype.addStyleToFrame = function(time) {
+	if(!this.element)
+		return this;
+	var cssText = this.element.style.cssText;
+	var a1 = cssText.split(";");
+	var l = a1.length;
+	var a2;
+	var cssObject = {};
+	for(var i =0; i < l; ++i) {
+		a2 = a1[i].split(":");
+		if(a2.length <= 1)
+			continue;
+		cssObject[a2[0].trim()] = a2[1].trim();
+	}
+	this.setProperties(time, cssObject);
+	
+	return this;
+}
+
+
 scenePrototype.playCSS = function play (){
 	if(this.isStart)
 		return this;

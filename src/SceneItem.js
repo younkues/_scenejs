@@ -14,18 +14,18 @@ var SceneItem = Scene.SceneItem = function(element) {
 	
 	self.timingFunctions = [];
 	self.nowTimingFunction;
-	self.animateFunction;	
+	self.animateFunction = "";	
 	
 	self.element = element;
-	self.newFrame(DEFAULT_LAYOUT_TIME);
+	self.newFrame(DEFAULT_FRAME_TIME);
 	
 	/* !!수정필요 View 속성 Rule로 초기화 필요*/
-	if(element) {
-		element.setAttribute("role", "item");
-		self.addStyleToFrame(DEFAULT_LAYOUT_TIME);
-	}
+	this.init();
 }
 var sceneItemPrototype = SceneItem.prototype;
+sceneItemPrototype.init = function() {
+	
+}
 defineGetterSetter(sceneItemPrototype, "element");
 defineGetterSetter(sceneItemPrototype, "id");
 
@@ -179,10 +179,11 @@ var getPrevFrameByProperty = function(sceneItem, time, property, func) {
 		value = getComputedStyle(element)[property];
 		if(value == "auto")
 			value = "0";
-		sceneItem.setProperty(DEFAULT_LAYOUT_TIME, property, value);
+			
+		sceneItem.setProperty(DEFAULT_FRAME_TIME, property, value);
 	}
 
-	return sceneItem.getFrame(DEFAULT_LAYOUT_TIME);
+	return sceneItem.getFrame(DEFAULT_FRAME_TIME);
 }
 /*
 	getNextFrameByProperty, getNextFrameByTransform, getNextFrameByFilter
@@ -220,27 +221,6 @@ function addGetFramePropertyFunction(name) {
 }
 
 
-/*
-	Element의 현재 Style을 해당 time의 Frame에 저장한다.
-*/
-sceneItemPrototype.addStyleToFrame = function(time) {
-	if(!this.element)
-		return this;
-	var cssText = this.element.style.cssText;
-	var a1 = cssText.split(";");
-	var l = a1.length;
-	var a2;
-	var cssObject = {};
-	for(var i =0; i < l; ++i) {
-		a2 = a1[i].split(":");
-		if(a2.length <= 1)
-			continue;
-		cssObject[a2[0].trim()] = a2[1].trim();
-	}
-	this.setProperties(time, cssObject);
-	
-	return this;
-}
 /*
 	해당 time이 몇번째에 지정되어있는지 확인
 */

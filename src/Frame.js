@@ -10,22 +10,6 @@ var Frame = Scene.Frame = function Frame(sceneItem, time) {
 	_frame.filters = {};
 	_frame.time = time;
 }
-var _defaultProperties = Frame._defaultProperties = {
-	"translate" : "0, 0",
-	"opacity" : 1,
-	"scale" : "1, 1",
-	rotateY :"0deg",
-	rotateX : "0deg",
-	rotateZ : "0deg",
-	rotate : "0deg",
-	blur: "0px",
-	grayscale : "0%",
-	contrast : "0%",
-	brightness : "0%",
-	invert : "0%",
-	saturate : "0%",
-	sepia : "0%"
-	
 }
 
 
