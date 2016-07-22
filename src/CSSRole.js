@@ -1,8 +1,4 @@
-function replaceAll(text, from, to) {
-	if(!text)
-		return "";
-	return text.split(from).join(to);
-}
+
 
 Scene.addRole("property", "properties");
 Scene.addRole("transform", "transforms");
@@ -153,7 +149,7 @@ sceneItemPrototype.setFrameToCSSRule = function(finishTime, count) {
 	var css = "";
 
 //**임시
-	var id = this.selector.match(/[0-9a-zA-Z]+/g).join() + this.id;
+	var id = this.selector.match(/[0-9a-zA-Z]+/g).join("") + this.id;
 	var _CSS_ANIMATION_START_RULE = replaceAll(CSS_ANIMATION_START_RULE, "{prefix}", "");
 	 _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{time}", finishTime);
 	 _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{type}", "linear");

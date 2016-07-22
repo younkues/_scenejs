@@ -6,8 +6,8 @@ var Scene = function Scene() {
 	this.playSpeed = 1;
 	this.playCount = 0;
 	this.iterationCount = 1;
-	this.name = "";
 	/*iterationCount = 1, 2, 3, 4, infinite*/
+	this.name = "";
 	this.direction = "normal";
 	/*normal, reverse, alternate, alternate-reverse*/
 }
@@ -122,7 +122,7 @@ scenePrototype.timerFunction = function() {
 		
 	this.nowTime = Date.now();
 	var duration = (this.nowTime - this.startTime) / 1000;
-	var isProcess = this.synchronize(duration * this.playSpeed, true);
+	var isProcess = this.synchronize(duration * this.getPlaySpeed(), true);
 	if(!isProcess) {
 		this.stop();
 		return;

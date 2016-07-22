@@ -38,9 +38,9 @@ var _u = Scene.Util = {
 			var length = colorArray.length;
 	 	} else if(v.charAt(0) === "#")  {
 			if(v.length === 4) {
-				colorArray = _c.hexToRGB(_c.hex4to6(v));
+				colorArray = _color.hexToRGB(_color.hex4to6(v));
 			} else if(v.length === 7) {
-				colorArray = _c.hexToRGB(v);
+				colorArray = _color.hexToRGB(v);
 			}
 			return this.arrayToColorObject(colorArray);
 		} else if(v.indexOf("(") !== -1) {		
@@ -81,7 +81,7 @@ var _u = Scene.Util = {
 					colorArray[i] = parseFloat(colorArray[i]) / 100;
 			}
 			// hsl, hsla to rgba
-			colorArray = _c.hslToRGB(colorArray);
+			colorArray = _color.hslToRGB(colorArray);
 			return this.arrayToColorObject(colorArray);
 		}
 		
@@ -251,7 +251,7 @@ var _u = Scene.Util = {
 	 		
 	 		return result;
 		} else if(a1.indexOf("(") != -1) {//괄호가 들어갈 때
- 			if((a1 = this.toBracketObject(a1)) && _c.models.indexOf(a1.getModel()) != -1) 
+ 			if((a1 = this.toBracketObject(a1)) && _color.models.indexOf(a1.getModel()) != -1) 
 	 			return this.toColorObject(a1);
 	 		
 	 		arr = a1.value;

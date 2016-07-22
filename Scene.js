@@ -78,6 +78,14 @@ var addFunction = function(func, func2) {
 		}
 	}();
 }
+/*
+	replace 확장버전
+*/
+function replaceAll(text, from, to) {
+	if(!text)
+		return "";
+	return text.split(from).join(to);
+}
 
 var Scene = function Scene() {
 	this.sceneItems = {};
@@ -86,8 +94,8 @@ var Scene = function Scene() {
 	this.playSpeed = 1;
 	this.playCount = 0;
 	this.iterationCount = 1;
-	this.name = "";
 	/*iterationCount = 1, 2, 3, 4, infinite*/
+	this.name = "";
 	this.direction = "normal";
 	/*normal, reverse, alternate, alternate-reverse*/
 }
@@ -202,7 +210,7 @@ scenePrototype.timerFunction = function() {
 		
 	this.nowTime = Date.now();
 	var duration = (this.nowTime - this.startTime) / 1000;
-	var isProcess = this.synchronize(duration * this.playSpeed, true);
+	var isProcess = this.synchronize(duration * this.getPlaySpeed(), true);
 	if(!isProcess) {
 		this.stop();
 		return;
@@ -963,9 +971,9 @@ var _u = Scene.Util = {
 			var length = colorArray.length;
 	 	} else if(v.charAt(0) === "#")  {
 			if(v.length === 4) {
-				colorArray = _c.hexToRGB(_c.hex4to6(v));
+				colorArray = _color.hexToRGB(_color.hex4to6(v));
 			} else if(v.length === 7) {
-				colorArray = _c.hexToRGB(v);
+				colorArray = _color.hexToRGB(v);
 			}
 			return this.arrayToColorObject(colorArray);
 		} else if(v.indexOf("(") !== -1) {		
@@ -1006,7 +1014,7 @@ var _u = Scene.Util = {
 					colorArray[i] = parseFloat(colorArray[i]) / 100;
 			}
 			// hsl, hsla to rgba
-			colorArray = _c.hslToRGB(colorArray);
+			colorArray = _color.hslToRGB(colorArray);
 			return this.arrayToColorObject(colorArray);
 		}
 		
@@ -1176,7 +1184,7 @@ var _u = Scene.Util = {
 	 		
 	 		return result;
 		} else if(a1.indexOf("(") != -1) {//괄호가 들어갈 때
- 			if((a1 = this.toBracketObject(a1)) && _c.models.indexOf(a1.getModel()) != -1) 
+ 			if((a1 = this.toBracketObject(a1)) && _color.models.indexOf(a1.getModel()) != -1) 
 	 			return this.toColorObject(a1);
 	 		
 	 		arr = a1.value;
@@ -1266,7 +1274,7 @@ var _u = Scene.Util = {
 	}
 };
 
-var _c = Scene.Color = {
+var _color = Scene.Color = {
 	models : ["rgb", "rgba", "hsl", "hsla"],
 	nameToRGB : function(name){
 		var rgb = this.rgbCodes[name];
@@ -1356,11 +1364,7 @@ var _c = Scene.Color = {
 	    return result;
 	}
 };
-function replaceAll(text, from, to) {
-	if(!text)
-		return "";
-	return text.split(from).join(to);
-}
+
 
 Scene.addRole("property", "properties");
 Scene.addRole("transform", "transforms");
@@ -1511,17 +1515,18 @@ sceneItemPrototype.setFrameToCSSRule = function(finishTime, count) {
 	var css = "";
 
 //**임시
+	var id = this.selector.match(/[0-9a-zA-Z]+/g).join("") + this.id;
 	var _CSS_ANIMATION_START_RULE = replaceAll(CSS_ANIMATION_START_RULE, "{prefix}", "");
 	 _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{time}", finishTime);
 	 _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{type}", "linear");
 	  _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{count}", count);
-	  _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{id}", this.id);
+	  _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{id}", id);
 	for(var i = 0; i < length; ++i) {
 		css += replaceAll(_CSS_ANIMATION_START_RULE, "{selector}", selectors[i]);
 	}
 	
 	
-	var keyframeCss = "@keyframes scenejs_animation_" + this.id +"{";
+	var keyframeCss = "@keyframes scenejs_animation_" + id +"{";
 	var times = this.times, time;
 	legnth = times.length;
 	var percentage;

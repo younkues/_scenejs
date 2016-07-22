@@ -72,3 +72,11 @@ var addFunction = function(func, func2) {
 		}
 	}();
 }
+/*
+	replace 확장버전
+*/
+function replaceAll(text, from, to) {
+	if(!text)
+		return "";
+	return text.split(from).join(to);
+}
