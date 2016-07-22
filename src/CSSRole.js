@@ -4,6 +4,24 @@ Scene.addRole("property", "properties");
 Scene.addRole("transform", "transforms");
 Scene.addRole("filter", "filters");
 
+function animateFunction(time, frame) {
+	var cssText = frame.getCSSText(), _cssText;
+	var selector = this.selector;
+	if(!selector)
+		return;
+	try {
+		var elements = document.querySelectorAll(selector);
+		var length = elements.length;
+		for(var i = 0; i < length; ++i) {
+			_cssText = elements[i].style.cssText;
+			elements[i].style.cssText = _cssText + cssText;
+		}
+	} catch(e) {
+		//console.log(e);
+	}
+}
+
+
 scenePrototype._addElement = function(elements) {
 	var length = elements.length, i;
 
@@ -52,9 +70,12 @@ defineGetterSetter(sceneItemPrototype, "selector");
 var _synchronize = sceneItemPrototype.synchronize;
 sceneItemPrototype.synchronize = (function(_synchronize) {
 	return function(time) {
+	if(!this.animateFunction)
+		this.animateFunction = animateFunction;
+		
 	var frame = _synchronize.call(this, time);
 	
-	
+
 
 	if(!frame)
 		return false;
