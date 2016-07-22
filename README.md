@@ -27,7 +27,7 @@ Scene.js is an Javascript Aniamtion Library
 
 |Internet Explorer|Chrome|FireFox|Safari|Opera|
 |---|---|---|---|---|
-|9+|Latest|Latest|Latest|Latest|
+|9+|(yes)|(yes)|(yes)|(yes)|
 **Transform**
 
 |Internet Explorer|Chrome|FireFox|Safari|Opera|
