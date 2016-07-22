@@ -14,8 +14,8 @@ Scene.js is an Javascript Aniamtion Library
 * **Util** : @@@
 > 
 * **PropertyObject** : Make String to Property Object for the inner product
->ex) Util.stringToObject => "rgba(200, 100, 20, 10)" to {prefix: "rgba(", suffix: ")", arr: [200,100, 20,10], separator: ","}
->ex) Util.stringToObject => "a b c d" to {prefix: "", suffix: "", arr: ["a","b", "c", "d"], separator: " "}
+> + ex) Util.stringToObject => "rgba(200, 100, 20, 10)" to {prefix: "rgba(", suffix: ")", arr: [200,100, 20,10], separator: ","}
+> + ex) Util.stringToObject => "a b c d" to {prefix: "", suffix: "", arr: ["a","b", "c", "d"], separator: " "}
 
 * **Curve** : Make Transition Type with Bezier Curve.
 * **Scene.Color** : Convert RGB, HSL HEX4, HEX6 to RGBA Model.
