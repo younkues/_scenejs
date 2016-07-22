@@ -81,7 +81,7 @@ var _color = Scene.Color = {
 			rgb = [c, 0, x];
 		
 		console.log(h, rgb);
-		var result = [(rgb[0] + m) * 255, (rgb[1] + m) * 255, (rgb[2] + m) * 255];
+		var result = [parseInt((rgb[0] + m) * 255), parseInt((rgb[1] + m) * 255), parseInt((rgb[2] + m) * 255)];
 	    if(hsl.length > 3)
 	    	result[3] = hsl[3];
 	    	
