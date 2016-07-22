@@ -73,13 +73,13 @@ sceneItemPrototype.synchronize = (function(_synchronize) {
 };})(_synchronize);
 
 /*export CSS STYLE*/
-scenePrototype.setFrameToStyle = function() {
+scenePrototype.setFrameToCSSRule = function() {
 	var sceneItems = this.sceneItems;
 	var sceneItem;
 	css = "";
 	for(var id in sceneItems) {
 		sceneItem = sceneItems[id];
-		css += sceneItem.setFrameToStyle();
+		css += sceneItem.setFrameToCSSRule();
 	}
 
 	
@@ -87,12 +87,12 @@ scenePrototype.setFrameToStyle = function() {
 	
 	return css;
 }
-sceneItemPrototype.setFrameToStyle = function(finishTime) {
+sceneItemPrototype.setFrameToCSSRule = function(finishTime) {
 	if(!this.getSelector())
 		return "";
 		
 	var selectors = this.getSelector().split(","), length = selectors.length;
-	var finishTime = this.getFinishTime();
+	var finishTime = finishTime || this.getFinishTime();
 	var css = "";
 
 	for(var i = 0; i < length; ++i) {

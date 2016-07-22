@@ -48,19 +48,6 @@ http://daybrush.com/Scene.js/sample/circleburst.html
 ```HTML
 <script src="scene.all.js"></script>
 
-
-or
-
-<script src="Util.js"></script>
-<script src="Scene.js"></script>
-<script src="SceneItem.js"></script>
-<script src="Frame.js"></script>
-<script src="Curve.js"></script>
-<script src="TimingFunction.js"></script>
-<script src="PropertyFunction.js"></script>
-<script src="PropertyObject.js"></script>
-
-
 ```
  
 ## Example

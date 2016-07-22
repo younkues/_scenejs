@@ -44,6 +44,18 @@ scenePrototype.addItem = function(id, sceneItem) {
 	this.sceneItems[id] = sceneItem;
 	return sceneItem;
 }
+scenePrototype.getFinishTime = function() {
+	var item, id;
+	var sceneItems = this.sceneItems;
+	var time = 0, _time;
+	for(id in sceneItems) {
+		item = sceneItems[id];
+		_time = item.getFinishTime();
+		if( time < _time)
+			time = _time;
+	}
+	return time;
+}
 
 scenePrototype.getItem = function(id) {
 	// string(id), object(element)
