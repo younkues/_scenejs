@@ -13,8 +13,8 @@ Scene.js is an Javascript Aniamtion Library
 * **TimingFunction** : @@@
 * **Util** : @@@
 * **PropertyObject** : @@@
-* **Curve** : @@@
-
+* **Curve** : Make Transition Type with Bezier Curve.
+* **Scene.Color** : Convert RGB, HSL HEX4, HEX6 to RGBA Model.
 
 ## Support Browser
 **Default**
