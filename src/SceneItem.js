@@ -1,3 +1,5 @@
+//element를 바깥으로 빼기
+
 var SceneItem = Scene.SceneItem = function(element) {
 	var self = this;
 	self.id = "";
@@ -22,13 +24,26 @@ var SceneItem = Scene.SceneItem = function(element) {
 	/* !!수정필요 View 속성 Rule로 초기화 필요*/
 	this.init();
 }
+defineGetterSetter(sceneItemPrototype, "element");
+defineGetterSetter(sceneItemPrototype, "id");
+
+
 var sceneItemPrototype = SceneItem.prototype;
 sceneItemPrototype.init = function() {
 	
 }
-defineGetterSetter(sceneItemPrototype, "element");
-defineGetterSetter(sceneItemPrototype, "id");
+sceneItemPrototype.load = function(item) {
+	var key, properties;
+	for(key in item) {
+		properties = item[key];
+		key = parseFloat(key);
+		if(isNaN(key))
+			continue;
+		
+	}
+}
 
+//sceneItemPrototype.
 var addPropertyFunction = function(name, names) {
 	var setProperty = camelize("set " + name);
 	var setProperties = camelize("set " + names);

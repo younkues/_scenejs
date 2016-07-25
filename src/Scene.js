@@ -1,5 +1,5 @@
 
-var Scene = function Scene() {
+var Scene = function Scene(items) {
 	this.sceneItems = {};
 	this.startTime = this.prevTime = this.nowTime = 0;
 	this.isStart = this.isFinish = this.isPause = false;
@@ -13,7 +13,18 @@ var Scene = function Scene() {
 }
 var _roles = Scene._roles = [];
 
+Scene.load = function(items) {
+	var itemName, sceneItem, item;
+	for(itemName in items) {
+		if(itemName === "option")
+			continue;
+		
+		item = items[itemName];
+		sceneItem = this.newItem(itemName);
+		sceneItem.load(item);
+	}
 
+}
 Scene.addRole = function(name, plural) {
 	var _roles = Scene._roles;
 
@@ -158,7 +169,7 @@ scenePrototype.addTimingFunction = function addTimingFunction(startTime, endTime
 	var sceneItems = this.sceneItems;
 	var item;
 		
-	for(var id in sceneItems) {
+for(var id in sceneItems) {
 		item = sceneItems[id];
 		item.addTimingFunction(startTime, endTime, curveArray);
 	}

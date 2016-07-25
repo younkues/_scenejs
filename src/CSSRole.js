@@ -14,10 +14,11 @@ var _defaultProperties = Frame._defaultProperties = {
 	saturate : "0%",
 	sepia : "0%"
 	
-
 Scene.addRole("property", "properties");
 Scene.addRole("transform", "transforms");
 Scene.addRole("filter", "filters");
+defineGetterSetter(sceneItemPrototype, "selector");
+
 
 function animateFunction(time, frame) {
 	var cssText = frame.getCSSText(), _cssText;
@@ -80,7 +81,7 @@ scenePrototype.addElement = function(id, element) {
 	return this.addItem(id, item);
 }
 
-defineGetterSetter(sceneItemPrototype, "selector");
+
 
 var _synchronize = sceneItemPrototype.synchronize;
 sceneItemPrototype.synchronize = (function(_synchronize) {

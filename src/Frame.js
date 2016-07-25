@@ -5,9 +5,7 @@
 var Frame = Scene.Frame = function Frame(sceneItem, time) {
 	var _frame = this;
 	_frame.sceneItem = sceneItem;
-	_frame.transforms = {};
 	_frame.properties = {};
-	_frame.filters = {};
 	_frame.time = time;
 }
 }

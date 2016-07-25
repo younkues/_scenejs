@@ -9,7 +9,7 @@ Scene.js is an Javascript Aniamtion Library
 ## Component
 * **Scene** : Control SceneItem, Speed & Count, Play & Stop
 * **Scene.SceneItem** : Add & Manage Frame
-* **Scene.Frame** : Set Property & ge tCSSText
+* **Scene.Frame** : Set Property & get CSSText
 * **Scene.TimingFunction** : Set Transition Timing Function in Scene time zone.
 	+ ex) sceneItem.addTimingFunction(startTime, endTime, ease);
 * **Scene.Util** : dot product with array, object, number, color, PropertyObject
