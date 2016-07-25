@@ -306,12 +306,15 @@ sceneItemPrototype.init = function() {
 	
 }
 sceneItemPrototype.load = function(item) {
-	var key, properties;
-	for(key in item) {
-		properties = item[key];
-		key = parseFloat(key);
-		if(isNaN(key))
+	var time, properties, frame;
+	for(time in item) {
+		properties = item[time];
+		time = parseFloat(time);
+		if(isNaN(time))
 			continue;
+			
+		frame = this.newFrame(time);
+		frame.load(properties);
 		
 	}
 }
@@ -792,9 +795,18 @@ defineAll(framePrototype, "sceneItem");
 
 
 framePrototype.load = function(properties) {
-	var property;
+	var property, p2;
+	var value;
+	var value2;
 	for(property in properties) {
-		
+		value = properties[property];
+		if(typeof value === "object") {
+			for(p2 in value) {
+				this.set(property, p2, value[p2]);
+			}
+			continue;
+		} 
+		this.set("property", property, value);
 	}
 }
 framePrototype.set = function(name, property, value) {

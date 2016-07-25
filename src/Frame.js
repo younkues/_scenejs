@@ -20,9 +20,18 @@ defineAll(framePrototype, "sceneItem");
 
 
 framePrototype.load = function(properties) {
-	var property;
+	var property, p2;
+	var value;
+	var value2;
 	for(property in properties) {
-		
+		value = properties[property];
+		if(typeof value === "object") {
+			for(p2 in value) {
+				this.set(property, p2, value[p2]);
+			}
+			continue;
+		} 
+		this.set("property", property, value);
 	}
 }
 framePrototype.set = function(name, property, value) {

@@ -38,12 +38,15 @@ sceneItemPrototype.init = function() {
 	
 }
 sceneItemPrototype.load = function(item) {
-	var key, properties;
-	for(key in item) {
-		properties = item[key];
-		key = parseFloat(key);
-		if(isNaN(key))
+	var time, properties, frame;
+	for(time in item) {
+		properties = item[time];
+		time = parseFloat(time);
+		if(isNaN(time))
 			continue;
+			
+		frame = this.newFrame(time);
+		frame.load(properties);
 		
 	}
 }
