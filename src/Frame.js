@@ -73,23 +73,17 @@ framePrototype.get = function(name, property) {
 Frame.addPropertyFunction = function(name, names) {
 	var setProperty = camelize("set " + name);
 	var setProperties = camelize("set " + names);
-	var removeProperty = camelize("remove " + names);
-	var addPropertyName =camelize("add " + name) + "Name";
+	var removeProperty = camelize("remove " + name);
 	framePrototype[setProperty] = function(property, value) {
-			
+		this.set(name, property, value);
 		return this;
 	};
 	framePrototype[setProperties] = function(properties) {
-		var _frame = this;
-		for(var property in properties) {
-			_frame[setProperty](property, properties[property]);
-		}
+		this.sets(name, properties);
 		return _frame;
 	}
 	framePrototype[removeProperty] = addFunction(framePrototype.removeProperty, function(property) {
-		var sceneItem = this.getSceneItem();
-		if(sceneItem)
-			sceneItem[removeProperty + "Name"](property);
+		this.remove(name, property);
 			
 		return this;
 	});
