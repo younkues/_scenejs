@@ -29,10 +29,7 @@ Scene.addRole = function(name, plural) {
 
 	_roles.push({"name":name, "plural":plural, "capitalize":camelize(" " + name)});
 	
-	addGetFramePropertyFunction(name);
-
-	defineAll(framePrototype, name, plural);	
-
+	SceneItem.addGetFramePropertyFunction(name);
 	SceneItem.addPropertyFunction(name, plural);
 	Frame.addPropertyFunction(name, plural);
 }
@@ -116,10 +113,12 @@ scenePrototype.synchronize = function synchronize(time, isPlay) {
 		var ic = this.getIterationCount(), pc = this.getPlayCount();
 		this.setPlayCount(++pc);
 		
+		if(this.getFinishTime() <= 0)
+			return false;
 		if(ic === "infinite" || pc < ic) {
 			this.play();
 		} else {
-		return false;
+			return false;
 		}
 	}
 	

@@ -4,13 +4,13 @@
 
 
 var Frame = Scene.Frame = function Frame(sceneItem, time) {
-	var _frame = this;
-	_frame.sceneItem = sceneItem;
-	_frame.properties = {};
-	_frame.time = time;
-	
+	this.sceneItem = sceneItem;
+	this.properties = {};
+	this.time = time;
+
+	var _roles = Scene._roles, length = _roles.length;
 	for(var i = 0; i < length; ++i) {
-		self.properties[_roles[i]["name"]] = {}; //속성의 이름을 가진 배열 초기화
+		this.properties[_roles[i]["name"]] = {}; //속성의 이름을 가진 배열 초기화
 	}
 }
 
@@ -33,7 +33,7 @@ framePrototype.set = function(name, property, value) {
 	if(typeof value === "string") {
 		value = _u.stringToObject(value);
 	}
-	this.properties[name] = value;
+	this.properties[name][property] = value;
 
 
 	var sceneItem = this.getSceneItem();
@@ -72,15 +72,20 @@ framePrototype.get = function(name, property) {
 //setFilter, setFilters
 Frame.addPropertyFunction = function(name, names) {
 	var setProperty = camelize("set " + name);
+	var getProperty = camelize("get " + name);
 	var setProperties = camelize("set " + names);
 	var removeProperty = camelize("remove " + name);
+	framePrototype[getProperty] = function(property) {
+		return this.get(name, property);
+
+	};
 	framePrototype[setProperty] = function(property, value) {
 		this.set(name, property, value);
 		return this;
 	};
 	framePrototype[setProperties] = function(properties) {
 		this.sets(name, properties);
-		return _frame;
+		return this;
 	}
 	framePrototype[removeProperty] = addFunction(framePrototype.removeProperty, function(property) {
 		this.remove(name, property);

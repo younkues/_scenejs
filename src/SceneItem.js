@@ -24,11 +24,16 @@ var SceneItem = Scene.SceneItem = function(element) {
 	/* !!수정필요 View 속성 Rule로 초기화 필요*/
 	this.init();
 }
+
+var sceneItemPrototype = SceneItem.prototype;
+
+
+
 defineGetterSetter(sceneItemPrototype, "element");
 defineGetterSetter(sceneItemPrototype, "id");
 
 
-var sceneItemPrototype = SceneItem.prototype;
+
 sceneItemPrototype.init = function() {
 	
 }
@@ -44,16 +49,33 @@ sceneItemPrototype.load = function(item) {
 }
 sceneItemPrototype.set = function(name, time, property, value) {
 	var frame;
+	
+	
+	//!! throw error
+	if(typeof time !== "number" && isNaN(parseFloat(time)))
+		return this;
+		
 	if(!(frame = this.getFrame(time))) {
 		frame = this.newFrame(time);	
 	}
+	
 	frame.set(name, property, value);
 	return this;
 }
 sceneItemPrototype.sets = function(name, time, properties) {
-	for(var property in properties) {
-		this.set(name, property, properties[property]);
+	var frame;
+	
+	
+	//!! throw error
+	if(typeof time !== "number" && isNaN(parseFloat(time)))
+		return this;
+		
+	if(!(frame = this.getFrame(time))) {
+		frame = this.newFrame(time);	
 	}
+	
+	
+	frame.sets(name, properties);
 	return this;
 }
 sceneItemPrototype.isIn = function(name, property) {
@@ -105,6 +127,7 @@ sceneItemPrototype.removeName = function(name, property) {
 
 SceneItem.addPropertyFunction = function(name, names) {
 	var setProperty = camelize("set " + name);
+	var getProperty = camelize("get " + name);
 	var setProperties = camelize("set " + names);
 	var removeProperty = camelize("remove " + name);
 	var addPropertyName = camelize("add " + name) + "Name";
@@ -115,6 +138,12 @@ SceneItem.addPropertyFunction = function(name, names) {
 	*/
 	sceneItemPrototype[addPropertyName] = function(propertyName) {
 		this.addName(name,propertyName);
+	}
+	/*
+		해당 시간에 대한 프레임을 찾아 property에 대한 값을 가져온다.
+	*/
+	sceneItemPrototype[getProperty] = function(time, property, value) {
+		return this.get(name, time, property);
 	}
 	/*
 		해당 시간에 대한 프레임을 찾아 property를 추가
@@ -238,7 +267,7 @@ var getNextFrameByProperty = function(sceneItem, time, property, func) {
 	}
 	return;
 }
-function addGetFramePropertyFunction(name) {
+SceneItem.addGetFramePropertyFunction = function(name) {
 	var Property = camelize(" " + name);
 	sceneItemPrototype["getNowFrameBy" + Property] = function(time, property) {
 		return getNowFrameByProperty(this, time, property, "getPrevFrameBy" + Property, "getNextFrameBy" + Property, "get" + Property);

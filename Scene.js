@@ -1,4 +1,4 @@
-var DEFAULT_LAYOUT_TIME = 0;
+var DEFAULT_FRAME_TIME = 0;
 var COLOR_MODEL_RGBA = "rgba";
 var COLOR_MODEL_RGB = "rgba";
 var COLOR_MODEL_HSL = "hsl";
@@ -87,7 +87,7 @@ function replaceAll(text, from, to) {
 	return text.split(from).join(to);
 }
 
-var Scene = function Scene() {
+var Scene = function Scene(items) {
 	this.sceneItems = {};
 	this.startTime = this.prevTime = this.nowTime = 0;
 	this.isStart = this.isFinish = this.isPause = false;
@@ -101,16 +101,25 @@ var Scene = function Scene() {
 }
 var _roles = Scene._roles = [];
 
-
+Scene.load = function(items) {
+	var itemName, sceneItem, item;
+	for(itemName in items) {
+		if(itemName === "option")
+			continue;
+		
+		item = items[itemName];
+		sceneItem = this.newItem(itemName);
+		sceneItem.load(item);
+	}
+}
 Scene.addRole = function(name, plural) {
 	var _roles = Scene._roles;
 
 	_roles.push({"name":name, "plural":plural, "capitalize":camelize(" " + name)});
-	addPropertyFunction(name, plural);
-	addGetFramePropertyFunction(name);
-
-	defineAll(framePrototype, name, plural);	
-	setPropertyFunction(name, plural);
+	
+	SceneItem.addGetFramePropertyFunction(name);
+	SceneItem.addPropertyFunction(name, plural);
+	Frame.addPropertyFunction(name, plural);
 }
 
 var scenePrototype = Scene.prototype;
@@ -192,10 +201,12 @@ scenePrototype.synchronize = function synchronize(time, isPlay) {
 		var ic = this.getIterationCount(), pc = this.getPlayCount();
 		this.setPlayCount(++pc);
 		
+		if(this.getFinishTime() <= 0)
+			return false;
 		if(ic === "infinite" || pc < ic) {
 			this.play();
 		} else {
-		return false;
+			return false;
 		}
 	}
 	
@@ -246,7 +257,7 @@ scenePrototype.addTimingFunction = function addTimingFunction(startTime, endTime
 	var sceneItems = this.sceneItems;
 	var item;
 		
-	for(var id in sceneItems) {
+for(var id in sceneItems) {
 		item = sceneItems[id];
 		item.addTimingFunction(startTime, endTime, curveArray);
 	}
@@ -255,6 +266,8 @@ scenePrototype.addTimingFunction = function addTimingFunction(startTime, endTime
 scenePrototype.setClippingRegion = function(x, y, width, height) {
 
 };
+//element를 바깥으로 빼기
+
 var SceneItem = Scene.SceneItem = function(element) {
 	var self = this;
 	self.id = "";
@@ -271,25 +284,120 @@ var SceneItem = Scene.SceneItem = function(element) {
 	
 	self.timingFunctions = [];
 	self.nowTimingFunction;
-	self.animateFunction;	
+	self.animateFunction = "";	
 	
 	self.element = element;
-	self.newFrame(DEFAULT_LAYOUT_TIME);
+	self.newFrame(DEFAULT_FRAME_TIME);
 	
 	/* !!수정필요 View 속성 Rule로 초기화 필요*/
-	if(element) {
-		element.setAttribute("role", "item");
-		self.addStyleToFrame(DEFAULT_LAYOUT_TIME);
-	}
+	this.init();
 }
+
 var sceneItemPrototype = SceneItem.prototype;
+
+
+
 defineGetterSetter(sceneItemPrototype, "element");
 defineGetterSetter(sceneItemPrototype, "id");
 
-var addPropertyFunction = function(name, names) {
+
+
+sceneItemPrototype.init = function() {
+	
+}
+sceneItemPrototype.load = function(item) {
+	var key, properties;
+	for(key in item) {
+		properties = item[key];
+		key = parseFloat(key);
+		if(isNaN(key))
+			continue;
+		
+	}
+}
+sceneItemPrototype.set = function(name, time, property, value) {
+	var frame;
+	
+	
+	//!! throw error
+	if(typeof time !== "number" && isNaN(parseFloat(time)))
+		return this;
+		
+	if(!(frame = this.getFrame(time))) {
+		frame = this.newFrame(time);	
+	}
+	
+	frame.set(name, property, value);
+	return this;
+}
+sceneItemPrototype.sets = function(name, time, properties) {
+	var frame;
+	
+	
+	//!! throw error
+	if(typeof time !== "number" && isNaN(parseFloat(time)))
+		return this;
+		
+	if(!(frame = this.getFrame(time))) {
+		frame = this.newFrame(time);	
+	}
+	
+	
+	frame.sets(name, properties);
+	return this;
+}
+sceneItemPrototype.isIn = function(name, property) {
+	var frame, time, frames = this.frames;
+	//var count = 0;
+	for(time in frames) {
+		frame = frames[time];
+		if(!frame)
+			continue;
+			
+		if(typeof frame.get(name, property) !== "undefined")
+			return true;
+	}
+	return false;	
+}
+sceneItemPrototype.remove = function(name, time, property) {
+	var index = this.names[name].indexOf(property);
+	if(index == -1)
+		return this;
+	
+	var frame = this.getFrame(time);
+	if(!frame)
+		return this;
+		
+	frame.remove(name, property);
+
+	return this;	
+}
+sceneItemPrototype.get = function(name, time, property) {
+	var frame;
+	if(!(frame = this.frames[time]))
+		return;
+	
+	return frame.get(name, property);
+}
+sceneItemPrototype.addName = function(name, propertyName) {
+	if(this.names[name].indexOf(propertyName) != -1)
+		return;
+	this.names[name].push(propertyName);	
+	
+	return this;
+}
+sceneItemPrototype.removeName = function(name, property) {
+	if(!this.isIn(name, property))
+		this.names[name].splice(index, 1);
+}
+
+
+
+SceneItem.addPropertyFunction = function(name, names) {
 	var setProperty = camelize("set " + name);
+	var getProperty = camelize("get " + name);
 	var setProperties = camelize("set " + names);
-	var removeProperty = camelize("remove " + names);
+	var removeProperty = camelize("remove " + name);
 	var addPropertyName = camelize("add " + name) + "Name";
 	var isInProperty = camelize("isIn " + name);
 
@@ -297,76 +405,39 @@ var addPropertyFunction = function(name, names) {
 		property 이름을 추가한다.
 	*/
 	sceneItemPrototype[addPropertyName] = function(propertyName) {
-
-		if(this.names[name].indexOf(propertyName) != -1)
-			return;
-		this.names[name].push(propertyName);	
-		
-		return this;
+		this.addName(name,propertyName);
 	}
-
+	/*
+		해당 시간에 대한 프레임을 찾아 property에 대한 값을 가져온다.
+	*/
+	sceneItemPrototype[getProperty] = function(time, property, value) {
+		return this.get(name, time, property);
+	}
 	/*
 		해당 시간에 대한 프레임을 찾아 property를 추가
 	*/
 	sceneItemPrototype[setProperty] = function(time, property, value) {
-		var frame;
-		if(!(frame = this.getFrame(time))) {
-			frame = this.newFrame(time);	
-		}
-		
-
-		if(typeof value === "string") {
-			value = _u.stringToObject(value);
-		}
-		frame[setProperty](property, value);
+		this.set(name, time, property, value);
 		return this;
 	}
-	/*
-		해당 시간에 대한 프레임을 찾아 property들을 추가
-	*/
-	
+	//해당 시간에 대한 프레임을 찾아 property들을 추가
 	sceneItemPrototype[setProperties] = function(time, properties) {
-		for(var property in properties) {
-			this[setProperty](time, property, properties[property]);
-		}
+		this.sets(name, time, properties);
 		return this;
 	}
-	/*
-		property가 어느 시간에도 없을 때 제거한다.
-	*/
-	sceneItemPrototype[removeProperty] = function(property) {
-		var index = this.names[name].indexOf(property);
-		if(index == -1)
-			return this;
-		
-		if(!this[isInProperty](property))
-			this.names[name].splice(index, 1);
-			
+	//property가 어느 시간에도 없을 때 제거한다.
+	sceneItemPrototype[removeProperty] = function(time, property) {
+		this.remove(name, time, property);
 		return this;
 	}
 	/*
 		property가 존재하는지 확인
 	*/
 	sceneItemPrototype[isInProperty] = function(property) {
-		var frame, time, frames = this.frames;
-		//var count = 0;
-		for(time in frames) {
-			frame = frames[time];
-			if(!frame)
-				continue;
-			if(typeof frame.getProperty(property) !== "undefined")
-				return true;
-		}
-		return false;
+		return this.isIn(name, property);
 	}
 }
 
-sceneItemPrototype.setDefaultTransform = function(time, property) {
-	
-}
-sceneItemPrototype.setDefaultFilter = function(time, property) {
-	
-}
 /*
 	getNowFrameByProperty, getNowFrameByTransform, getNowFrameByFilter
 	time에 해당하는 Frame을 가져온다.
@@ -436,10 +507,11 @@ var getPrevFrameByProperty = function(sceneItem, time, property, func) {
 		value = getComputedStyle(element)[property];
 		if(value == "auto")
 			value = "0";
-		sceneItem.setProperty(DEFAULT_LAYOUT_TIME, property, value);
+			
+		sceneItem.setProperty(DEFAULT_FRAME_TIME, property, value);
 	}
 
-	return sceneItem.getFrame(DEFAULT_LAYOUT_TIME);
+	return sceneItem.getFrame(DEFAULT_FRAME_TIME);
 }
 /*
 	getNextFrameByProperty, getNextFrameByTransform, getNextFrameByFilter
@@ -463,7 +535,7 @@ var getNextFrameByProperty = function(sceneItem, time, property, func) {
 	}
 	return;
 }
-function addGetFramePropertyFunction(name) {
+SceneItem.addGetFramePropertyFunction = function(name) {
 	var Property = camelize(" " + name);
 	sceneItemPrototype["getNowFrameBy" + Property] = function(time, property) {
 		return getNowFrameByProperty(this, time, property, "getPrevFrameBy" + Property, "getNextFrameBy" + Property, "get" + Property);
@@ -477,27 +549,6 @@ function addGetFramePropertyFunction(name) {
 }
 
 
-/*
-	Element의 현재 Style을 해당 time의 Frame에 저장한다.
-*/
-sceneItemPrototype.addStyleToFrame = function(time) {
-	if(!this.element)
-		return this;
-	var cssText = this.element.style.cssText;
-	var a1 = cssText.split(";");
-	var l = a1.length;
-	var a2;
-	var cssObject = {};
-	for(var i =0; i < l; ++i) {
-		a2 = a1[i].split(":");
-		if(a2.length <= 1)
-			continue;
-		cssObject[a2[0].trim()] = a2[1].trim();
-	}
-	this.setProperties(time, cssObject);
-	
-	return this;
-}
 /*
 	해당 time이 몇번째에 지정되어있는지 확인
 */
@@ -723,59 +774,93 @@ sceneItemPrototype.addTimingFunction = function(startTime, endTime, curveArray) 
 	Frame
 */
 
+
 var Frame = Scene.Frame = function Frame(sceneItem, time) {
-	var _frame = this;
-	_frame.sceneItem = sceneItem;
-	_frame.transforms = {};
-	_frame.properties = {};
-	_frame.filters = {};
-	_frame.time = time;
-}
-var _defaultProperties = Frame._defaultProperties = {
-	"translate" : "0, 0",
-	"opacity" : 1,
-	"scale" : "1, 1",
-	rotateY :"0deg",
-	rotateX : "0deg",
-	rotateZ : "0deg",
-	rotate : "0deg",
-	blur: "0px",
-	grayscale : "0%",
-	contrast : "0%",
-	brightness : "0%",
-	invert : "0%",
-	saturate : "0%",
-	sepia : "0%"
-	
+	this.sceneItem = sceneItem;
+	this.properties = {};
+	this.time = time;
+
+	var _roles = Scene._roles, length = _roles.length;
+	for(var i = 0; i < length; ++i) {
+		this.properties[_roles[i]["name"]] = {}; //속성의 이름을 가진 배열 초기화
+	}
 }
 
 
 var framePrototype = Frame.prototype;
 defineAll(framePrototype, "sceneItem");
 
-var setPropertyFunction = function(name, names) {
-	var setProperty = camelize("set " + name);
-	var setProperties = camelize("set " + names);
-	var removeProperty = camelize("remove " + names);
-	var addPropertyName =camelize("add " + name) + "Name";
-	framePrototype[setProperty] = addFunction(framePrototype[setProperty], function(property, value) {
-		var sceneItem = this.getSceneItem();
-		if(sceneItem)
-			sceneItem[addPropertyName](property);
-			
+
+framePrototype.load = function(properties) {
+	var property;
+	for(property in properties) {
+		
+	}
+}
+framePrototype.set = function(name, property, value) {
+	if(!this.properties[name])
 		return this;
-	});
+		
+	
+	if(typeof value === "string") {
+		value = _u.stringToObject(value);
+	}
+	this.properties[name][property] = value;
+
+
+	var sceneItem = this.getSceneItem();
+	if(sceneItem)
+		sceneItem.addName(name, property);
+
+	return this;
+}
+framePrototype.sets = function(name, properties) {
+	for(var property in properties) {
+		this.set(name, property, properties[property]);
+	}
+	return this;
+}
+framePrototype.remove = function(name, property) {
+	if(!this.properties[name])
+		return this;
+		
+
+	delete this.properties[name][property];
+	
+	var sceneItem = this.getSceneItem();
+	if(sceneItem)
+		sceneItem.removeName(name, property);
+			
+	return this;
+}
+framePrototype.get = function(name, property) {
+	if(!this.properties[name])
+		return;
+	
+	return this.properties[name][property];
+}
+//setProperty, setProperties
+//setTransform, setTransforms
+//setFilter, setFilters
+Frame.addPropertyFunction = function(name, names) {
+	var setProperty = camelize("set " + name);
+	var getProperty = camelize("get " + name);
+	var setProperties = camelize("set " + names);
+	var removeProperty = camelize("remove " + name);
+	framePrototype[getProperty] = function(property) {
+		return this.get(name, property);
+
+	};
+	framePrototype[setProperty] = function(property, value) {
+		this.set(name, property, value);
+		return this;
+	};
 	framePrototype[setProperties] = function(properties) {
-		var _frame = this;
-		for(var property in properties) {
-			_frame[setProperty](property, properties[property]);
-		}
-		return _frame;
+		this.sets(name, properties);
+		return this;
 	}
 	framePrototype[removeProperty] = addFunction(framePrototype.removeProperty, function(property) {
-		var sceneItem = this.getSceneItem();
-		if(sceneItem)
-			sceneItem[removeProperty + "Name"](property);
+		this.remove(name, property);
 			
 		return this;
 	});
@@ -1357,18 +1442,53 @@ var _color = Scene.Color = {
 			rgb = [c, 0, x];
 		
 		console.log(h, rgb);
-		var result = [(rgb[0] + m) * 255, (rgb[1] + m) * 255, (rgb[2] + m) * 255];
+		var result = [parseInt((rgb[0] + m) * 255), parseInt((rgb[1] + m) * 255), parseInt((rgb[2] + m) * 255)];
 	    if(hsl.length > 3)
 	    	result[3] = hsl[3];
 	    	
 	    return result;
 	}
 };
-
-
+var _defaultProperties = Frame._defaultProperties = {
+	"translate" : "0, 0",
+	"opacity" : 1,
+	"scale" : "1, 1",
+	rotateY :"0deg",
+	rotateX : "0deg",
+	rotateZ : "0deg",
+	rotate : "0deg",
+	blur: "0px",
+	grayscale : "0%",
+	contrast : "0%",
+	brightness : "0%",
+	invert : "0%",
+	saturate : "0%",
+	sepia : "0%"
+}
+	
 Scene.addRole("property", "properties");
 Scene.addRole("transform", "transforms");
 Scene.addRole("filter", "filters");
+defineGetterSetter(sceneItemPrototype, "selector");
+
+
+function animateFunction(time, frame) {
+	var cssText = frame.getCSSText(), _cssText;
+	var selector = this.selector;
+	if(!selector)
+		return;
+	try {
+		var elements = document.querySelectorAll(selector);
+		var length = elements.length;
+		for(var i = 0; i < length; ++i) {
+			_cssText = elements[i].style.cssText;
+			elements[i].style.cssText = _cssText + cssText;
+		}
+	} catch(e) {
+		//console.log(e);
+	}
+}
+
 
 scenePrototype._addElement = function(elements) {
 	var length = elements.length, i;
@@ -1413,14 +1533,17 @@ scenePrototype.addElement = function(id, element) {
 	return this.addItem(id, item);
 }
 
-defineGetterSetter(sceneItemPrototype, "selector");
+
 
 var _synchronize = sceneItemPrototype.synchronize;
 sceneItemPrototype.synchronize = (function(_synchronize) {
 	return function(time) {
+	if(!this.animateFunction)
+		this.animateFunction = animateFunction;
+		
 	var frame = _synchronize.call(this, time);
 	
-	
+
 
 	if(!frame)
 		return false;
@@ -1436,6 +1559,37 @@ sceneItemPrototype.synchronize = (function(_synchronize) {
 	
 	return true;
 };})(_synchronize);
+
+sceneItemPrototype.init = function() {
+	if(this.element) {
+		this.element.setAttribute("role", "item");
+		this.addStyleToFrame(DEFAULT_FRAME_TIME);
+	}
+}
+
+/*
+	Element의 현재 Style을 해당 time의 Frame에 저장한다.
+*/
+sceneItemPrototype.addStyleToFrame = function(time) {
+	if(!this.element)
+		return this;
+	var cssText = this.element.style.cssText;
+	var a1 = cssText.split(";");
+	var l = a1.length;
+	var a2;
+	var cssObject = {};
+	for(var i =0; i < l; ++i) {
+		a2 = a1[i].split(":");
+		if(a2.length <= 1)
+			continue;
+		cssObject[a2[0].trim()] = a2[1].trim();
+	}
+	this.setProperties(time, cssObject);
+	
+	return this;
+}
+
+
 scenePrototype.playCSS = function play (){
 	if(this.isStart)
 		return this;
@@ -1543,7 +1697,7 @@ sceneItemPrototype.setFrameToCSSRule = function(finishTime, count) {
 
 
 framePrototype.getCSSObject = function() {
-	var transforms = this.transforms, filters = this.filters, properties = this.properties;
+	var transforms = this.properties["transform"], filters = this.properties["filter"], properties = this.properties["property"];
 	var value;
 	var cssObject = {}, cssTransform = "", cssFilter = "";
 	/*transform css*/

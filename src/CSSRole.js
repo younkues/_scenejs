@@ -13,6 +13,7 @@ var _defaultProperties = Frame._defaultProperties = {
 	invert : "0%",
 	saturate : "0%",
 	sepia : "0%"
+}
 	
 Scene.addRole("property", "properties");
 Scene.addRole("transform", "transforms");
@@ -111,7 +112,7 @@ sceneItemPrototype.synchronize = (function(_synchronize) {
 sceneItemPrototype.init = function() {
 	if(this.element) {
 		this.element.setAttribute("role", "item");
-		this.addStyleToFrame(DEFAULT_LAYOUT_TIME);
+		this.addStyleToFrame(DEFAULT_FRAME_TIME);
 	}
 }
 
@@ -245,7 +246,7 @@ sceneItemPrototype.setFrameToCSSRule = function(finishTime, count) {
 
 
 framePrototype.getCSSObject = function() {
-	var transforms = this.transforms, filters = this.filters, properties = this.properties;
+	var transforms = this.properties["transform"], filters = this.properties["filter"], properties = this.properties["property"];
 	var value;
 	var cssObject = {}, cssTransform = "", cssFilter = "";
 	/*transform css*/
