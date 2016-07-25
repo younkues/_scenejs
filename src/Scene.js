@@ -23,17 +23,18 @@ Scene.load = function(items) {
 		sceneItem = this.newItem(itemName);
 		sceneItem.load(item);
 	}
-
 }
 Scene.addRole = function(name, plural) {
 	var _roles = Scene._roles;
 
 	_roles.push({"name":name, "plural":plural, "capitalize":camelize(" " + name)});
-	addPropertyFunction(name, plural);
+	
 	addGetFramePropertyFunction(name);
 
 	defineAll(framePrototype, name, plural);	
-	setPropertyFunction(name, plural);
+
+	SceneItem.addPropertyFunction(name, plural);
+	Frame.addPropertyFunction(name, plural);
 }
 
 var scenePrototype = Scene.prototype;

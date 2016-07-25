@@ -42,12 +42,71 @@ sceneItemPrototype.load = function(item) {
 		
 	}
 }
+sceneItemPrototype.set = function(name, time, property, value) {
+	var frame;
+	if(!(frame = this.getFrame(time))) {
+		frame = this.newFrame(time);	
+	}
+	frame.set(name, property, value);
+	return this;
+}
+sceneItemPrototype.sets = function(name, time, properties) {
+	for(var property in properties) {
+		this.set(name, property, properties[property]);
+	}
+	return this;
+}
+sceneItemPrototype.isIn = function(name, property) {
+	var frame, time, frames = this.frames;
+	//var count = 0;
+	for(time in frames) {
+		frame = frames[time];
+		if(!frame)
+			continue;
+			
+		if(typeof frame.get(name, property) !== "undefined")
+			return true;
+	}
+	return false;	
+}
+sceneItemPrototype.remove = function(name, time, property) {
+	var index = this.names[name].indexOf(property);
+	if(index == -1)
+		return this;
+	
+	var frame = this.getFrame(time);
+	if(!frame)
+		return this;
+		
+	frame.remove(name, property);
 
-//sceneItemPrototype.
-var addPropertyFunction = function(name, names) {
+	return this;	
+}
+sceneItemPrototype.get = function(name, time, property) {
+	var frame;
+	if(!(frame = this.frames[time]))
+		return;
+	
+	return frame.get(name, property);
+}
+sceneItemPrototype.addName = function(name, propertyName) {
+	if(this.names[name].indexOf(propertyName) != -1)
+		return;
+	this.names[name].push(propertyName);	
+	
+	return this;
+}
+sceneItemPrototype.removeName = function(name, property) {
+	if(!this.isIn(name, property))
+		this.names[name].splice(index, 1);
+}
+
+
+
+SceneItem.addPropertyFunction = function(name, names) {
 	var setProperty = camelize("set " + name);
 	var setProperties = camelize("set " + names);
-	var removeProperty = camelize("remove " + names);
+	var removeProperty = camelize("remove " + name);
 	var addPropertyName = camelize("add " + name) + "Name";
 	var isInProperty = camelize("isIn " + name);
 
@@ -55,76 +114,33 @@ var addPropertyFunction = function(name, names) {
 		property 이름을 추가한다.
 	*/
 	sceneItemPrototype[addPropertyName] = function(propertyName) {
-
-		if(this.names[name].indexOf(propertyName) != -1)
-			return;
-		this.names[name].push(propertyName);	
-		
-		return this;
+		this.addName(name,propertyName);
 	}
-
 	/*
 		해당 시간에 대한 프레임을 찾아 property를 추가
 	*/
 	sceneItemPrototype[setProperty] = function(time, property, value) {
-		var frame;
-		if(!(frame = this.getFrame(time))) {
-			frame = this.newFrame(time);	
-		}
-		
-
-		if(typeof value === "string") {
-			value = _u.stringToObject(value);
-		}
-		frame[setProperty](property, value);
+		this.set(name, time, property, value);
 		return this;
 	}
-	/*
-		해당 시간에 대한 프레임을 찾아 property들을 추가
-	*/
-	
+	//해당 시간에 대한 프레임을 찾아 property들을 추가
 	sceneItemPrototype[setProperties] = function(time, properties) {
-		for(var property in properties) {
-			this[setProperty](time, property, properties[property]);
-		}
+		this.sets(name, time, properties);
 		return this;
 	}
-	/*
-		property가 어느 시간에도 없을 때 제거한다.
-	*/
-	sceneItemPrototype[removeProperty] = function(property) {
-		var index = this.names[name].indexOf(property);
-		if(index == -1)
-			return this;
-		
-		if(!this[isInProperty](property))
-			this.names[name].splice(index, 1);
-			
+	//property가 어느 시간에도 없을 때 제거한다.
+	sceneItemPrototype[removeProperty] = function(time, property) {
+		this.remove(name, time, property);
 		return this;
 	}
 	/*
 		property가 존재하는지 확인
 	*/
 	sceneItemPrototype[isInProperty] = function(property) {
-		var frame, time, frames = this.frames;
-		//var count = 0;
-		for(time in frames) {
-			frame = frames[time];
-			if(!frame)
-				continue;
-			if(typeof frame.getProperty(property) !== "undefined")
-				return true;
-		}
-		return false;
+		return this.isIn(name, property);
 	}
 }
 
-sceneItemPrototype.setDefaultTransform = function(time, property) {
-	
-}
-sceneItemPrototype.setDefaultFilter = function(time, property) {
-	
-}
 /*
 	getNowFrameByProperty, getNowFrameByTransform, getNowFrameByFilter
 	time에 해당하는 Frame을 가져온다.
