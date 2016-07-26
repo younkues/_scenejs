@@ -1053,6 +1053,8 @@ var _u = Scene.Util = {
 		if(arr.length === 3)
 			arr[3] = 1;
 		
+		
+
 		var object = new PropertyObject(arr, ",");
 		object.setType("color")
 		object.setModel(model);
@@ -1093,7 +1095,7 @@ var _u = Scene.Util = {
 			
 			
 		colorObject.setType("color");
-		var colorModel = colorObject.getModel();
+		var colorModel = colorObject.getModel().toLowerCase();
 		
 		
 		 //rgb hsl model to CHANGE rgba hsla
@@ -1283,7 +1285,7 @@ var _u = Scene.Util = {
 	 		
 	 		return result;
 		} else if(a1.indexOf("(") != -1) {//괄호가 들어갈 때
- 			if((a1 = this.toBracketObject(a1)) && _color.models.indexOf(a1.getModel()) != -1) 
+ 			if((a1 = this.toBracketObject(a1)) && _color.models.indexOf(a1.getModel().toLowerCase()) != -1) 
 	 			return this.toColorObject(a1);
 	 		
 	 		arr = a1.value;
@@ -1455,8 +1457,7 @@ var _color = Scene.Color = {
 		else if(h < 360)
 			rgb = [c, 0, x];
 		
-		console.log(h, rgb);
-		var result = [parseInt((rgb[0] + m) * 255), parseInt((rgb[1] + m) * 255), parseInt((rgb[2] + m) * 255)];
+		var result = [Math.round((rgb[0] + m) * 255), Math.round((rgb[1] + m) * 255), Math.round((rgb[2] + m) * 255)];
 	    if(hsl.length > 3)
 	    	result[3] = hsl[3];
 	    	

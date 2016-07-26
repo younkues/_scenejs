@@ -21,6 +21,8 @@ var _u = Scene.Util = {
 		if(arr.length === 3)
 			arr[3] = 1;
 		
+		
+
 		var object = new PropertyObject(arr, ",");
 		object.setType("color")
 		object.setModel(model);
@@ -61,7 +63,7 @@ var _u = Scene.Util = {
 			
 			
 		colorObject.setType("color");
-		var colorModel = colorObject.getModel();
+		var colorModel = colorObject.getModel().toLowerCase();
 		
 		
 		 //rgb hsl model to CHANGE rgba hsla
