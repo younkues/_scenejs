@@ -251,7 +251,7 @@ var _u = Scene.Util = {
 	 		
 	 		return result;
 		} else if(a1.indexOf("(") != -1) {//괄호가 들어갈 때
- 			if((a1 = this.toBracketObject(a1)) && _color.models.indexOf(a1.getModel()) != -1) 
+ 			if((a1 = this.toBracketObject(a1)) && _color.models.indexOf(a1.getModel().toLowerCase()) != -1) 
 	 			return this.toColorObject(a1);
 	 		
 	 		arr = a1.value;
