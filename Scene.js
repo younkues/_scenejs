@@ -1336,7 +1336,10 @@ var _u = Scene.Util = {
 			v = v1.value * r2 + v2.value * r1;
 		}
 		
-		var unit = v1.unit || v2.unit || "";	
+		var unit = v1.unit || v2.unit || false;
+		if(unit === false)
+			return v;
+		
 		return v + unit.trim();
 	},
 	/*
