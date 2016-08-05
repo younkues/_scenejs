@@ -349,7 +349,7 @@ sceneItemPrototype.getFinishTime = function() {
 /*
 	재생간에 불러낼 Callback 함수 지정
 */
-scenePrototype.on = function onAnimate(name, func) {
+sceneItemPrototype.on = function onAnimate(name, func) {
 	this.callbackFunction[name] = this.callbackFunction[name] || [];
 	this.callbackFunction[name].push(func);
 	

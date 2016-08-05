@@ -303,7 +303,7 @@ var SceneItem = Scene.SceneItem = function(element) {
 	
 	self.timingFunctions = [];
 	self.nowTimingFunction;
-	self.animateFunction = "";	
+	this.callbackFunction = {};
 	
 	self.element = element;
 	self.newFrame(DEFAULT_FRAME_TIME);
@@ -634,10 +634,12 @@ sceneItemPrototype.getFinishTime = function() {
 
 
 /*
-	재생간에 불러낼 함수 지정
+	재생간에 불러낼 Callback 함수 지정
 */
-sceneItemPrototype.onAnimate = function onAnimate(func) {
-	this.animateFunction = func;
+sceneItemPrototype.on = function onAnimate(name, func) {
+	console.log("hi" + name);
+	this.callbackFunction[name] = this.callbackFunction[name] || [];
+	this.callbackFunction[name].push(func);
 	
 	return this;
 }
@@ -657,7 +659,7 @@ sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
 	var timingFunctions = this.timingFunctions;
 	var length = timingFunctions.length;
 	var nowTimingFunction = this.nowTimingFunction;
-	
+	var _callback;
 	//시간이 벗어나거나 TimingFunction이 미지정일시 해당 시간에 만족하는 TimingFunction을 찾는다.
 	if(nowTimingFunction && (nowTimingFunction.endTime < time || time < nowTimingFunction.startTime) || length > 0  && !nowTimingFunction ) {
 		nowTimingFunction = this.nowTimingFunction = 0;
@@ -676,12 +678,20 @@ sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
 	}
 	
 	frame = this.getNowFrame(time);
+	
 	try {
-		if(this.animateFunction)
-			this.animateFunction(time, frame);
+		_callback = this.callbackFunction["animate"];
+		if(_callback) {	
+			length = _callback.length;
+			for(var i = 0; i < length; ++i) {
+				_callback[i](time, isFinish);
+			}
+		}
 	} catch(e) {
+		//Not Function
 		//No Function
-	}
+	} 
+	
 	
 	
 	return frame;
