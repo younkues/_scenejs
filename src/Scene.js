@@ -89,7 +89,7 @@ scenePrototype.getItem = function(id) {
 	}
 	return;
 }
-scenePrototype.synchronize = function synchronize(time, isPlay) {
+scenePrototype.setTime = function synchronize(time, isPlay) {
 	var sceneItems = this.sceneItems;
 	var item, itemsLength = 0;
 	var finishCount = 0;
@@ -183,6 +183,7 @@ scenePrototype.stop = function stop() {
 	this.isStart = false;
 	this.isFinish = true;
 	this.isPause = false;
+	this.setTime(0);
 }
 
 scenePrototype.addTimingFunction = function addTimingFunction(startTime, endTime, curveArray) {

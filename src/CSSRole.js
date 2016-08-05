@@ -84,8 +84,8 @@ scenePrototype.addElement = function(id, element) {
 
 
 
-var _synchronize = sceneItemPrototype.synchronize;
-sceneItemPrototype.synchronize = function() {
+var _setTime = sceneItemPrototype.setTime;
+sceneItemPrototype.setTime = function() {
 
 	var frame = _synchronize.call(this, time);
 	
@@ -102,7 +102,7 @@ sceneItemPrototype.synchronize = function() {
 	this.element.style.cssText = cssText;
 	
 	return true;
-};})(_synchronize);
+};
 
 sceneItemPrototype.init = function() {
 	if(this.element) {

@@ -358,7 +358,7 @@ sceneItemPrototype.on = function onAnimate(name, func) {
 /*
 	해당 시간에 지정된 Frame으로 Element style 변경
 */
-sceneItemPrototype.setTime = function synchronize(time, isPlay) {
+sceneItemPrototype.setTime = function setTime(time, isPlay) {
 	if(this.getFinishTime() < time)
 		time = this.getFinishTime();
 
