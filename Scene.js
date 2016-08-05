@@ -4,6 +4,10 @@ var COLOR_MODEL_RGB = "rgba";
 var COLOR_MODEL_HSL = "hsl";
 var COLOR_MODEL_HSLA = "hsla";
 var ATTR_ITEM_ID = "item-id";
+var ANIMATION_PLAY_STATE = ["idle", "pending", "paused", "running", "finished"];
+var FILL_MODE = ["none", "forwards", "backwards", "both", "auto" ];
+var PLAY_DIRECTION = ["normal", "reverse", "alternate", "alternate-reverse"];
+
 (function() {
 	var StringPrototype = String.prototype;
 	StringPrototype.replaceAll = function(from, to) {
@@ -177,7 +181,7 @@ scenePrototype.getItem = function(id) {
 	}
 	return;
 }
-scenePrototype.synchronize = function synchronize(time, isPlay) {
+scenePrototype.setTime = function setTime(time, isPlay) {
 	var sceneItems = this.sceneItems;
 	var item, itemsLength = 0;
 	var finishCount = 0;
@@ -187,7 +191,7 @@ scenePrototype.synchronize = function synchronize(time, isPlay) {
 		++itemsLength;
 		
 		item = sceneItems[id];
-		item.synchronize(time, isPlay);
+		item.setTime(time, isPlay);
 		if(item.isFinish())
 			++finishCount;
 	}
@@ -230,21 +234,21 @@ scenePrototype.on = function onAnimate(name, func) {
 	
 	return this;
 }
-scenePrototype.timerFunction = function(resolve, reject) {
+scenePrototype.tick = function(resolve, reject) {
 	var self = this;
 	if(!self.isStart)
 		return;
 		
 	self.nowTime = Date.now();
 	var duration = (self.nowTime - self.startTime) / 1000;
-	var isProcess = self.synchronize(duration * self.getPlaySpeed(), true);
+	var isProcess = self.setTime(duration * self.getPlaySpeed(), true);
 	if(!isProcess) {
 		self.stop();
 		if(resolve)
 		resolve();
 	} else {
 		requestAnimFrame(function() {
-			self.timerFunction(resolve, reject);
+			self.tick(resolve, reject);
 		});
 	}
 }
@@ -261,7 +265,8 @@ scenePrototype.play = function play (){
 	this.isStart = true;
 	this.isFinish = false;
 	this.isPause = false;
-	requestAnimFrame(this.timerFunction.bind(this));
+	
+	this.tick(resolve, reject);
 
 	return this;	
 }
@@ -270,6 +275,7 @@ scenePrototype.stop = function stop() {
 	this.isStart = false;
 	this.isFinish = true;
 	this.isPause = false;
+	this.setTime(0);
 }
 
 scenePrototype.addTimingFunction = function addTimingFunction(startTime, endTime, curveArray) {
@@ -645,7 +651,7 @@ sceneItemPrototype.on = function onAnimate(name, func) {
 /*
 	해당 시간에 지정된 Frame으로 Element style 변경
 */
-sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
+sceneItemPrototype.setTime = function setTime(time, isPlay) {
 	if(this.getFinishTime() < time)
 		time = this.getFinishTime();
 
@@ -1580,16 +1586,11 @@ scenePrototype.addElement = function(id, element) {
 
 
 
-var _synchronize = sceneItemPrototype.synchronize;
-sceneItemPrototype.synchronize = (function(_synchronize) {
-	return function(time) {
-	if(!this.animateFunction)
-		this.animateFunction = animateFunction;
-		
-	var frame = _synchronize.call(this, time);
+var _setTime = sceneItemPrototype.setTime;
+sceneItemPrototype.setTime = function(time, isPlay) {
+
+	var frame = _setTime.call(this, time, isPlay);
 	
-
-
 	if(!frame)
 		return false;
 
@@ -1603,7 +1604,7 @@ sceneItemPrototype.synchronize = (function(_synchronize) {
 	this.element.style.cssText = cssText;
 	
 	return true;
-};})(_synchronize);
+};
 
 sceneItemPrototype.init = function() {
 	if(this.element) {
@@ -1831,7 +1832,7 @@ scenePrototype.play = function play (){
 		self.isFinish = false;
 		self.isPause = false;
 
-		self.timerFunction(resolve, reject);
+		self.tick(resolve, reject);
 	});
 	
 	return promise;	

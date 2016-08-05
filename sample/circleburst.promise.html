@@ -298,7 +298,6 @@ for (var i = 0; i < circles.length; ++i) {
 	_circles[i].opacity(d + duration * 0.7, "1").opacity(d+ duration, "0");
 }
 
-scene2.synchronize(0);
 
 
 var scene3 = new Scene();
@@ -381,18 +380,13 @@ bomb_body.scale(2, "1,1");
 bomb_body.scale(3, "20,20");
 bomb_body.addTimingFunction(2, 3, ease);
 
-scene6.onAnimate(function(time, isFinish) {
-	if(isFinish) {
-		text.innerHTML = "";
-	}
-});
 scene1.setPlaySpeed(0.5);
-scene1.synchronize(0);
-scene2.synchronize(0);
-scene3.synchronize(0);
-scene4.synchronize(0);
-scene5.synchronize(0);
-scene6.synchronize(0);
+scene1.setTime(0);
+scene2.setTime(0);
+scene3.setTime(0);
+scene4.setTime(0);
+scene5.setTime(0);
+scene6.setTime(0);
 
 scene1.play().then(function() {
 	text.innerHTML = "2";

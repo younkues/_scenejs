@@ -365,7 +365,6 @@ sceneItemPrototype.setTime = function setTime(time, isPlay) {
 	if(this.time == time && time > 0 && isPlay)
 		return false;
 
-
 		
 	this.time = time;
 	var timingFunctions = this.timingFunctions;

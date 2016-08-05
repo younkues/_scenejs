@@ -89,7 +89,7 @@ scenePrototype.getItem = function(id) {
 	}
 	return;
 }
-scenePrototype.setTime = function synchronize(time, isPlay) {
+scenePrototype.setTime = function setTime(time, isPlay) {
 	var sceneItems = this.sceneItems;
 	var item, itemsLength = 0;
 	var finishCount = 0;
@@ -99,7 +99,7 @@ scenePrototype.setTime = function synchronize(time, isPlay) {
 		++itemsLength;
 		
 		item = sceneItems[id];
-		item.synchronize(time, isPlay);
+		item.setTime(time, isPlay);
 		if(item.isFinish())
 			++finishCount;
 	}
@@ -149,7 +149,7 @@ scenePrototype.tick = function(resolve, reject) {
 		
 	self.nowTime = Date.now();
 	var duration = (self.nowTime - self.startTime) / 1000;
-	var isProcess = self.synchronize(duration * self.getPlaySpeed(), true);
+	var isProcess = self.setTime(duration * self.getPlaySpeed(), true);
 	if(!isProcess) {
 		self.stop();
 		if(resolve)
