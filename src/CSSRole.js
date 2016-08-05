@@ -85,15 +85,10 @@ scenePrototype.addElement = function(id, element) {
 
 
 var _synchronize = sceneItemPrototype.synchronize;
-sceneItemPrototype.synchronize = (function(_synchronize) {
-	return function(time) {
-	if(!this.animateFunction)
-		this.animateFunction = animateFunction;
-		
+sceneItemPrototype.synchronize = function() {
+
 	var frame = _synchronize.call(this, time);
 	
-
-
 	if(!frame)
 		return false;
 

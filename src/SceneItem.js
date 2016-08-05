@@ -358,7 +358,7 @@ sceneItemPrototype.on = function onAnimate(name, func) {
 /*
 	해당 시간에 지정된 Frame으로 Element style 변경
 */
-sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
+sceneItemPrototype.setTime = function synchronize(time, isPlay) {
 	if(this.getFinishTime() < time)
 		time = this.getFinishTime();
 
@@ -396,7 +396,7 @@ sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
 		if(_callback) {	
 			length = _callback.length;
 			for(var i = 0; i < length; ++i) {
-				_callback[i](time, isFinish);
+				_callback[i].call(this,time, frame);
 			}
 		}
 	} catch(e) {

@@ -637,7 +637,6 @@ sceneItemPrototype.getFinishTime = function() {
 	재생간에 불러낼 Callback 함수 지정
 */
 sceneItemPrototype.on = function onAnimate(name, func) {
-	console.log("hi" + name);
 	this.callbackFunction[name] = this.callbackFunction[name] || [];
 	this.callbackFunction[name].push(func);
 	
@@ -684,7 +683,7 @@ sceneItemPrototype.synchronize = function synchronize(time, isPlay) {
 		if(_callback) {	
 			length = _callback.length;
 			for(var i = 0; i < length; ++i) {
-				_callback[i](time, isFinish);
+				_callback[i].call(this,time, frame);
 			}
 		}
 	} catch(e) {

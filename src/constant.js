@@ -4,3 +4,6 @@ var COLOR_MODEL_RGB = "rgba";
 var COLOR_MODEL_HSL = "hsl";
 var COLOR_MODEL_HSLA = "hsla";
 var ATTR_ITEM_ID = "item-id";
+var ANIMATION_PLAY_STATE = ["idle", "pending", "paused", "running", "finished"];
+var FILL_MODE = ["none", "forwards", "backwards", "both", "auto" ];
+var PLAY_DIRECTION = ["normal", "reverse", "alternate", "alternate-reverse"];

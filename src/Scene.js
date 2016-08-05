@@ -142,7 +142,7 @@ scenePrototype.on = function onAnimate(name, func) {
 	
 	return this;
 }
-scenePrototype.timerFunction = function(resolve, reject) {
+scenePrototype.tick = function(resolve, reject) {
 	var self = this;
 	if(!self.isStart)
 		return;
@@ -156,7 +156,7 @@ scenePrototype.timerFunction = function(resolve, reject) {
 		resolve();
 	} else {
 		requestAnimFrame(function() {
-			self.timerFunction(resolve, reject);
+			self.tick(resolve, reject);
 		});
 	}
 }
@@ -173,7 +173,8 @@ scenePrototype.play = function play (){
 	this.isStart = true;
 	this.isFinish = false;
 	this.isPause = false;
-	requestAnimFrame(this.timerFunction.bind(this));
+	
+	this.tick(resolve, reject);
 
 	return this;	
 }

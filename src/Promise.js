@@ -16,7 +16,7 @@ scenePrototype.play = function play (){
 		self.isFinish = false;
 		self.isPause = false;
 
-		self.timerFunction(resolve, reject);
+		self.tick(resolve, reject);
 	});
 	
 	return promise;	
