@@ -1,7 +1,7 @@
 
 var Scene = function Scene(items) {
 	this.sceneItems = {};
-	this._startTime = this.prevTime = this.nowTime = 0;
+	this._startTime = this._prevTime = this._nowTime = 0;
 	this._isStart = this._isFinish = this._isPause = false;
 	this.playSpeed = 1;
 	this.playCount = 0;
@@ -144,8 +144,8 @@ scenePrototype.tick = function(resolve, reject) {
 		return;
 		
 
-	self.nowTime = Date.now();
-	var duration = (self.nowTime - self._startTime) / 1000;
+	self._nowTime = Date.now();
+	var duration = (self._nowTime - self._startTime) / 1000;
 	self.setTime(duration * self.getPlaySpeed(), true);
 
 
@@ -178,8 +178,8 @@ scenePrototype.play = function play (){
 		return this;
 		
 	console.log("PLAY");
-	this._startTime = this.prevTime = Date.now();
-	this.nowTime = this.spendTime = 0;
+	this._startTime = this._prevTime = Date.now();
+	this._nowTime = this.spendTime = 0;
 	
 	this.setPlayCount(0);
 
