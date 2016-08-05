@@ -85,7 +85,7 @@ scenePrototype.addElement = function(id, element) {
 
 
 var _setTime = sceneItemPrototype.setTime;
-sceneItemPrototype.setTime = function() {
+sceneItemPrototype.setTime = function(time) {
 
 	var frame = _synchronize.call(this, time);
 	
