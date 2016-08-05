@@ -120,8 +120,7 @@ framePrototype.merge = function(frame) {
 	var _roles = Scene._roles, length = _roles.length;
 	var properties, capital;
 	for(var i = 0; i < length; ++i) {
-		capital = camelize(" " + _roles[i]["plural"]);
-		properties = frame[_roles[i]["plural"]];
-		_frame["set" + capital](properties);
+		properties = frame.properties[_roles[i]["name"]];
+		_frame.sets(_roles[i]["name"], properties);
 	}
 }

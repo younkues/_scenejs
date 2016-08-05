@@ -43,6 +43,8 @@ var _u = Scene.Util = {
 				colorArray = _color.hexToRGB(_color.hex4to6(v));
 			} else if(v.length === 7) {
 				colorArray = _color.hexToRGB(v);
+			} else {
+				colorArray = _color.hexToRGB(v);
 			}
 			return this.arrayToColorObject(colorArray);
 		} else if(v.indexOf("(") !== -1) {		

@@ -897,9 +897,8 @@ framePrototype.merge = function(frame) {
 	var _roles = Scene._roles, length = _roles.length;
 	var properties, capital;
 	for(var i = 0; i < length; ++i) {
-		capital = camelize(" " + _roles[i]["plural"]);
-		properties = frame[_roles[i]["plural"]];
-		_frame["set" + capital](properties);
+		properties = frame.properties[_roles[i]["name"]];
+		_frame.sets(_roles[i]["name"], properties);
 	}
 }
 var Curve = {
@@ -1074,6 +1073,8 @@ var _u = Scene.Util = {
 			if(v.length === 4) {
 				colorArray = _color.hexToRGB(_color.hex4to6(v));
 			} else if(v.length === 7) {
+				colorArray = _color.hexToRGB(v);
+			} else {
 				colorArray = _color.hexToRGB(v);
 			}
 			return this.arrayToColorObject(colorArray);
