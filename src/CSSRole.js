@@ -22,22 +22,13 @@ defineGetterSetter(sceneItemPrototype, "selector");
 
 
 function animateFunction(time, frame) {
-	var cssText = frame.getCSSText(), _cssText;
-	var selector = this.selector;
-	if(!selector)
-		return;
-	try {
-		var elements = document.querySelectorAll(selector);
-		var length = elements.length;
-		for(var i = 0; i < length; ++i) {
-			_cssText = elements[i].style.cssText;
-			elements[i].style.cssText = _cssText + cssText;
-		}
-	} catch(e) {
-		//console.log(e);
+		var cssText = frame.getCSSText();
+			
+		if(!this.element)
+			return;
+	
+		this.element.style.cssText = cssText;
 	}
-}
-
 
 scenePrototype._addElement = function(elements) {
 	var length = elements.length, i;
@@ -84,31 +75,13 @@ scenePrototype.addElement = function(id, element) {
 
 
 
-var _setTime = sceneItemPrototype.setTime;
-sceneItemPrototype.setTime = function(time, isPlay) {
-
-	var frame = _setTime.call(this, time, isPlay);
-	
-	if(!frame)
-		return false;
-
-	var cssText = frame.getCSSText();
-
-	
-		
-	if(!this.element)
-		return false;
-
-	this.element.style.cssText = cssText;
-	
-	return true;
-};
-
 sceneItemPrototype.init = function() {
 	if(this.element) {
 		this.element.setAttribute("role", "item");
 		this.addStyleToFrame(DEFAULT_FRAME_TIME);
 	}
+	this.on("animate", animateFunction);
+
 }
 
 /*

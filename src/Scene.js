@@ -1,8 +1,8 @@
 
 var Scene = function Scene(items) {
 	this.sceneItems = {};
-	this.startTime = this.prevTime = this.nowTime = 0;
-	this.isStart = this.isFinish = this.isPause = false;
+	this._startTime = this.prevTime = this.nowTime = 0;
+	this._isStart = this._isFinish = this._isPause = false;
 	this.playSpeed = 1;
 	this.playCount = 0;
 	this.iterationCount = 1;
@@ -89,6 +89,18 @@ scenePrototype.getItem = function(id) {
 	}
 	return;
 }
+scenePrototype.isFinish = function isFinish() {
+	var sceneItems = this.sceneItems;
+	var item, itemsLength = 0;
+	var finishCount = 0;
+	for(id in sceneItems) {
+		++itemsLength;
+		item = sceneItems[id];
+		if(item.isFinish())
+			++finishCount;
+	}
+	return (itemsLength <= finishCount);
+}
 scenePrototype.setTime = function setTime(time, isPlay) {
 	var sceneItems = this.sceneItems;
 	var item, itemsLength = 0;
@@ -96,14 +108,9 @@ scenePrototype.setTime = function setTime(time, isPlay) {
 	var _callback, length;
 	var id;
 	for(id in sceneItems) {
-		++itemsLength;
-		
 		item = sceneItems[id];
 		item.setTime(time, isPlay);
-		if(item.isFinish())
-			++finishCount;
 	}
-	var isFinish = (itemsLength <= finishCount);
 	
 	try {
 		_callback = this.callbackFunction["animate"];
@@ -118,23 +125,9 @@ scenePrototype.setTime = function setTime(time, isPlay) {
 		//No Function
 	} 
 	
-	if(isFinish) {
-		this.isStart = false;
-		this.isFinish = true;
-		this.isPause = false;
-		var ic = this.getIterationCount(), pc = this.getPlayCount();
-		this.setPlayCount(++pc);
-		
-		if(this.getFinishTime() <= 0)
-			return false;
-		if(ic === "infinite" || pc < ic) {
-			this.play();
-		} else {
-			return false;
-		}
-	}
 	
-	return true;
+	
+	return this;
 };
 scenePrototype.on = function onAnimate(name, func) {
 	this.callbackFunction[name] = this.callbackFunction[name] || [];
@@ -144,13 +137,33 @@ scenePrototype.on = function onAnimate(name, func) {
 }
 scenePrototype.tick = function(resolve, reject) {
 	var self = this;
-	if(!self.isStart)
+
+
+
+	if(!self._isStart)
 		return;
 		
+
 	self.nowTime = Date.now();
-	var duration = (self.nowTime - self.startTime) / 1000;
-	var isProcess = self.setTime(duration * self.getPlaySpeed(), true);
-	if(!isProcess) {
+	var duration = (self.nowTime - self._startTime) / 1000;
+	self.setTime(duration * self.getPlaySpeed(), true);
+
+
+
+	var isFinish = this.isFinish();
+
+	if(isFinish) {
+		var ic = this.getIterationCount(), pc = this.getPlayCount();
+		this.stop();
+		this.setPlayCount(++pc);
+		
+		if(this.getFinishTime() <= 0) {	
+		} else if(ic === "infinite" || pc < ic) {
+			this.play();
+			return;
+		}
+	}
+	if(isFinish) {
 		self.stop();
 		if(resolve)
 		resolve();
@@ -161,18 +174,18 @@ scenePrototype.tick = function(resolve, reject) {
 	}
 }
 scenePrototype.play = function play (){
-	if(this.isStart)
+	if(this._isStart)
 		return this;
 		
 	console.log("PLAY");
-	this.startTime = this.prevTime = Date.now();
+	this._startTime = this.prevTime = Date.now();
 	this.nowTime = this.spendTime = 0;
 	
 	this.setPlayCount(0);
 
-	this.isStart = true;
-	this.isFinish = false;
-	this.isPause = false;
+	this._isStart = true;
+	this._isFinish = false;
+	this._isPause = false;
 	
 	this.tick(resolve, reject);
 
@@ -180,10 +193,10 @@ scenePrototype.play = function play (){
 }
 scenePrototype.stop = function stop() {
 	console.log("STOP");
-	this.isStart = false;
-	this.isFinish = true;
-	this.isPause = false;
-	this.setTime(0);
+	this._isStart = false;
+	this._isFinish = true;
+	this._isPause = false;
+	this.setPlayCount(0);
 }
 
 scenePrototype.addTimingFunction = function addTimingFunction(startTime, endTime, curveArray) {

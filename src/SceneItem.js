@@ -363,7 +363,7 @@ sceneItemPrototype.setTime = function setTime(time, isPlay) {
 		time = this.getFinishTime();
 
 	if(this.time == time && time > 0 && isPlay)
-		return false;
+		return this;
 
 		
 	this.time = time;
@@ -405,7 +405,7 @@ sceneItemPrototype.setTime = function setTime(time, isPlay) {
 	
 	
 	
-	return frame;
+	return this;
 }
 
 

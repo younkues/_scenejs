@@ -93,8 +93,8 @@ function replaceAll(text, from, to) {
 
 var Scene = function Scene(items) {
 	this.sceneItems = {};
-	this.startTime = this.prevTime = this.nowTime = 0;
-	this.isStart = this.isFinish = this.isPause = false;
+	this._startTime = this.prevTime = this.nowTime = 0;
+	this._isStart = this._isFinish = this._isPause = false;
 	this.playSpeed = 1;
 	this.playCount = 0;
 	this.iterationCount = 1;
@@ -181,6 +181,18 @@ scenePrototype.getItem = function(id) {
 	}
 	return;
 }
+scenePrototype.isFinish = function isFinish() {
+	var sceneItems = this.sceneItems;
+	var item, itemsLength = 0;
+	var finishCount = 0;
+	for(id in sceneItems) {
+		++itemsLength;
+		item = sceneItems[id];
+		if(item.isFinish())
+			++finishCount;
+	}
+	return (itemsLength <= finishCount);
+}
 scenePrototype.setTime = function setTime(time, isPlay) {
 	var sceneItems = this.sceneItems;
 	var item, itemsLength = 0;
@@ -188,14 +200,9 @@ scenePrototype.setTime = function setTime(time, isPlay) {
 	var _callback, length;
 	var id;
 	for(id in sceneItems) {
-		++itemsLength;
-		
 		item = sceneItems[id];
 		item.setTime(time, isPlay);
-		if(item.isFinish())
-			++finishCount;
 	}
-	var isFinish = (itemsLength <= finishCount);
 	
 	try {
 		_callback = this.callbackFunction["animate"];
@@ -210,23 +217,9 @@ scenePrototype.setTime = function setTime(time, isPlay) {
 		//No Function
 	} 
 	
-	if(isFinish) {
-		this.isStart = false;
-		this.isFinish = true;
-		this.isPause = false;
-		var ic = this.getIterationCount(), pc = this.getPlayCount();
-		this.setPlayCount(++pc);
-		
-		if(this.getFinishTime() <= 0)
-			return false;
-		if(ic === "infinite" || pc < ic) {
-			this.play();
-		} else {
-			return false;
-		}
-	}
 	
-	return true;
+	
+	return this;
 };
 scenePrototype.on = function onAnimate(name, func) {
 	this.callbackFunction[name] = this.callbackFunction[name] || [];
@@ -236,13 +229,33 @@ scenePrototype.on = function onAnimate(name, func) {
 }
 scenePrototype.tick = function(resolve, reject) {
 	var self = this;
-	if(!self.isStart)
+
+
+
+	if(!self._isStart)
 		return;
 		
+
 	self.nowTime = Date.now();
-	var duration = (self.nowTime - self.startTime) / 1000;
-	var isProcess = self.setTime(duration * self.getPlaySpeed(), true);
-	if(!isProcess) {
+	var duration = (self.nowTime - self._startTime) / 1000;
+	self.setTime(duration * self.getPlaySpeed(), true);
+
+
+
+	var isFinish = this.isFinish();
+
+	if(isFinish) {
+		var ic = this.getIterationCount(), pc = this.getPlayCount();
+		this.stop();
+		this.setPlayCount(++pc);
+		
+		if(this.getFinishTime() <= 0) {	
+		} else if(ic === "infinite" || pc < ic) {
+			this.play();
+			return;
+		}
+	}
+	if(isFinish) {
 		self.stop();
 		if(resolve)
 		resolve();
@@ -253,18 +266,18 @@ scenePrototype.tick = function(resolve, reject) {
 	}
 }
 scenePrototype.play = function play (){
-	if(this.isStart)
+	if(this._isStart)
 		return this;
 		
 	console.log("PLAY");
-	this.startTime = this.prevTime = Date.now();
+	this._startTime = this.prevTime = Date.now();
 	this.nowTime = this.spendTime = 0;
 	
 	this.setPlayCount(0);
 
-	this.isStart = true;
-	this.isFinish = false;
-	this.isPause = false;
+	this._isStart = true;
+	this._isFinish = false;
+	this._isPause = false;
 	
 	this.tick(resolve, reject);
 
@@ -272,10 +285,10 @@ scenePrototype.play = function play (){
 }
 scenePrototype.stop = function stop() {
 	console.log("STOP");
-	this.isStart = false;
-	this.isFinish = true;
-	this.isPause = false;
-	this.setTime(0);
+	this._isStart = false;
+	this._isFinish = true;
+	this._isPause = false;
+	this.setPlayCount(0);
 }
 
 scenePrototype.addTimingFunction = function addTimingFunction(startTime, endTime, curveArray) {
@@ -656,8 +669,7 @@ sceneItemPrototype.setTime = function setTime(time, isPlay) {
 		time = this.getFinishTime();
 
 	if(this.time == time && time > 0 && isPlay)
-		return false;
-
+		return this;
 
 		
 	this.time = time;
@@ -699,7 +711,7 @@ sceneItemPrototype.setTime = function setTime(time, isPlay) {
 	
 	
 	
-	return frame;
+	return this;
 }
 
 
@@ -1524,22 +1536,13 @@ defineGetterSetter(sceneItemPrototype, "selector");
 
 
 function animateFunction(time, frame) {
-	var cssText = frame.getCSSText(), _cssText;
-	var selector = this.selector;
-	if(!selector)
-		return;
-	try {
-		var elements = document.querySelectorAll(selector);
-		var length = elements.length;
-		for(var i = 0; i < length; ++i) {
-			_cssText = elements[i].style.cssText;
-			elements[i].style.cssText = _cssText + cssText;
-		}
-	} catch(e) {
-		//console.log(e);
+		var cssText = frame.getCSSText();
+			
+		if(!this.element)
+			return;
+	
+		this.element.style.cssText = cssText;
 	}
-}
-
 
 scenePrototype._addElement = function(elements) {
 	var length = elements.length, i;
@@ -1586,31 +1589,13 @@ scenePrototype.addElement = function(id, element) {
 
 
 
-var _setTime = sceneItemPrototype.setTime;
-sceneItemPrototype.setTime = function(time, isPlay) {
-
-	var frame = _setTime.call(this, time, isPlay);
-	
-	if(!frame)
-		return false;
-
-	var cssText = frame.getCSSText();
-
-	
-		
-	if(!this.element)
-		return false;
-
-	this.element.style.cssText = cssText;
-	
-	return true;
-};
-
 sceneItemPrototype.init = function() {
 	if(this.element) {
 		this.element.setAttribute("role", "item");
 		this.addStyleToFrame(DEFAULT_FRAME_TIME);
 	}
+	this.on("animate", animateFunction);
+
 }
 
 /*
@@ -1817,20 +1802,22 @@ framePrototype.getCSSText = function(prefix) {
 scenePrototype.play = function play (){
 	var self = this;	
 	var promise = new Promise(function(resolve, reject) {
-		if(self.isStart) {
+		if(self._isStart) {
 			//** !! MODIFY CONSTANT
 			reject(Error("Already Starting."));
+			return;
 		}
 			
 		console.log("PLAY");
-		self.startTime = self.prevTime = Date.now();
+		self._startTime = self.prevTime = Date.now();
 		self.nowTime = this.spendTime = 0;
 		
 		self.setPlayCount(0);
 	
-		self.isStart = true;
-		self.isFinish = false;
-		self.isPause = false;
+	
+		self._isStart = true;
+		self._isFinish = false;
+		self._isPause = false;
 
 		self.tick(resolve, reject);
 	});
