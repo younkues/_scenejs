@@ -16,6 +16,7 @@ gulp.task('combine-js', function () {
 	"./src/Util.js",
 	"./src/Color.js",	
 	"./src/CSSRole.js",	
+	"./src/Promise.js",	
 ])
 	.pipe(concat('Scene.js'))
 	.pipe(gulp.dest('./'));

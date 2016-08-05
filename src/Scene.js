@@ -7,9 +7,13 @@ var Scene = function Scene(items) {
 	this.playCount = 0;
 	this.iterationCount = 1;
 	/*iterationCount = 1, 2, 3, 4, infinite*/
-	this.name = "";
 	this.direction = "normal";
 	/*normal, reverse, alternate, alternate-reverse*/
+	
+	
+	this.name = "";
+	this.callbackFunction = {};
+
 }
 var _roles = Scene._roles = [];
 
@@ -87,11 +91,11 @@ scenePrototype.getItem = function(id) {
 }
 scenePrototype.synchronize = function synchronize(time, isPlay) {
 	var sceneItems = this.sceneItems;
-	var item;
-	var itemsLength = 0;
+	var item, itemsLength = 0;
 	var finishCount = 0;
-		
-	for(var id in sceneItems) {
+	var _callback, length;
+	var id;
+	for(id in sceneItems) {
 		++itemsLength;
 		
 		item = sceneItems[id];
@@ -102,9 +106,15 @@ scenePrototype.synchronize = function synchronize(time, isPlay) {
 	var isFinish = (itemsLength <= finishCount);
 	
 	try {
-		if(this.animateFunction)
-			this.animateFunction(time, isFinish);
+		_callback = this.callbackFunction["animate"];
+		if(_callback) {	
+			length = _callback.length;
+			for(var i = 0; i < length; ++i) {
+				_callback[i](time, isFinish);
+			}
+		}
 	} catch(e) {
+		//Not Function
 		//No Function
 	} 
 	
@@ -126,22 +136,29 @@ scenePrototype.synchronize = function synchronize(time, isPlay) {
 	
 	return true;
 };
-scenePrototype.onAnimate = function onAnimate(func) {
-	this.animateFunction = func;
+scenePrototype.on = function onAnimate(name, func) {
+	this.callbackFunction[name] = this.callbackFunction[name] || [];
+	this.callbackFunction[name].push(func);
+	
+	return this;
 }
-scenePrototype.timerFunction = function() {
-	if(!this.isStart)
+scenePrototype.timerFunction = function(resolve, reject) {
+	var self = this;
+	if(!self.isStart)
 		return;
 		
-	this.nowTime = Date.now();
-	var duration = (this.nowTime - this.startTime) / 1000;
-	var isProcess = this.synchronize(duration * this.getPlaySpeed(), true);
+	self.nowTime = Date.now();
+	var duration = (self.nowTime - self.startTime) / 1000;
+	var isProcess = self.synchronize(duration * self.getPlaySpeed(), true);
 	if(!isProcess) {
-		this.stop();
-		return;
+		self.stop();
+		if(resolve)
+		resolve();
+	} else {
+		requestAnimFrame(function() {
+			self.timerFunction(resolve, reject);
+		});
 	}
-	
-	requestAnimFrame(this.timerFunction.bind(this));
 }
 scenePrototype.play = function play (){
 	if(this.isStart)
@@ -155,7 +172,7 @@ scenePrototype.play = function play (){
 
 	this.isStart = true;
 	this.isFinish = false;
-	this.isPause = false;	
+	this.isPause = false;
 	requestAnimFrame(this.timerFunction.bind(this));
 
 	return this;	
