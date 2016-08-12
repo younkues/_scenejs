@@ -1,5 +1,8 @@
+scenePrototype.then = function(resolve) {
+		
+}
 scenePrototype.play = function play (){
-	var self = this;	
+	var self = this;
 	var promise = new Promise(function(resolve, reject) {
 		if(self._isStart) {
 			//** !! MODIFY CONSTANT

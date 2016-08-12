@@ -166,7 +166,7 @@ scenePrototype.tick = function(resolve, reject) {
 	if(isFinish) {
 		self.stop();
 		if(resolve)
-		resolve();
+			resolve();
 	} else {
 		requestAnimFrame(function() {
 			self.tick(resolve, reject);
