@@ -1,5 +1,5 @@
 scenePrototype.then = function(resolve) {
-		
+	this.on("done", resolve);
 }
 scenePrototype.play = function play (){
 	var self = this;

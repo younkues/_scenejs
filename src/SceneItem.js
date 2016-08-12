@@ -335,7 +335,10 @@ sceneItemPrototype.getNowFrame = function(time) {
 /*
 	재생이 끝났는지 확인
 */
-sceneItemPrototype.isFinish = function() {
+sceneItemPrototype.isFinish = function(direction) {
+	if(direction == "reverse")
+		return this.time == 0;
+		
 	return this.getFinishTime() <= this.time;
 }
 /*
@@ -361,7 +364,10 @@ sceneItemPrototype.on = function onAnimate(name, func) {
 sceneItemPrototype.setTime = function setTime(time, isPlay) {
 	if(this.getFinishTime() < time)
 		time = this.getFinishTime();
-
+	else if(time < 0)
+		time = 0;
+		
+		
 	if(this.time == time && time > 0 && isPlay)
 		return this;
 

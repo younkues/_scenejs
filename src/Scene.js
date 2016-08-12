@@ -93,10 +93,11 @@ scenePrototype.isFinish = function isFinish() {
 	var sceneItems = this.sceneItems;
 	var item, itemsLength = 0;
 	var finishCount = 0;
+	var direction = this.direction;
 	for(id in sceneItems) {
 		++itemsLength;
 		item = sceneItems[id];
-		if(item.isFinish())
+		if(item.isFinish(direction))
 			++finishCount;
 	}
 	return (itemsLength <= finishCount);
@@ -105,30 +106,31 @@ scenePrototype.setTime = function setTime(time, isPlay) {
 	var sceneItems = this.sceneItems;
 	var item, itemsLength = 0;
 	var finishCount = 0;
-	var _callback, length;
 	var id;
 	for(id in sceneItems) {
 		item = sceneItems[id];
 		item.setTime(time, isPlay);
 	}
+	this.trigger("animate", [time]);
 	
+	
+	return this;
+};
+scenePrototype.trigger = function(name, args) {
+	var _callback, length;
 	try {
-		_callback = this.callbackFunction["animate"];
+		_callback = this.callbackFunction[name];
 		if(_callback) {	
 			length = _callback.length;
 			for(var i = 0; i < length; ++i) {
-				_callback[i](time, isFinish);
+				_callback[i].apply(this, args);
 			}
 		}
 	} catch(e) {
 		//Not Function
 		//No Function
 	} 
-	
-	
-	
-	return this;
-};
+}
 scenePrototype.on = function onAnimate(name, func) {
 	this.callbackFunction[name] = this.callbackFunction[name] || [];
 	this.callbackFunction[name].push(func);
@@ -137,7 +139,7 @@ scenePrototype.on = function onAnimate(name, func) {
 }
 scenePrototype.tick = function(resolve, reject) {
 	var self = this;
-
+	var finishTime = this.getFinishTime();
 
 
 	if(!self._isStart)
@@ -145,8 +147,12 @@ scenePrototype.tick = function(resolve, reject) {
 		
 
 	self._nowTime = Date.now();
-	var duration = (self._nowTime - self._startTime) / 1000;
-	self.setTime(duration * self.getPlaySpeed(), true);
+	var duration = (self._nowTime - self._startTime) / 1000 * self.getPlaySpeed();
+	
+	if(this.direction === "reverse")
+		duration = finishTime - duration;
+
+	self.setTime(duration, true);
 
 
 
@@ -164,6 +170,7 @@ scenePrototype.tick = function(resolve, reject) {
 		}
 	}
 	if(isFinish) {
+		this.trigger("done");
 		self.stop();
 		if(resolve)
 			resolve();
@@ -173,24 +180,39 @@ scenePrototype.tick = function(resolve, reject) {
 		});
 	}
 }
+scenePrototype.then = function(resolve) {
+	this.on("done", resolve);
+}
 scenePrototype.play = function play (){
-	if(this._isStart)
-		return this;
+	var self = this;
+	var func = function(resolve, reject) {
+		if(self._isStart) {
+			//** !! MODIFY CONSTANT
+			return;
+		}
+		console.log("PLAY");
+		self._startTime = self.prevTime = Date.now();
+		self.nowTime = this.spendTime = 0;
 		
-	console.log("PLAY");
-	this._startTime = this._prevTime = Date.now();
-	this._nowTime = this.spendTime = 0;
+		self.setPlayCount(0);
 	
-	this.setPlayCount(0);
-
-	this._isStart = true;
-	this._isFinish = false;
-	this._isPause = false;
 	
-	this.tick(resolve, reject);
+		self._isStart = true;
+		self._isFinish = false;
+		self._isPause = false;
 
+		self.tick(resolve, reject);
+	};
+	
+	if(window.Promise)
+		return new Promise(func);
+	
+	
+	func();
+	
 	return this;	
 }
+
 scenePrototype.stop = function stop() {
 	console.log("STOP");
 	this._isStart = false;
