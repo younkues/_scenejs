@@ -1,3 +1,4 @@
+(function() {
 var _defaultProperties = Frame._defaultProperties = {
 	"translate" : "0, 0",
 	"opacity" : 1,
@@ -21,14 +22,27 @@ Scene.addRole("filter", "filters");
 defineGetterSetter(sceneItemPrototype, "selector");
 
 
-function animateFunction(time, frame) {
-		var cssText = frame.getCSSText();
-			
-		if(!this.element)
-			return;
+sceneItemPrototype.setSelector = function(selector) {
+	this.selector = selector;
 	
-		this.element.style.cssText = cssText;
+	this.element = document.querySelectorAll(selector);
+}
+function animateFunction(time, frame) {
+	var cssText = frame.getCSSText();
+	var element = this.element;
+	if(!element)
+		return;
+	
+	if(element instanceof NodeList) {
+		var length = element.length;
+		for(var i = 0; i < length; ++i) {
+			element[i].style.cssText = cssTexet;
+		}
+		
+		return;
 	}
+	element.style.cssText = cssText;
+}
 
 scenePrototype._addElement = function(elements) {
 	var length = elements.length, i;
@@ -284,3 +298,5 @@ framePrototype.getCSSText = function(prefix) {
 
 	return cssText;
 }
+
+})();

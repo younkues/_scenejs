@@ -155,9 +155,12 @@ scenePrototype.tick = function(resolve, reject) {
 	self.setTime(duration, true);
 
 
-
-	var isFinish = this.isFinish();
-
+	
+	try {
+		var isFinish = self.isFinish();
+	} catch(e) {
+		//console.log(self);
+	}
 	if(isFinish) {
 		var ic = this.getIterationCount(), pc = this.getPlayCount();
 		this.stop();

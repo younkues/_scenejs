@@ -364,9 +364,6 @@ for (var i = 0; i < l; ++i) {
 }
 
 
-
-
-
 var scene6 = new Scene();
 var _bomb = scene6.addElement(bomb);
 var bomb_tail = scene6.addElement(bomb.querySelector(".tail path"));
@@ -380,41 +377,33 @@ bomb_body.scale(2, "1,1");
 bomb_body.scale(3, "20,20");
 bomb_body.addTimingFunction(2, 3, ease);
 
-scene1.on("animate", function(time, isFinish) {
-	if(isFinish) {
-		text.innerHTML = "2";
-		scene3.play();
-	}
+
+
+scene1.on("done", function() {
+	text.innerHTML = "2";
+	scene3.play();
 });
-scene2.on("animate", function(time, isFinish) {
-	if(isFinish) {
-		text.innerHTML = "4";
-		scene4.play();
-	}
+scene2.on("done", function() {
+	text.innerHTML = "4";
+	scene4.play();
 });
-scene3.on("animate", function(time, isFinish) {
-	if(isFinish) {
-		text.innerHTML = "3";
-		scene2.play();
-	}
+scene3.on("done", function() {
+	text.innerHTML = "3";
+	scene2.play();
 });
-scene4.on("animate", function(time, isFinish) {
-	if(isFinish) {
-		text.innerHTML = "5";
-		scene5.play();
-	}
+scene4.on("done", function() {
+	text.innerHTML = "5";
+	scene5.play();
 });
-scene5.on("animate", function(time, isFinish) {
-	if(isFinish) {
-		text.innerHTML = "6";
-		scene6.play();
-	}
+scene5.on("done", function() {
+	text.innerHTML = "6";
+	scene6.play();
 });
-scene6.on("animate", function(time, isFinish) {
-	if(isFinish) {
-		text.innerHTML = "";
-	}
+scene6.on("done", function() {
+	text.innerHTML = "";
 });
+
+
 scene1.setPlaySpeed(0.5);
 scene1.setTime(0);
 scene2.setTime(0);

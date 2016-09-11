@@ -1,5 +1,4 @@
 //element를 바깥으로 빼기
-
 var SceneItem = Scene.SceneItem = function(element) {
 	var self = this;
 	self.id = "";
@@ -348,6 +347,21 @@ sceneItemPrototype.getFinishTime = function() {
 	return this.times.length > 0 ? this.times[this.times.length - 1] : 0;
 }
 
+sceneItemPrototype.trigger = function(name, args) {
+	var _callback, length;
+	try {
+		_callback = this.callbackFunction[name];
+		if(_callback) {	
+			length = _callback.length;
+			for(var i = 0; i < length; ++i) {
+				_callback[i].apply(this, args);
+			}
+		}
+	} catch(e) {
+		//Not Function
+		//No Function
+	} 
+}
 
 /*
 	재생간에 불러낼 Callback 함수 지정
@@ -396,18 +410,7 @@ sceneItemPrototype.setTime = function setTime(time, isPlay) {
 	
 	frame = this.getNowFrame(time);
 	
-	try {
-		_callback = this.callbackFunction["animate"];
-		if(_callback) {	
-			length = _callback.length;
-			for(var i = 0; i < length; ++i) {
-				_callback[i].call(this,time, frame);
-			}
-		}
-	} catch(e) {
-		//Not Function
-		//No Function
-	} 
+	this.trigger("animate", [time, frame]);
 	
 	
 	

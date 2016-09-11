@@ -4,9 +4,9 @@ var uglify = require('gulp-uglify');
 
 gulp.task('combine-js', function () {
 	return gulp.src([
-	"./src/constant.js",
 	"./src/pre.js",
 	"./src/Scene.js",
+	"./src/constant.js",
 	"./src/SceneItem.js",
 	"./src/Frame.js",
 	"./src/Curve.js",
@@ -16,7 +16,6 @@ gulp.task('combine-js', function () {
 	"./src/Util.js",
 	"./src/Color.js",	
 	"./src/CSSRole.js",	
-	"./src/Promise.js",	
 ])
 	.pipe(concat('Scene.js'))
 	.pipe(gulp.dest('./'));

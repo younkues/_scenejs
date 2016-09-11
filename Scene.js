@@ -1,13 +1,3 @@
-var DEFAULT_FRAME_TIME = 0;
-var COLOR_MODEL_RGBA = "rgba";
-var COLOR_MODEL_RGB = "rgba";
-var COLOR_MODEL_HSL = "hsl";
-var COLOR_MODEL_HSLA = "hsla";
-var ATTR_ITEM_ID = "item-id";
-var ANIMATION_PLAY_STATE = ["idle", "pending", "paused", "running", "finished"];
-var FILL_MODE = ["none", "forwards", "backwards", "both", "auto" ];
-var PLAY_DIRECTION = ["normal", "reverse", "alternate", "alternate-reverse"];
-
 (function() {
 	var StringPrototype = String.prototype;
 	StringPrototype.replaceAll = function(from, to) {
@@ -231,7 +221,7 @@ scenePrototype.on = function onAnimate(name, func) {
 }
 scenePrototype.tick = function(resolve, reject) {
 	var self = this;
-
+	var finishTime = this.getFinishTime();
 
 
 	if(!self._isStart)
@@ -239,17 +229,20 @@ scenePrototype.tick = function(resolve, reject) {
 		
 
 	self._nowTime = Date.now();
-	var duration = (self._nowTime - self._startTime) / 1000;
+	var duration = (self._nowTime - self._startTime) / 1000 * self.getPlaySpeed();
 	
 	if(this.direction === "reverse")
-		self.setTime(this.getFinishTime() - duration * self.getPlaySpeed(), true);
-	else
-		self.setTime(duration * self.getPlaySpeed(), true);
+		duration = finishTime - duration;
+
+	self.setTime(duration, true);
 
 
-
-	var isFinish = this.isFinish();
-
+	
+	try {
+		var isFinish = self.isFinish();
+	} catch(e) {
+		//console.log(self);
+	}
 	if(isFinish) {
 		var ic = this.getIterationCount(), pc = this.getPlayCount();
 		this.stop();
@@ -326,8 +319,19 @@ for(var id in sceneItems) {
 scenePrototype.setClippingRegion = function(x, y, width, height) {
 
 };
+var DEFAULT_FRAME_TIME = 0;
+var COLOR_MODEL_RGBA = "rgba";
+var COLOR_MODEL_RGB = "rgba";
+var COLOR_MODEL_HSL = "hsl";
+var COLOR_MODEL_HSLA = "hsla";
+var ATTR_ITEM_ID = "item-id";
+var ANIMATION_PLAY_STATE = ["idle", "pending", "paused", "running", "finished"];
+var FILL_MODE = ["none", "forwards", "backwards", "both", "auto" ];
+var PLAY_DIRECTION = ["normal", "reverse", "alternate", "alternate-reverse"];
+Scene.EASE = [.25,.1,.25,1];
+Scene.EASE_IN = [.42,0,1,1];
+Scene.EASE_IN_OUT = [.42,0,.58,1];
 //element를 바깥으로 빼기
-
 var SceneItem = Scene.SceneItem = function(element) {
 	var self = this;
 	self.id = "";
@@ -676,6 +680,21 @@ sceneItemPrototype.getFinishTime = function() {
 	return this.times.length > 0 ? this.times[this.times.length - 1] : 0;
 }
 
+sceneItemPrototype.trigger = function(name, args) {
+	var _callback, length;
+	try {
+		_callback = this.callbackFunction[name];
+		if(_callback) {	
+			length = _callback.length;
+			for(var i = 0; i < length; ++i) {
+				_callback[i].apply(this, args);
+			}
+		}
+	} catch(e) {
+		//Not Function
+		//No Function
+	} 
+}
 
 /*
 	재생간에 불러낼 Callback 함수 지정
@@ -724,18 +743,7 @@ sceneItemPrototype.setTime = function setTime(time, isPlay) {
 	
 	frame = this.getNowFrame(time);
 	
-	try {
-		_callback = this.callbackFunction["animate"];
-		if(_callback) {	
-			length = _callback.length;
-			for(var i = 0; i < length; ++i) {
-				_callback[i].call(this,time, frame);
-			}
-		}
-	} catch(e) {
-		//Not Function
-		//No Function
-	} 
+	this.trigger("animate", [time, frame]);
 	
 	
 	
@@ -1540,6 +1548,7 @@ var _color = Scene.Color = {
 	    return result;
 	}
 };
+(function() {
 var _defaultProperties = Frame._defaultProperties = {
 	"translate" : "0, 0",
 	"opacity" : 1,
@@ -1563,14 +1572,27 @@ Scene.addRole("filter", "filters");
 defineGetterSetter(sceneItemPrototype, "selector");
 
 
-function animateFunction(time, frame) {
-		var cssText = frame.getCSSText();
-			
-		if(!this.element)
-			return;
+sceneItemPrototype.setSelector = function(selector) {
+	this.selector = selector;
 	
-		this.element.style.cssText = cssText;
+	this.element = document.querySelectorAll(selector);
+}
+function animateFunction(time, frame) {
+	var cssText = frame.getCSSText();
+	var element = this.element;
+	if(!element)
+		return;
+	
+	if(element instanceof NodeList) {
+		var length = element.length;
+		for(var i = 0; i < length; ++i) {
+			element[i].style.cssText = cssTexet;
+		}
+		
+		return;
 	}
+	element.style.cssText = cssText;
+}
 
 scenePrototype._addElement = function(elements) {
 	var length = elements.length, i;
@@ -1827,31 +1849,4 @@ framePrototype.getCSSText = function(prefix) {
 	return cssText;
 }
 
-scenePrototype.then = function(resolve) {
-	this.on("done", resolve);
-}
-scenePrototype.play = function play (){
-	var self = this;
-	var promise = new Promise(function(resolve, reject) {
-		if(self._isStart) {
-			//** !! MODIFY CONSTANT
-			reject(Error("Already Starting."));
-			return;
-		}
-			
-		console.log("PLAY");
-		self._startTime = self.prevTime = Date.now();
-		self.nowTime = this.spendTime = 0;
-		
-		self.setPlayCount(0);
-	
-	
-		self._isStart = true;
-		self._isFinish = false;
-		self._isPause = false;
-
-		self.tick(resolve, reject);
-	});
-	
-	return promise;	
-}
+})();

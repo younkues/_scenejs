@@ -7,3 +7,6 @@ var ATTR_ITEM_ID = "item-id";
 var ANIMATION_PLAY_STATE = ["idle", "pending", "paused", "running", "finished"];
 var FILL_MODE = ["none", "forwards", "backwards", "both", "auto" ];
 var PLAY_DIRECTION = ["normal", "reverse", "alternate", "alternate-reverse"];
+Scene.EASE = [.25,.1,.25,1];
+Scene.EASE_IN = [.42,0,1,1];
+Scene.EASE_IN_OUT = [.42,0,.58,1];
