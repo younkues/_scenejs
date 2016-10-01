@@ -90,6 +90,7 @@ var Scene = function Scene(items) {
 	this.iterationCount = 1;
 	/*iterationCount = 1, 2, 3, 4, infinite*/
 	this.direction = "normal";
+	this.delay = 0;
 	/*normal, reverse, alternate, alternate-reverse*/
 	
 	
@@ -119,6 +120,8 @@ defineGetterSetter(scenePrototype, "direction");
 
 
 scenePrototype.load = function(items) {
+	if(!items)
+		return this;
 	var itemName, sceneItem, item;
 	for(itemName in items) {
 		if(itemName === "option")
@@ -128,6 +131,20 @@ scenePrototype.load = function(items) {
 		sceneItem = this.newItem(itemName);
 		sceneItem.load(item);
 	}
+	if("option" in items) {
+		options = items.option;
+		for(option in options) {
+			value = options[option];
+			if(option === "timingFunction") {
+				for(var i = 0; i < length / 3; ++i) {
+					sceneItem.addTimingFunction(value[3*i + 0], value[3 * i + 1], value[3 * i + 2]);
+				}
+			} else {
+				this[option] = options[option];
+			}
+		}
+	}
+	return this;
 }
 scenePrototype.newItem = function(id) {
 	var item = new SceneItem();
@@ -229,8 +246,13 @@ scenePrototype.tick = function(resolve, reject) {
 		
 
 	self._nowTime = Date.now();
-	var duration = (self._nowTime - self._startTime) / 1000 * self.getPlaySpeed();
-	
+	var duration = (self._nowTime - self._startTime) / 1000 * self.getPlaySpeed() -this.delay;
+
+	if(duration < 0)
+		return;
+		
+		
+		
 	if(this.direction === "reverse")
 		duration = finishTime - duration;
 
@@ -375,12 +397,26 @@ sceneItemPrototype.load = function(item) {
 		properties = item[time];
 		time = parseFloat(time);
 		if(isNaN(time))
-			continue;
-			
+			continue;			
 		frame = this.newFrame(time);
 		frame.load(properties);
 		
 	}
+	if("option" in items) {
+		options = items.option;
+		for(option in options) {
+			value = options[option];
+			if(option === "timingFunction") {
+				for(var i = 0; i < length / 3; ++i) {
+					sceneItem.addTimingFunction(value[3*i + 0], value[3 * i + 1], value[3 * i + 2]);
+				}
+			} else {
+				this[option] = options[option];
+			}
+		}
+	}
+	
+	return this;
 }
 sceneItemPrototype.set = function(name, time, property, value) {
 	var frame;

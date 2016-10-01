@@ -42,12 +42,26 @@ sceneItemPrototype.load = function(item) {
 		properties = item[time];
 		time = parseFloat(time);
 		if(isNaN(time))
-			continue;
-			
+			continue;			
 		frame = this.newFrame(time);
 		frame.load(properties);
 		
 	}
+	if("option" in items) {
+		options = items.option;
+		for(option in options) {
+			value = options[option];
+			if(option === "timingFunction") {
+				for(var i = 0; i < length / 3; ++i) {
+					sceneItem.addTimingFunction(value[3*i + 0], value[3 * i + 1], value[3 * i + 2]);
+				}
+			} else {
+				this[option] = options[option];
+			}
+		}
+	}
+	
+	return this;
 }
 sceneItemPrototype.set = function(name, time, property, value) {
 	var frame;
