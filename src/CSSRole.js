@@ -21,7 +21,17 @@ Scene.addRole("transform", "transforms");
 Scene.addRole("filter", "filters");
 defineGetterSetter(sceneItemPrototype, "selector");
 
-
+scenePrototype.setSelector = function(selectors) {
+	var itemName, item;
+	for(var selector in selectors) {
+		itemName = selectors[selector];
+		item = this.getItem(itemName);
+		if(!item)
+			continue;
+			
+		item.setSelector(selector);
+	}
+}
 sceneItemPrototype.setSelector = function(selector) {
 	this.selector = selector;
 	

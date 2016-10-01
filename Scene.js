@@ -132,7 +132,7 @@ scenePrototype.load = function(items) {
 		sceneItem.load(item);
 	}
 	if("option" in items) {
-		options = items.option;
+		var options = items.option;
 		for(option in options) {
 			value = options[option];
 			if(option === "timingFunction") {
@@ -402,8 +402,8 @@ sceneItemPrototype.load = function(item) {
 		frame.load(properties);
 		
 	}
-	if("option" in items) {
-		options = items.option;
+	if("option" in item) {
+		var options = item.option;
 		for(option in options) {
 			value = options[option];
 			if(option === "timingFunction") {
@@ -1607,7 +1607,17 @@ Scene.addRole("transform", "transforms");
 Scene.addRole("filter", "filters");
 defineGetterSetter(sceneItemPrototype, "selector");
 
-
+scenePrototype.setSelector = function(selectors) {
+	var itemName, item;
+	for(var selector in selectors) {
+		itemName = selectors[selector];
+		item = this.getItem(itemName);
+		if(!item)
+			continue;
+			
+		item.setSelector(selector);
+	}
+}
 sceneItemPrototype.setSelector = function(selector) {
 	this.selector = selector;
 	

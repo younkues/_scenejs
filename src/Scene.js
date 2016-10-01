@@ -50,7 +50,7 @@ scenePrototype.load = function(items) {
 		sceneItem.load(item);
 	}
 	if("option" in items) {
-		options = items.option;
+		var options = items.option;
 		for(option in options) {
 			value = options[option];
 			if(option === "timingFunction") {

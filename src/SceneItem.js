@@ -47,8 +47,8 @@ sceneItemPrototype.load = function(item) {
 		frame.load(properties);
 		
 	}
-	if("option" in items) {
-		options = items.option;
+	if("option" in item) {
+		var options = item.option;
 		for(option in options) {
 			value = options[option];
 			if(option === "timingFunction") {
