@@ -3,8 +3,9 @@ var _u = Scene.Util = {
 	// ex) 100px unit:px, value: 100
 	splitUnit: function splitUnit(v) {
 		v = v + "";
-		var value = parseFloat(v.replace(/[^0-9|\.|\-]/g,''));
+		var value = v.replace(/[^0-9|\.|\-]/g,'');
 		var unit = v.replace(value, "") || "";
+		value = parseFloat(value);
 		return {unit:unit, value:value};
 		
 	 },

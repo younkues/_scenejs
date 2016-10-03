@@ -96,6 +96,9 @@ var Scene = function Scene(items) {
 	
 	this.name = "";
 	this.callbackFunction = {};
+	
+	if(items)
+		this.load(items);
 
 }
 var _roles = Scene._roles = [];
@@ -136,8 +139,8 @@ scenePrototype.load = function(items) {
 		for(option in options) {
 			value = options[option];
 			if(option === "timingFunction") {
-				for(var i = 0; i < length / 3; ++i) {
-					sceneItem.addTimingFunction(value[3*i + 0], value[3 * i + 1], value[3 * i + 2]);
+				for(var i = 0; i < value.length / 3; ++i) {
+					this.addTimingFunction(value[3*i + 0], value[3 * i + 1], value[3 * i + 2]);
 				}
 			} else {
 				this[option] = options[option];
@@ -403,16 +406,17 @@ sceneItemPrototype.load = function(item) {
 		
 	}
 	if("option" in item) {
-		var options = item.option;
+		var option, value, options = item.option;
 		for(option in options) {
 			value = options[option];
 			if(option === "timingFunction") {
-				for(var i = 0; i < length / 3; ++i) {
-					sceneItem.addTimingFunction(value[3*i + 0], value[3 * i + 1], value[3 * i + 2]);
+				for(var i = 0; i < value.length / 3; ++i) {
+					this.addTimingFunction(value[3*i + 0], value[3 * i + 1], value[3 * i + 2]);
 				}
-			} else {
-				this[option] = options[option];
+				continue;
 			}
+			
+			this[option] = options[option];
 		}
 	}
 	
@@ -760,6 +764,9 @@ sceneItemPrototype.setTime = function setTime(time, isPlay) {
 	var length = timingFunctions.length;
 	var nowTimingFunction = this.nowTimingFunction;
 	var _callback;
+	
+	
+	
 	//시간이 벗어나거나 TimingFunction이 미지정일시 해당 시간에 만족하는 TimingFunction을 찾는다.
 	if(nowTimingFunction && (nowTimingFunction.endTime < time || time < nowTimingFunction.startTime) || length > 0  && !nowTimingFunction ) {
 		nowTimingFunction = this.nowTimingFunction = 0;
@@ -773,6 +780,7 @@ sceneItemPrototype.setTime = function setTime(time, isPlay) {
 	
 	
 	try {
+		if(nowTimingFunction)
 		time = nowTimingFunction && nowTimingFunction.cubicBezier(time) || time;
 	} catch(e) {
 	}
@@ -1150,8 +1158,9 @@ var _u = Scene.Util = {
 	// ex) 100px unit:px, value: 100
 	splitUnit: function splitUnit(v) {
 		v = v + "";
-		var value = parseFloat(v.replace(/[^0-9|\.|\-]/g,''));
+		var value = v.replace(/[^0-9|\.|\-]/g,'');
 		var unit = v.replace(value, "") || "";
+		value = parseFloat(value);
 		return {unit:unit, value:value};
 		
 	 },
@@ -1631,8 +1640,9 @@ function animateFunction(time, frame) {
 	
 	if(element instanceof NodeList) {
 		var length = element.length;
+		
 		for(var i = 0; i < length; ++i) {
-			element[i].style.cssText = cssTexet;
+			element[i].style.cssText = cssText;
 		}
 		
 		return;

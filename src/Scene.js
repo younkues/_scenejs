@@ -14,6 +14,9 @@ var Scene = function Scene(items) {
 	
 	this.name = "";
 	this.callbackFunction = {};
+	
+	if(items)
+		this.load(items);
 
 }
 var _roles = Scene._roles = [];
@@ -54,8 +57,8 @@ scenePrototype.load = function(items) {
 		for(option in options) {
 			value = options[option];
 			if(option === "timingFunction") {
-				for(var i = 0; i < length / 3; ++i) {
-					sceneItem.addTimingFunction(value[3*i + 0], value[3 * i + 1], value[3 * i + 2]);
+				for(var i = 0; i < value.length / 3; ++i) {
+					this.addTimingFunction(value[3*i + 0], value[3 * i + 1], value[3 * i + 2]);
 				}
 			} else {
 				this[option] = options[option];

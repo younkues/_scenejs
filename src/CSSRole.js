@@ -45,8 +45,9 @@ function animateFunction(time, frame) {
 	
 	if(element instanceof NodeList) {
 		var length = element.length;
+		
 		for(var i = 0; i < length; ++i) {
-			element[i].style.cssText = cssTexet;
+			element[i].style.cssText = cssText;
 		}
 		
 		return;
