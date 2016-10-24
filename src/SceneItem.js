@@ -252,14 +252,7 @@ var getPrevFrameByProperty = function(sceneItem, time, property, func) {
 		
 	var element = sceneItem.element;
 	
-	if(func === "getProperty") {
-		value = getComputedStyle(element)[property];
-		if(value == "auto")
-			value = "0";
-			
-		sceneItem.setProperty(DEFAULT_FRAME_TIME, property, value);
-	}
-
+	
 	return sceneItem.getFrame(DEFAULT_FRAME_TIME);
 }
 /*
