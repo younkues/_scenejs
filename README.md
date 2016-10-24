@@ -89,14 +89,17 @@ var scene = new Scene({
 		0 : {width: "30px", height: "20px", property:value},
 		2 : {width: "50px", property:value},
 		6.5:{height: "200px", property:value},
-		selector: ".item1"
 	},
 	"item2" : {
 		0 : {transform:{scale:0.5}, property:value},
 		2 : {transform:{scale:1.5, rotate:"0deg"}, width: "50px", property:value},
 		6.5: {transform:{scale:1, rotate:"50deg"}, width: "10px", property:value},
-		selector: ".item2"
 	},
+});
+
+scene.setSelector({
+	"item1" : ".item1",
+	"item2" : ".item2",
 });
 
 //scene.playCSS(); set CSS Rule to Play
