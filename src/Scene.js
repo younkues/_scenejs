@@ -196,10 +196,8 @@ scenePrototype.tick = function(resolve, reject) {
 			this.play();
 			return;
 		}
-	}
-	if(isFinish) {
+
 		this.trigger("done");
-		self.stop();
 		if(resolve)
 			resolve();
 	} else {
