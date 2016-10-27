@@ -278,10 +278,8 @@ scenePrototype.tick = function(resolve, reject) {
 			this.play();
 			return;
 		}
-	}
-	if(isFinish) {
+
 		this.trigger("done");
-		self.stop();
 		if(resolve)
 			resolve();
 	} else {
@@ -1392,7 +1390,7 @@ var _u = Scene.Util = {
 		if(typeof a1 !== "string")
 			return a1;
 			
-	 	var arr = a1.match(/(\S*\([\s\S]*\)|(\S+(\s*,\s*))|\S+)+/g);
+	 	var arr = a1.match(/(\S*\([^\)]*\)|(\S+(\s*,\s*))|\S+)+/g);
 	 	var result, length;
 	 	if(arr && arr.length != 1) {
 		 	length = arr.length;
