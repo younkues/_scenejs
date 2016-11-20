@@ -99,11 +99,10 @@ scenePrototype.addElement = function(id, element) {
 }
 
 
-
 sceneItemPrototype.init = function() {
 	if(this.element) {
 		this.element.setAttribute("role", "item");
-		this.addStyleToFrame(DEFAULT_FRAME_TIME);
+		this.addStyleToFrame(Scene.DEFAULT_FRAME_TIME);
 	}
 	this.on("animate", animateFunction);
 
@@ -112,6 +111,22 @@ sceneItemPrototype.init = function() {
 /*
 	Element의 현재 Style을 해당 time의 Frame에 저장한다.
 */
+sceneItemPrototype.addCSSToFrame = function(time, property) {
+	if(!this.element)
+		return this;
+	var css = this.element.style[property];
+	if(typeof css === "undefined")
+		css = getComputedStyle(this.element)[property];
+	
+	
+	var frame = this.newFrame(time);
+	var value = {};
+	value[property] = css;
+	console.log(value);
+	frame.load(value);	
+	
+	return this;
+}
 sceneItemPrototype.addStyleToFrame = function(time) {
 	if(!this.element)
 		return this;
@@ -119,12 +134,14 @@ sceneItemPrototype.addStyleToFrame = function(time) {
 	var a1 = cssText.split(";");
 	var l = a1.length;
 	var a2;
-	var cssObject = {};
+	var cssObject = {}, value;
 	for(var i =0; i < l; ++i) {
 		a2 = a1[i].split(":");
 		if(a2.length <= 1)
 			continue;
-		cssObject[a2[0].trim()] = a2[1].trim();
+			
+		value = a2[1].trim();
+		cssObject[a2[0].trim()] = value;
 	}
 	this.setProperties(time, cssObject);
 	

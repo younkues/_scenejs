@@ -1,5 +1,5 @@
 
-var Scene = function Scene(items) {
+var Scene = window.Scene = function Scene(items) {
 	this.sceneItems = {};
 	this._startTime = this._prevTime = this._nowTime = 0;
 	this._isStart = this._isFinish = this._isPause = false;

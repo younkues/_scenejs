@@ -72,9 +72,8 @@ sceneItemPrototype.set = function(name, time, property, value) {
 	if(typeof time !== "number" && isNaN(parseFloat(time)))
 		return this;
 		
-	if(!(frame = this.getFrame(time))) {
-		frame = this.newFrame(time);	
-	}
+	frame = this.newFrame(time);	
+
 	
 	frame.set(name, property, value);
 	return this;
@@ -87,9 +86,7 @@ sceneItemPrototype.sets = function(name, time, properties) {
 	if(typeof time !== "number" && isNaN(parseFloat(time)))
 		return this;
 		
-	if(!(frame = this.getFrame(time))) {
-		frame = this.newFrame(time);	
-	}
+	frame = this.newFrame(time);
 	
 	
 	frame.sets(name, properties);

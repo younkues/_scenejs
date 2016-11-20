@@ -20,19 +20,42 @@ defineAll(framePrototype, "sceneItem");
 
 
 framePrototype.load = function(properties) {
+	var self = this;
+	var _util = Scene.Util;
 	var property, p2;
 	var value;
 	var value2;
 	for(property in properties) {
 		value = properties[property];
-		if(typeof value === "object") {
-			for(p2 in value) {
-				this.set(property, p2, value[p2]);
+		if(property in this.properties) {
+			if(typeof value === "object") {
+				for(p2 in value) {
+					this.set(property, p2, value[p2]);
+				}
+			} else {
+				value = _util.stringToObject(value);
+				if(typeof value !== "object")
+					continue;
+					
+				if(value.type !== "array") {
+					this.set(property, value.model, value.value.join(value.separator));
+					continue;
+				}
+				
+				value.each(function(v, i) {
+					if(typeof value !== "object")
+						return;
+						
+					self.set(property, v.model, v.value.join(v.separator));
+				});
+					
 			}
 			continue;
 		} 
 		this.set("property", property, value);
 	}
+	
+	return this;	
 }
 framePrototype.set = function(name, property, value) {
 	if(!this.properties[name])
@@ -124,3 +147,5 @@ framePrototype.merge = function(frame) {
 		_frame.sets(_roles[i]["name"], properties);
 	}
 }
+
+

@@ -1,5 +1,4 @@
-
-var PropertyObject = function(value, separator) {
+var PropertyObject = Scene.PropertyObject = function PropertyObject(value, separator) {
 	/*
 		value가 구분자로 인해 Array 또는 Object로 되어 있는 상태
 	*/
@@ -18,19 +17,25 @@ defineGetterSetter(propertyObjectPrototype, "prefix");
 defineGetterSetter(propertyObjectPrototype, "suffix");
 
 propertyObjectPrototype.join = function() {
-		var rv = "", v = "";
-		var s = false;
-		var arr = this.value, separator = this.separator;
-		for(var i in arr) {
-			if(s) rv += separator;
+	var rv = "", v = "";
+	var s = false;
+	var arr = this.value, separator = this.separator;
+	for(var i in arr) {
+		if(s) rv += separator;
 
-			v = arr[i];
-			rv += (v instanceof PropertyObject) ? v.toValue() : v;
-			s = true;
-		}
-		return rv;
-	};
-
+		v = arr[i];
+		rv += (v instanceof PropertyObject) ? v.toValue() : v;
+		s = true;
+	}
+	return rv;
+};
+propertyObjectPrototype.each = function(func) {
+	var arr = this.value;
+	for(var i in arr) {
+		func(arr[i], i);
+	}
+}
 propertyObjectPrototype.toValue = function() {
 	return this.prefix + this.join() + this.suffix;
 };
+
