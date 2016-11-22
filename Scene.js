@@ -1634,10 +1634,20 @@ Scene.addRole("property", "properties");
 Scene.addRole("transform", "transforms");
 Scene.addRole("filter", "filters");
 defineGetterSetter(sceneItemPrototype, "selector");
+defineGetterSetter(sceneItemPrototype, "element");
 
-scenePrototype.setSelector = function(selectors) {
-	var itemName, item;
-	for(var selector in selectors) {
+scenePrototype.setSelector = function(selectors, itemName) {
+	var item;
+	if(typeof selectors === "string") {
+		item = this.getItem(itemName);
+		if(!item)
+			return this;
+			
+		item.setSelector(selectors);
+		return this;
+	}
+	
+	for(selector in selectors) {
 		itemName = selectors[selector];
 		item = this.getItem(itemName);
 		if(!item)
@@ -1726,24 +1736,39 @@ sceneItemPrototype.init = function() {
 	Element의 현재 Style을 해당 time의 Frame에 저장한다.
 */
 sceneItemPrototype.addCSSToFrame = function(time, property) {
-	if(!this.element)
+	var element = this.element;
+	if(element instanceof NodeList)
+		element = element[0];
+		
+	if(!element)
 		return this;
-	var css = this.element.style[property];
-	if(typeof css === "undefined")
-		css = getComputedStyle(this.element)[property];
+		
+		
+		
+	var css = element.style[property];
+	if(typeof css === "undefined" || css === "")
+		css = getComputedStyle(element)[property];
 	
 	
 	var frame = this.newFrame(time);
 	var value = {};
+
 	value[property] = css;
-	console.log(value);
-	frame.load(value);	
+	
+
+	frame.load(value);
 	
 	return this;
 }
 sceneItemPrototype.addStyleToFrame = function(time) {
-	if(!this.element)
+	var element = this.element;
+	
+	if(element instanceof NodeList)
+		element = element[0];
+		
+	if(!element)
 		return this;
+
 	var cssText = this.element.style.cssText;
 	var a1 = cssText.split(";");
 	var l = a1.length;
