@@ -109,7 +109,7 @@ scenePrototype.getItem = function(id) {
 	}
 	return;
 }
-scenePrototype.isFinish = function isFinish() {
+scenePrototype.isTimeEnd = function isTimeEnd() {
 	var sceneItems = this.sceneItems;
 	var item, itemsLength = 0;
 	var finishCount = 0;
@@ -117,8 +117,9 @@ scenePrototype.isFinish = function isFinish() {
 	for(id in sceneItems) {
 		++itemsLength;
 		item = sceneItems[id];
-		if(item.isFinish(direction))
+		if(item.isTimeEnd(direction))
 			++finishCount;
+			
 	}
 	return (itemsLength <= finishCount);
 }
@@ -182,13 +183,13 @@ scenePrototype.tick = function(resolve, reject) {
 
 	
 	try {
-		var isFinish = self.isFinish();
+		var isTimeEnd = self.isTimeEnd();
 	} catch(e) {
 		//console.log(self);
 	}
-	if(isFinish) {
+	if(isTimeEnd) {
 		var ic = this.getIterationCount(), pc = this.getPlayCount();
-		this.stop();
+		this.finish();
 		this.setPlayCount(++pc);
 		
 		if(this.getFinishTime() <= 0) {	
@@ -209,7 +210,7 @@ scenePrototype.tick = function(resolve, reject) {
 scenePrototype.then = function(resolve) {
 	this.on("done", resolve);
 }
-scenePrototype.play = function play (){
+scenePrototype.play = function play (option){
 	var self = this;
 	var func = function(resolve, reject) {
 		if(self._isStart) {
@@ -217,7 +218,7 @@ scenePrototype.play = function play (){
 			return;
 		}
 		console.log("PLAY");
-		self._startTime = self.prevTime = Date.now();
+		self._startTime = self.prevTime = Date.now() - (option && option.time || 0);
 		self.nowTime = this.spendTime = 0;
 		
 		self.setPlayCount(0);
@@ -238,14 +239,28 @@ scenePrototype.play = function play (){
 	
 	return this;	
 }
-
-scenePrototype.stop = function stop() {
-	console.log("STOP");
+scenePrototype.finish = function stop() {
+	console.log("FINISH");
 	this._isStart = false;
 	this._isFinish = true;
 	this._isPause = false;
 	this.setPlayCount(0);
 }
+scenePrototype.stop = function stop() {
+	console.log("STOP");
+	this._isStart = false;
+	this._isFinish = false;
+	this._isPause = false;
+	this.setPlayCount(0);
+}
+
+scenePrototype.isPlay = function() {
+	return this._isStart;
+}
+scenePrototype.isFinish = function() {
+	return this._isFinish;
+}
+
 
 scenePrototype.addTimingFunction = function addTimingFunction(startTime, endTime, curveArray) {
 	var sceneItems = this.sceneItems;

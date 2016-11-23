@@ -339,7 +339,7 @@ sceneItemPrototype.getNowFrame = function(time) {
 /*
 	재생이 끝났는지 확인
 */
-sceneItemPrototype.isFinish = function(direction) {
+sceneItemPrototype.isTimeEnd = function(direction) {
 	if(direction == "reverse")
 		return this.time == 0;
 		
