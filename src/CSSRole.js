@@ -41,6 +41,7 @@ scenePrototype.setSelector = function(selectors, itemName) {
 			
 		item.setSelector(selector);
 	}
+	return this;
 }
 sceneItemPrototype.setSelector = function(selector) {
 	this.selector = selector;

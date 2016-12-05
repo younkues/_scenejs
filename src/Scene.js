@@ -1,4 +1,7 @@
-
+/**
+* @class
+* @
+*/
 var Scene = window.Scene = function Scene(items) {
 	this.sceneItems = {};
 	this._startTime = this._prevTime = this._nowTime = 0;
