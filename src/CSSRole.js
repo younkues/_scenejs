@@ -156,7 +156,7 @@ sceneItemPrototype.addStyleToFrame = function(time) {
 	if(!element)
 		return this;
 
-	var cssText = this.element.style.cssText;
+	var cssText = element.style.cssText;
 	var a1 = cssText.split(";");
 	var l = a1.length;
 	var a2;

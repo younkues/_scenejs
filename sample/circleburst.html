@@ -1,4 +1,4 @@
-<script src="../Scene.js"></script>
+<script src="../dest/Scene.js"></script>
 
 <style>
 body {
@@ -185,15 +185,16 @@ body {
 
 <div id="sun" class="sun"></div>
 <div id="sun2" class="sun"></div>
-<div class="sun_afterimage"></div>
-<div class="sun_afterimage"></div>
-<div class="sun_afterimage"></div>
-<div class="sun_afterimage"></div>
-<div class="sun_afterimage"></div>
-<div class="sun_afterimage"></div>
-<div class="sun_afterimage"></div>
-<div class="sun_afterimage"></div>
-
+<div class="sun_afterimages">
+	<div class="sun_afterimage"></div>
+	<div class="sun_afterimage"></div>
+	<div class="sun_afterimage"></div>
+	<div class="sun_afterimage"></div>
+	<div class="sun_afterimage"></div>
+	<div class="sun_afterimage"></div>
+	<div class="sun_afterimage"></div>
+	<div class="sun_afterimage"></div>
+</div>
 <div class="circles" id="circles1">
 	<div class="circle" style="border-color:#c9af52;"></div>
 	<div class="circle" style="border-color:#183c43;"></div>
@@ -250,28 +251,45 @@ body {
 
 <script>
 var ease= [.42,0,.58,1];
-var easeinout = [.48,.01,.25,1];
-var scene1 = new Scene();
-//sunny
-var _sun1 = scene1.addElement(sun);
-_sun1.setTransform(0, "scale", "0, 0").setTransform(0.5, "scale", "1, 1").setProperty(0.2, "border-width", "100px").setProperty(0.4988, "display", "none").setProperty(0.5, "border-width","0px")
-_sun1.addTimingFunction(0, 0.5, easeinout);
+var customTimingFunction = [.48,.01,.25,1];
+var scene1 = new Scene({
+	"sun1" : {
+		0 : {"transform" : "scale(0, 0)"},
+		0.2 : {"border-width" : "100px"},
+		0.4998 : {"display": "none"},
+		0.5 : {"border-width" : "0px", "transform" : "scale(1, 1)"}
+	},
+	"sun2" : {
+		0 : {"transform" : "scale(0, 0)", "border-width" : "100px"},
+		0.2 : {"transform" : "scale(0, 0)"},
+		0.45 : {"transform": "scale(0.9, 0.9)", "border-width": "0px"},
+	},
+	option : {
+		timingFunction : [0, 0.5, customTimingFunction]
+	}
+}).setSelector({
+	"#sun":"sun1",
+	"#sun2": "sun2"
+});
 
 
-var _sun2 = scene1.addElement(sun2);
-_sun2.setTransform(0, "scale", "0, 0").setTransform(0.2, "scale", "0, 0").setTransform(0.45, "scale", "0.9, 0.9").setProperty(0.0, "border-width", "100px").setProperty(0.45, "border-width","0px").addTimingFunction(0, 0.5, easeinout);//.setProperty(0.3, "opacity", 1).setProperty(0.4, "opacity", 0)
-
-
-var _sun_after = [];
-var sun_afters = document.querySelectorAll(".sun_afterimage");
-for (var i = 0; i < sun_afters.length; ++i) {
-	_sun_after[i] = scene1.addElement(sun_afters[i]);
-	_sun_after[i].setTransforms(0, {rotate:(i * 45 +"deg"), translate:"80px, 0px", scale: "0,1"}).copyFrame(0, 0.9).setTransforms(0.2, {translate:"80px, 0px", scale: "0.7,1"}).setTransforms(0.5, {translate:"150px, 0px", scale: "0,1"}).addTimingFunction(0, 0.5, easeinout);
+for (var i = 1; i <= 8; ++i) {
+	var json = {}
+	json["sun_after" + i] = {
+		0 : {transform : {rotate: i* 45 + "deg", translate : "80px, 0px", scale : "0,1"}},
+		0.2 : {transform : {translate:"80px, 0px", scale : "0.7, 1"}},
+		0.5 : {transform : {translate: "150px, 0px", scale : "0, 1"}},
+		0.9 : {transform : {translate : "80px, 0px", scale : "0,1"}},
+		option : {
+			timingFunction : [0, 0.5, customTimingFunction]
+		}
+	}
+	scene1.load(json).setSelector(".sun_afterimage:nth-child(" + (i) + ")", "sun_after" + i);
 }
+
+
 //rainy  1s  ~ 3s
 var scene2 = new Scene();
-
-var _circles = [];
 var circles = document.querySelectorAll("#circles1 .circle");
 
 var circlesPosition = [
@@ -282,20 +300,27 @@ var circlesPosition = [
 {x:70, y:-40, r: 50, delay: 0.8, duration: 0.8}
 ]
 var cp, r , w,d, duration, x, y;
+
+
 for (var i = 0; i < circles.length; ++i) {
-	_circles[i] = scene2.addElement(circles[i]);
 	 cp = circlesPosition[i];
 	r = cp.r + "px", w =  (cp.r * 2) + "px";
 	d = cp.delay, duration = cp.duration;
 	x = cp.x, y = cp.y;
-	_circles[i].setProperties(-1, {
-		"margin-left": "-"+r,
-		"margin-top" : "-"+r,
-		width: w,
-		height: w
-	});
-	_circles[i].translate(0, x +"px,"+y+"px").scale(0, "0,0").scale(d, "0,0").scale(duration + d, "1,1").setProperty(duration * 0.3 + d, "border-width", r).setProperty(duration + d, "border-width","0px").addTimingFunction(d, duration + d, easeinout);
-	_circles[i].opacity(d + duration * 0.7, "1").opacity(d+ duration, "0");
+	var json = {};
+	json["circles" + i] = {};
+	json["circles" + i][-1] = {"margin-left": "-"+r, "margin-top" : "-"+r, width: w, height: w};
+	json["circles" + i][0] = {transform : {translate : x +"px,"+y+"px", scale : "0,0" }};
+	json["circles" + i][d] = {transform:"scale(0,0)"};
+	json["circles" + i][duration * 0.3 + d] = {"border-width" : r};
+	json["circles" + i][duration * 0.7 + d] = {"opacity" : 1};	
+	json["circles" + i][duration + d] = {transform:"scale(1,1)", "border-width" : "0px", opacity: 0};
+	json["circles" + i]["option"] = {
+		timingFunction : [d, duration + d, Scene.EASE_IN_OUT]
+	}
+	
+	scene2.load(json).setSelector("#circles1 .circle:nth-child(" + (i+1) + ")" , "circles" + i)
+	scene2.getItem("circles"+i).addStyleToFrame(-1);
 }
 
 
@@ -344,7 +369,7 @@ for(var i = 0; i <= 5; ++i) {
 	sign = i % 2 == 0 ? 1 : -1;
 	sc.rotate(0.3 + i * duration, sign * 10 + "deg");
 	if(i != 4)
-		sc.addTimingFunction(0.3 + i * duration, 0.3 + (i + 1) * duration, easeinout);
+		sc.addTimingFunction(0.3 + i * duration, 0.3 + (i + 1) * duration, customTimingFunction);
 }
 
 var scene5 = new Scene();
