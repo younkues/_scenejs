@@ -1,0 +1,56 @@
+ <script src="../dest/Scene.js"></script>
+<style>
+body {
+		background:#84cce8;
+}
+#moons {
+	position: absolute;	
+	width: 140px;
+	height: 140px;
+	-webkit-transform: rotate(45deg);
+	top:80px;
+	right:50px;
+}
+#moon2 {
+	width: 130px;
+	height: 130px;
+	background: #E2E6E9;
+	position: absolute;
+	margin: 5px 4px;
+	border-radius: 50%;
+	
+	-webkit-transform: scale(0.0,1);
+}
+#moon {
+	position: absolute;
+}
+</style>
+
+
+
+<div id="moons">
+	<div id="moon2"></div>
+	<svg version="1.1" id="moon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+		 y="0px" width="140px" height="140px" viewBox="10.25 -3.688 140 140" enable-background="new 10.25 -3.688 140 140"
+		 xml:space="preserve">
+	<path fill="#E2E6E9" stroke-miterlimit="10" d="M145.312,66.312c0,36.071-29.241,65.312-65.312,65.312
+		c0,0,40.562-17.711,40.562-65.312C120.562,10.625,80,1,80,1C116.071,1,145.312,30.241,145.312,66.312z"/>
+	
+	</svg>
+</div>
+
+<script>
+	var scene = new Scene();
+	var item = scene.addElement(moon2);
+	
+	item.setTransform(0, "scale", "0, 1").copyFrame(0, 0.5).setTransform(1, "scale", "1, 1");
+	var p = document.querySelector("#moon path");
+	item.on("animate", function(time) {
+		if(time <= 0.5) {
+			var d = time * 101;
+			var data = "M145.312,66.312c0,36.071-29.241,65.312-65.312,65.312c0,0,"+ (50.562-d)+"-17.711,"+ (50.562-d)+"-65.312C"+(128.562 - d)+",10.625,80,1,78,1C116.071,1,143.312,30.241,145.312,66.312z";
+			p.setAttribute("d", data);
+		}
+	});
+	scene.addTimingFunction(0, 1, [0.48,0.01,0.25,1]).setTime(0).play();
+</script>

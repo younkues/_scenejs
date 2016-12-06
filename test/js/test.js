@@ -28,8 +28,35 @@ QUnit.test( "Scene Color Test", function( assert ) {
 	assert.deepEqual(item1.getProperty(0, "c1").value, [0, 0, 0, 0] , "Color Property Object array");
 	assert.deepEqual(item1.getProperty(0, "c2").value, [244, 226, 178, 1] , "hex to rgba");
 	assert.deepEqual(item1.getProperty(0, "c3").value, [244, 226, 178, 1] , "hsl to rgba");
-	
+});
+QUnit.test( "Scene Util Test", function( assert ) {
+
 	var color = Scene.Util.stringToObject("linear-gradient(360deg, rgb(0,0,0) 0%, #1fc8db 51%, #2cb5e8 75%)")
+	assert.equal(color.model, "linear-gradient");
+	assert.equal(color.value[0], "360deg");
+	assert.equal(color.value[1].value[0].model, "rgba");
+	assert.deepEqual(color.value[1].value[0].value, [0, 0, 0, 1]);
+	assert.equal(color.value[1].value[1], "0%");
+	assert.equal(color.value[2].value[1], "51%");
+	assert.equal(color.value[3].value[1], "75%");
+
+
+	var color = Scene.Util.stringToObject("10px solid #000")
+	assert.equal(color.value[0], "10px");
+	assert.equal(color.value[1], "solid");
+	assert.deepEqual(color.value[2].value, [0, 0, 0, 1]);
+
+
+
+	var color = Scene.Util.stringToObject("10px   solid rgb(0, 0, 0)")
+	assert.equal(color.value[0], "10px");
+	assert.equal(color.value[1], "solid");
+	assert.deepEqual(color.value[2].value, [0, 0, 0, 1]);
+
+	var color = Scene.Util.stringToObject("rgba(20, 40, 50, 0.5) solid rgb(0, 0, 0)")
+	assert.deepEqual(color.value[0].value, [20, 40, 50, 0.5]);
+	assert.equal(color.value[1], "solid");
+	assert.deepEqual(color.value[2].value, [0, 0, 0, 1]);
 
 });
 QUnit.test( "Scene Util dot Test", function( assert ) {

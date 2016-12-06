@@ -245,8 +245,8 @@ var _u = Scene.Util = {
 			return a1;
 		//test code
 		//ref http://stackoverflow.com/questions/20215440/parse-css-gradient-rule-with-javascript-regex
-		///(\S*\(((\([^\)]*\)|[^\)\(]*)*)\)|(\S+(\s*,\s*))|\S+)+/g
-	 	var arr = a1.match(/(\S*\([^\)]*\)|(\S+(\s*,\s*))|\S+)+/g);
+		//   /(\S*\(((\([^\)]*\)|[^\)\(]*)*)\)|(\S+(\s*,\s*))|\S+)+/g
+	 	var arr = a1.match(/(\S*\(((\([^\)]*\)|[^\)\(]*)*)\)|(\S+(\s*,\s*))|\S+)+/g);
 	 	var result, length;
 	 	if(arr && arr.length != 1) {
 		 	length = arr.length;
