@@ -28,6 +28,8 @@ QUnit.test( "Scene Color Test", function( assert ) {
 	assert.deepEqual(item1.getProperty(0, "c1").value, [0, 0, 0, 0] , "Color Property Object array");
 	assert.deepEqual(item1.getProperty(0, "c2").value, [244, 226, 178, 1] , "hex to rgba");
 	assert.deepEqual(item1.getProperty(0, "c3").value, [244, 226, 178, 1] , "hsl to rgba");
+	
+	var color = Scene.Util.stringToObject("linear-gradient(360deg, rgb(0,0,0) 0%, #1fc8db 51%, #2cb5e8 75%)")
 
 });
 QUnit.test( "Scene Util dot Test", function( assert ) {

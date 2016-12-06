@@ -1611,9 +1611,13 @@ var _u = Scene.Util = {
 	 		
 	 		return result;
 		} else if(a1.indexOf("(") != -1) {//괄호가 들어갈 때
- 			if((a1 = this.toBracketObject(a1)) && _color.models.indexOf(a1.getModel().toLowerCase()) != -1) 
-	 			return this.toColorObject(a1);
-	 		
+			try {
+	 			if((a1 = this.toBracketObject(a1)) && _color.models.indexOf(a1.getModel().toLowerCase()) != -1) 
+		 			return this.toColorObject(a1);
+		 	} catch(e) {
+			 	
+			 	throw new Error("Error : This is an invalid format." + a1);
+		 	}
 	 		arr = a1.value;
 	 		length = arr.length;
 	 		for(var i = 0; i < length; ++i) {

@@ -243,7 +243,9 @@ var _u = Scene.Util = {
 	 */
 		if(typeof a1 !== "string")
 			return a1;
-			
+		//test code
+		//ref http://stackoverflow.com/questions/20215440/parse-css-gradient-rule-with-javascript-regex
+		///(\S*\(((\([^\)]*\)|[^\)\(]*)*)\)|(\S+(\s*,\s*))|\S+)+/g
 	 	var arr = a1.match(/(\S*\([^\)]*\)|(\S+(\s*,\s*))|\S+)+/g);
 	 	var result, length;
 	 	if(arr && arr.length != 1) {
@@ -256,9 +258,12 @@ var _u = Scene.Util = {
 	 		
 	 		return result;
 		} else if(a1.indexOf("(") != -1) {//괄호가 들어갈 때
- 			if((a1 = this.toBracketObject(a1)) && _color.models.indexOf(a1.getModel().toLowerCase()) != -1) 
-	 			return this.toColorObject(a1);
-	 		
+			try {
+	 			if((a1 = this.toBracketObject(a1)) && _color.models.indexOf(a1.getModel().toLowerCase()) != -1) 
+		 			return this.toColorObject(a1);
+		 	} catch(e) {
+			 	throw new Error("Error : This is an invalid format." + a1);
+		 	}
 	 		arr = a1.value;
 	 		length = arr.length;
 	 		for(var i = 0; i < length; ++i) {
