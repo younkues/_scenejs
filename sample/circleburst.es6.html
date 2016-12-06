@@ -183,7 +183,7 @@ body {
 </style>
 
 
-<div id="scene1">
+<div class="scene1">
 	<div id="sun" class="sun"></div>
 	<div id="sun2" class="sun"></div>
 	<div class="sun_afterimages">
@@ -198,7 +198,7 @@ body {
 	</div>
 </div>
 
-<div id="scene2">
+<div class="scene2">
 	<svg class ="svg_circle" version="1.1" id="레이어_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
 		 y="0px" width="300px" height="300px" viewBox="0 0 100 100" enable-background="new 0 0 56.69 56.69"
 		 xml:space="preserve">
@@ -209,7 +209,7 @@ body {
 	
 	<div id="stick"></div>
 </div>
-<div id="scene3">
+<div class="scene3">
 	
 	<div class="circles" id="circles1">
 		<div class="circle" style="border-color:#c9af52;"></div>
@@ -219,11 +219,11 @@ body {
 		<div class="circle" style="border-color:#E2E6E9;"></div>
 	</div>
 </div>
-<div id="scene4">
+<div class="scene4">
 	<div id="slice_circle" class="circle"></div>
 </div>
 
-<div id="scene5">
+<div class="scene5">
 	<div id="circle_squares">
 		<div class="circle_square"></div>
 		<div class="circle_square"></div>
@@ -243,7 +243,7 @@ body {
 		<div class="circle_square"></div>
 	</div>
 </div>
-<div id="scene6">
+<div class="scene6">
 	<div id="bomb">
 		<svg class="tail" version="1.1" id="&#xB808;&#xC774;&#xC5B4;_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
 			 x="0px" y="0px" width="63.333px" height="30.667px" viewBox="0 0 63.333 30.667"
@@ -385,9 +385,7 @@ scene4_slice_circle.load({
 for(let i = 0; i <= 5; ++i) {
 	clipArea = i * 30 ;
 	sign = i % 2 == 0 ? 1 : -1;
-	scene4_slice_circle.load({
-		[0.3 + i * scene4_duration]: {"clip": "rect("+clipArea+"px, 150px, 150px, 0px)", transform : "rotate(" + sign*10+"deg)"}
-	});
+	scene4_slice_circle.newFrame(0.3 + i * scene4_duration).load({"clip": "rect("+clipArea+"px, 150px, 150px, 0px)", transform : "rotate(" + sign*10+"deg)"});
 	if(i >= 4)
 		continue;
 	scene4_slice_circle.addTimingFunction(0.3 + i * scene4_duration, 0.3 + (i + 1) * scene4_duration, customTimingFunction);
@@ -397,10 +395,8 @@ scene4_slice_circle.setSelector("#slice_circle")
 
 
 const scene5 = new Scene();
-
-
 const css = document.querySelectorAll("#circle_squares .circle_square");
-const deg = 360 / l;
+const deg = 360 / css.length;
 for (let i = 0; i < css.length; ++i) {
 	scene5.newItem("circlesquare" + i).load({
 		0 : {transform: {rotate:(i * deg +"deg"), translate:"100px, 0px", scale: "0,0"}},
@@ -411,6 +407,8 @@ for (let i = 0; i < css.length; ++i) {
 		[1 + i * 0.1] : {"border-radius": "0%", opacity: 0}
 	}).setSelector(".circle_square:nth-child(" + (i + 1) +")");
 }
+
+
 
 
 const scene6 = new Scene({

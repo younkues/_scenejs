@@ -287,8 +287,7 @@ var scene1 = new Scene({
 
 
 for (var i = 1; i <= 8; ++i) {
-	var json = {}
-	json["sun_after" + i] = {
+	scene1.newItem("sun_after" + i).load({
 		0 : {transform : {rotate: i* 45 + "deg", translate : "80px, 0px", scale : "0,1"}},
 		0.2 : {transform : {translate:"80px, 0px", scale : "0.7, 1"}},
 		0.5 : {transform : {translate: "150px, 0px", scale : "0, 1"}},
@@ -296,8 +295,7 @@ for (var i = 1; i <= 8; ++i) {
 		option : {
 			timingFunction : [0, 0.5, customTimingFunction]
 		}
-	}
-	scene1.load(json).setSelector(".sun_afterimage:nth-child(" + (i) + ")", "sun_after" + i);
+	}).setSelector(".sun_afterimage:nth-child(" + (i) + ")");
 }
 
 
