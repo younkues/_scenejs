@@ -1,0 +1,416 @@
+<script src="../Scene.js"></script>
+
+<style>
+body {
+		background:skyblue;
+		overflow: hidden;
+}
+
+.sun {
+	width: 200px;
+	height: 200px;
+	top:50%;
+	left: 50%;
+	margin-left: -100px;
+	margin-top:-100px;
+	position: absolute;
+	border-radius: 50%;
+	box-sizing: border-box;
+}
+#sun {
+/* 	background: #FFE26C; */
+	border-color: #FFE26C;
+	border-style: solid;
+	border-width: 75px;
+}
+#sun2 {
+	border: 75px solid #fff;
+}
+.sun_afterimage {
+	width: 60px;
+	height:2px;
+	background: #FFE26C;
+	top:50%;
+	left: 50%;
+	position: absolute;
+	transform-origin: 0% 1px;
+	transform:translate(120px, 0px);
+}
+#moonbackground {
+	background: #96ABC0;	
+	top:50%;
+	left: 50%;
+	width: 1000px;
+	height: 1000px;
+	margin: -500px 0 0 -500px;
+	position: absolute;
+	border-radius: 50%;
+}
+
+
+#text {
+	top:50%;
+	left: 50%;
+	width: 100px;
+	height: 100px;
+	font-size: 100px;
+	margin-left:-50px;
+	margin-top:-50px;
+	position: absolute;
+	color: white;
+	text-align: center;
+	line-height: 100px;
+	
+	font-family: sans-serif;
+}
+.circles {
+	z-index: 100;
+}
+.circle {
+	width: 150px;
+	height: 150px;
+	top:50%;
+	left: 50%;
+	margin-top:-75px;
+	margin-left:-75px;
+	position: absolute;
+	border-radius: 50%;
+	box-sizing: border-box;
+	border: 75px solid transparent;
+}
+
+
+.svg_circle {
+	top:50%;
+	left: 50%;
+	width: 300px;
+	height: 300px;
+	font-size: 100px;
+	margin-left:-150px;
+	margin-top:-150px;
+	position: absolute;
+}
+.svg_circle circle{
+  stroke-width: 5;
+  stroke-linejoin: round;
+  stroke-dasharray: 0 1000;
+  stroke-dashoffset: 1;
+  
+  stroke: #ff8c3a;
+}
+.svg_circle circle#rotate_circle1 {
+}
+.svg_circle circle#rotate_circle2 {
+	stroke-width: 2;
+  stroke: #3AA1BF;
+}
+.svg_circle circle#rotate_circle3 {
+	stroke-width: 1;
+  stroke: white;
+}
+#stick {
+	position: absolute;
+	top:50%;
+	left: 50%;
+	height: 0;
+	margin-left: -17px;
+	width: 24px;
+	border-bottom: 150px solid #E5EBF7;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	transform-origin: 50% 0%;
+}
+
+#slice_circle {
+	background: #ea6b96;
+	
+}
+.circle_square {
+	width: 20px;
+	height: 20px;
+	top:50%;
+	left: 50%;
+	margin-top:-10px;
+	margin-left:-10	px;
+	position: absolute;
+	border-radius: 50%;
+	box-sizing: border-box;
+	background: #FFDDDD;
+}
+
+#bomb {
+	position: absolute;
+	width: 200px;
+	height: 200px;
+	top:50%;
+	left: 50%;
+	margin-left:-100px;
+	margin-top:-100px;
+	stroke-dasharray: 100 1000;
+	stroke-dashoffset: 0;
+	transform: rotate(20deg);
+}
+#bomb .tail {
+	position: absolute;
+	left: 50%;
+	top:-110px;
+	width: 200px;
+	height: 200px;
+	margin-left: -10px;
+}
+#bomb .tail path {
+	stroke-width: 3px;
+	fill:none;stroke:#000000;stroke-miterlimit:10;
+}
+#bomb .head {
+	position: absolute;
+	width: 80px;
+	height: 20px;
+	left: 50%;
+	margin-left: -40px;
+	top:-10px;
+	background: #000;
+	
+}
+#bomb .body{
+	position: absolute;
+	top:0;
+	width: 200px;
+	height: 200px;
+	background: #000;
+	border-radius: 50%;
+}
+</style>
+
+
+
+<div id="sun" class="sun"></div>
+<div id="sun2" class="sun"></div>
+<div class="sun_afterimage"></div>
+<div class="sun_afterimage"></div>
+<div class="sun_afterimage"></div>
+<div class="sun_afterimage"></div>
+<div class="sun_afterimage"></div>
+<div class="sun_afterimage"></div>
+<div class="sun_afterimage"></div>
+<div class="sun_afterimage"></div>
+
+<div class="circles" id="circles1">
+	<div class="circle" style="border-color:#c9af52;"></div>
+	<div class="circle" style="border-color:#183c43;"></div>
+	<div class="circle" style="border-color:#FF0088;"></div>
+	<div class="circle" style="border-color:#7986CB;"></div>
+	<div class="circle" style="border-color:#E2E6E9;"></div>
+</div>
+
+
+<svg class ="svg_circle" version="1.1" id="레이어_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" width="300px" height="300px" viewBox="0 0 100 100" enable-background="new 0 0 56.69 56.69"
+	 xml:space="preserve">
+<circle id="rotate_circle1" fill="transparent" stroke="#000000" stroke-miterlimit="10" cx="50" cy="50" r="25"/>
+<circle id="rotate_circle2" fill="transparent" stroke="#000000" stroke-miterlimit="10" cx="50" cy="50" r="35"/>
+<circle id="rotate_circle3" fill="transparent" stroke="#000000" stroke-miterlimit="10" cx="50" cy="50" r="45"/>
+</svg>
+
+<div id="stick"></div>
+<div id="slice_circle" class="circle"></div>
+
+
+<div id="circle_squares">
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+	<div class="circle_square"></div>
+</div>
+
+<div id="bomb">
+	<svg class="tail" version="1.1" id="&#xB808;&#xC774;&#xC5B4;_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+		 x="0px" y="0px" width="63.333px" height="30.667px" viewBox="0 0 63.333 30.667"
+		 style="enable-background:new 0 0 63.333 30.667;" xml:space="preserve">
+	<path d="M3,19.333C3,17.258,9.159,1.416,21,5.667
+		c13,4.667,13.167,38.724,39.667,7.39"/>
+	</svg>
+	<div class="head"></div>
+	<div class="body"></div>
+
+</div>
+<div id="text">1</div>
+
+
+<script>
+var ease= [.42,0,.58,1];
+var easeinout = [.48,.01,.25,1];
+var scene1 = new Scene();
+//sunny
+var _sun1 = scene1.addElement(sun);
+_sun1.setTransform(0, "scale", "0, 0").setTransform(0.5, "scale", "1, 1").setProperty(0.2, "border-width", "100px").setProperty(0.4988, "display", "none").setProperty(0.5, "border-width","0px")
+_sun1.addTimingFunction(0, 0.5, easeinout);
+
+
+var _sun2 = scene1.addElement(sun2);
+_sun2.setTransform(0, "scale", "0, 0").setTransform(0.2, "scale", "0, 0").setTransform(0.45, "scale", "0.9, 0.9").setProperty(0.0, "border-width", "100px").setProperty(0.45, "border-width","0px").addTimingFunction(0, 0.5, easeinout);//.setProperty(0.3, "opacity", 1).setProperty(0.4, "opacity", 0)
+
+
+var _sun_after = [];
+var sun_afters = document.querySelectorAll(".sun_afterimage");
+for (var i = 0; i < sun_afters.length; ++i) {
+	_sun_after[i] = scene1.addElement(sun_afters[i]);
+	_sun_after[i].setTransforms(0, {rotate:(i * 45 +"deg"), translate:"80px, 0px", scale: "0,1"}).copyFrame(0, 0.9).setTransforms(0.2, {translate:"80px, 0px", scale: "0.7,1"}).setTransforms(0.5, {translate:"150px, 0px", scale: "0,1"}).addTimingFunction(0, 0.5, easeinout);
+}
+//rainy  1s  ~ 3s
+var scene2 = new Scene();
+
+var _circles = [];
+var circles = document.querySelectorAll("#circles1 .circle");
+
+var circlesPosition = [
+{x:0, y:0, r: 100, delay: 0, duration: 1},
+{x:-30, y:-50, r: 40, delay: 0.3, duration: 0.7},
+{x:40, y:50, r: 50, delay: 0.5, duration: 0.7},
+{x:-40, y:60, r: 60, delay: 0.6, duration: 0.7},
+{x:70, y:-40, r: 50, delay: 0.8, duration: 0.8}
+]
+var cp, r , w,d, duration, x, y;
+for (var i = 0; i < circles.length; ++i) {
+	_circles[i] = scene2.addElement(circles[i]);
+	 cp = circlesPosition[i];
+	r = cp.r + "px", w =  (cp.r * 2) + "px";
+	d = cp.delay, duration = cp.duration;
+	x = cp.x, y = cp.y;
+	_circles[i].setProperties(-1, {
+		"margin-left": "-"+r,
+		"margin-top" : "-"+r,
+		width: w,
+		height: w
+	});
+	_circles[i].translate(0, x +"px,"+y+"px").scale(0, "0,0").scale(d, "0,0").scale(duration + d, "1,1").setProperty(duration * 0.3 + d, "border-width", r).setProperty(duration + d, "border-width","0px").addTimingFunction(d, duration + d, easeinout);
+	_circles[i].opacity(d + duration * 0.7, "1").opacity(d+ duration, "0");
+}
+
+
+
+var scene3 = new Scene();
+var rc1 = scene3.addElement(rotate_circle1);
+var rc2 = scene3.addElement(rotate_circle2);
+var rc3 = scene3.addElement(rotate_circle3);
+var st = scene3.addElement(stick);
+/*
+	stroke-dasharray: 283 1000;
+	stroke-dashoffset: -283;
+*/
+var r1 = 25 * 2 * Math.PI, r2 = 35 * 2 * Math.PI, r3 = 45 * 2 * Math.PI;
+var delay = 0.4;
+rc1.setProperties(delay , {"stroke-dasharray": "0 1000", "stroke-dashoffset": 1})
+	.setProperties(delay + 1, {"stroke-dasharray": r1+" 1000", "stroke-dashoffset": 1})
+	.setProperties(delay + 2, {"stroke-dashoffset": -r1});
+rc2.setProperties(delay , {"stroke-dasharray": "0 1000", "stroke-dashoffset": 1})
+	.setProperties(delay + 1, {"stroke-dasharray": (r2+1) + " 1000", "stroke-dashoffset": 1})
+	.setProperties(delay + 2, {"stroke-dashoffset": -r2});
+rc3.setProperties(delay , {"stroke-dasharray": "0 1000", "stroke-dashoffset": 1})
+	.setProperties(delay + 1, {"stroke-dasharray": (r3+1) + " 1000", "stroke-dashoffset": 1})
+	.setProperties(delay + 2, {"stroke-dashoffset": -r3});
+	
+st.setTransforms(0, {rotate:"-90deg", scale:"1, 0"}).setTransforms(delay/2, {rotate:"-90deg", scale:"1,1"}).setTransforms(delay, {rotate:"-90deg", scale:"1,1"});// show stick
+st.rotate(delay + 1, "270deg").rotate(delay + 2, "630deg"); // rotate stick
+st.setTransforms(2+delay, {scale:"1, 1"}).setTransforms(2+delay +delay/2, {scale:"1, 0"}); // hide stick
+
+scene3.setPlaySpeed(1);
+scene3.addTimingFunction(0, delay, ease).addTimingFunction(delay, delay + 1, ease).addTimingFunction(delay + 1, delay + 2, ease).addTimingFunction(delay + 2, delay + delay/2 + 2, ease);
+
+
+
+var scene4 = new Scene();
+var sc = scene4.addElement(slice_circle);
+
+
+
+var clipArea, sign, r = 75;
+duration = 0.3;
+sc.scale(0, "0,0").scale(0.3, "1,1");
+for(var i = 0; i <= 5; ++i) {
+	clipArea = i * 30 ;
+	sc.setProperty(0.3 + i * duration, "clip", "rect("+clipArea+"px, 150px, 150px, 0px)");	
+	sign = i % 2 == 0 ? 1 : -1;
+	sc.rotate(0.3 + i * duration, sign * 10 + "deg");
+	if(i != 4)
+		sc.addTimingFunction(0.3 + i * duration, 0.3 + (i + 1) * duration, easeinout);
+}
+
+var scene5 = new Scene();
+
+var _css = [];
+var css = document.querySelectorAll("#circle_squares .circle_square");
+l = css.length;
+deg = 360 / l;
+for (var i = 0; i < l; ++i) {
+	_css[i] = scene5.addElement(css[i]);
+	_css[i].setTransforms(0, {rotate:(i * deg +"deg"), translate:"100px, 0px", scale: "0,0"});
+	_css[i].setTransforms(i * 0.1, {scale:"0, 0"});
+	_css[i].setTransforms(i * 0.1 + 0.2, {scale:"1.3, 1.3"});
+	_css[i].setTransforms(i * 0.1 + 0.3, {scale:"1, 1"});
+	_css[i].setProperties(i * 0.1 + 0.6, {"border-radius": "50%", opacity: 1});
+	_css[i].setProperties(i * 0.1 + 1, {"border-radius": "0%", opacity: 0});
+}
+
+
+
+
+
+var scene6 = new Scene();
+var _bomb = scene6.addElement(bomb);
+var bomb_tail = scene6.addElement(bomb.querySelector(".tail path"));
+var bomb_body = scene6.addElement(bomb.querySelector(".body"));
+
+_bomb.rotate(0, "20deg").scale(0, "0, 0").scale(0.3, "1.3, 1.3").scale(0.5, "1,1");
+_bomb.addTimingFunction(0, 0.5, ease);
+bomb_tail.setProperty(0, "stroke-dashoffset", 0);
+bomb_tail.setProperty(2, "stroke-dashoffset", 100);
+bomb_body.scale(2, "1,1");
+bomb_body.scale(3, "20,20");
+bomb_body.addTimingFunction(2, 3, ease);
+
+scene1.setPlaySpeed(0.5);
+scene1.setTime(0);
+scene2.setTime(0);
+scene3.setTime(0);
+scene4.setTime(0);
+scene5.setTime(0);
+scene6.setTime(0);
+
+
+/* scene1.setDirection("reverse"); */
+
+scene1.play().then(function() {
+	text.innerHTML = "2";
+	return scene3.play();
+}).then(function() {
+	text.innerHTML = "3";
+	return scene2.play();
+}).then(function() {
+	text.innerHTML = "4";
+	return scene4.play();
+}).then(function() {
+	text.innerHTML = "5";
+	return scene5.play();
+}).then(function() {
+	text.innerHTML = "6";
+	return scene6.play();	
+}).then(function() {
+	text.innerHTML = "";
+	return this;
+});
+
+
+</script>

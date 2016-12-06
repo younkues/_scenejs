@@ -1842,6 +1842,8 @@ sceneItemPrototype.setSelector = function(selector) {
 	this.selector = selector;
 	
 	this.element = document.querySelectorAll(selector);
+	
+	return this;
 }
 function animateFunction(time, frame) {
 	var cssText = frame.getCSSText();
@@ -1951,7 +1953,7 @@ sceneItemPrototype.addStyleToFrame = function(time) {
 	if(!element)
 		return this;
 
-	var cssText = this.element.style.cssText;
+	var cssText = element.style.cssText;
 	var a1 = cssText.split(";");
 	var l = a1.length;
 	var a2;

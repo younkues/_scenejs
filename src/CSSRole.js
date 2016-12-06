@@ -47,6 +47,8 @@ sceneItemPrototype.setSelector = function(selector) {
 	this.selector = selector;
 	
 	this.element = document.querySelectorAll(selector);
+	
+	return this;
 }
 function animateFunction(time, frame) {
 	var cssText = frame.getCSSText();

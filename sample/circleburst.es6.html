@@ -183,7 +183,6 @@ body {
 </style>
 
 
-
 <div id="scene1">
 	<div id="sun" class="sun"></div>
 	<div id="sun2" class="sun"></div>
@@ -257,15 +256,13 @@ body {
 	
 	</div>
 </div>
-
-
 <div id="text">1</div>
 
 
 <script>
-var ease= [.42,0,.58,1];
-var customTimingFunction = [.48,.01,.25,1];
-var scene1 = new Scene({
+const ease = [.42,0,.58,1];
+const customTimingFunction = [.48,.01,.25,1];
+const scene1 = new Scene({
 	"sun1" : {
 		0 : {"transform" : "scale(0, 0)"},
 		0.2 : {"border-width" : "100px"},
@@ -286,9 +283,8 @@ var scene1 = new Scene({
 });
 
 
-for (var i = 1; i <= 8; ++i) {
-	var json = {}
-	json["sun_after" + i] = {
+for (let i = 1; i <= 8; ++i) {
+	scene1.newItem("sun_after" + i).load({
 		0 : {transform : {rotate: i* 45 + "deg", translate : "80px, 0px", scale : "0,1"}},
 		0.2 : {transform : {translate:"80px, 0px", scale : "0.7, 1"}},
 		0.5 : {transform : {translate: "150px, 0px", scale : "0, 1"}},
@@ -296,132 +292,128 @@ for (var i = 1; i <= 8; ++i) {
 		option : {
 			timingFunction : [0, 0.5, customTimingFunction]
 		}
-	}
-	scene1.load(json).setSelector(".sun_afterimage:nth-child(" + (i) + ")", "sun_after" + i);
+	}).setSelector(".sun_afterimage:nth-child(" + (i) + ")");
 }
 
 
 
-
-var scene2 = new Scene();
 /*
 	stroke-dasharray: 283 1000;
 	stroke-dashoffset: -283;
 */
-var scene2_radius = [25 * 2 * Math.PI, 35 * 2 * Math.PI, 45 * 2 * Math.PI];
-var delay = 0.4;
-for(var i = 0; i < scene2_radius.length; ++i) {
-	var json = {}
-	var r1 = scene2_radius[i];
-	json["rc" + i] = {};
-	json["rc" + i][delay] = {"stroke-dasharray": "0 1000", "stroke-dashoffset": 1};
-	json["rc" + i][delay + 1] = {"stroke-dasharray": r1+" 1000", "stroke-dashoffset": 1};
-	json["rc" + i][delay + 2] = {"stroke-dashoffset": -r1};
-	
-	scene2.load(json).setSelector("#rotate_circle" + (i+1), "rc" + i);
+const scene2 = new Scene();
+const scene2_radius = [25 * 2 * Math.PI, 35 * 2 * Math.PI, 45 * 2 * Math.PI];
+const delay = 0.4;
+
+
+for(let i = 0; i < scene2_radius.length; ++i) {
+	let r = scene2_radius[i];
+	scene2.newItem("rc" + i).load({
+		[delay]: {"stroke-dasharray": "0 1000", "stroke-dashoffset": 1},
+		[delay + 1]: {"stroke-dasharray": r + " 1000", "stroke-dashoffset": 1},
+		[delay + 2]: {"stroke-dashoffset": -r}
+	}).setSelector("#rotate_circle" + (i+1));
 }
 scene2.load({
 	"stick" : {
 		0 : {transform: {rotate:"-90deg", scale:"1, 0"}},
-		0.2 : {transform: {rotate:"-90deg", scale:"1,1"}}, // t = delay / 2
-		0.4 : {transform: {rotate:"-90deg", scale:"1,1"}}, // t = delay
-		1.4 : {transform: {rotate:"270deg", scale:"1,1"}}, // t = 1 + delay
-		2.4 : {transform: {rotate:"630deg", scale:"1,1"}}, // t = 2 + delay
-		2.6 : {transform: {scale:"1,0"}}, // t = 2 + delay + delay / 2
+		[delay / 2] : {transform: {rotate:"-90deg", scale:"1,1"}}, // t = delay / 2
+		[delay] : {transform: {rotate:"-90deg", scale:"1,1"}}, // t = delay
+		[1 + delay] : {transform: {rotate:"270deg", scale:"1,1"}}, // t = 1 + delay
+		[2 + delay] : {transform: {rotate:"630deg", scale:"1,1"}}, // t = 2 + delay
+		[2 + delay + delay / 2] : {transform: {scale:"1,0"}}, // t = 2 + delay + delay / 2
+	},
+	option : {
+		timingFunction :[
+			0, delay, ease,
+			delay, delay + 1, ease,
+			delay + 1, delay + 2, ease,
+			delay + 2, delay + delay / 2, ease
+		]
 	}
 }).setSelector({
 	"#stick" : "stick"
-}).addTimingFunction(0, delay, ease).addTimingFunction(delay, delay + 1, ease).addTimingFunction(delay + 1, delay + 2, ease).addTimingFunction(delay + 2, delay + delay/2 + 2, ease);
+});
 
 
 
 
 
 //rainy  1s  ~ 3s
-var scene3 = new Scene();
-var circles = document.querySelectorAll("#circles1 .circle");
+const scene3 = new Scene();
+const circles = document.querySelectorAll("#circles1 .circle");
 
-var circlesPosition = [
+const circlesPosition = [
 {x:0, y:0, r: 100, delay: 0, duration: 1},
 {x:-30, y:-50, r: 40, delay: 0.3, duration: 0.7},
 {x:40, y:50, r: 50, delay: 0.5, duration: 0.7},
 {x:-40, y:60, r: 60, delay: 0.6, duration: 0.7},
 {x:70, y:-40, r: 50, delay: 0.8, duration: 0.8}
 ]
-var cp, r , w,d, duration, x, y;
+let cp, r , w,d, duration, x, y;
 
 
-for (var i = 0; i < circles.length; ++i) {
+for (let i = 0; i < circles.length; ++i) {
 	 cp = circlesPosition[i];
 	r = cp.r + "px", w =  (cp.r * 2) + "px";
 	d = cp.delay, duration = cp.duration;
 	x = cp.x, y = cp.y;
-	var json = {};
-	json["circles" + i] = {};
-	json["circles" + i][-1] = {"margin-left": "-"+r, "margin-top" : "-"+r, width: w, height: w};
-	json["circles" + i][0] = {transform : {translate : x +"px,"+y+"px", scale : "0,0" }};
-	json["circles" + i][d] = {transform:"scale(0,0)"};
-	json["circles" + i][duration * 0.3 + d] = {"border-width" : r};
-	json["circles" + i][duration * 0.7 + d] = {"opacity" : 1};	
-	json["circles" + i][duration + d] = {transform:"scale(1,1)", "border-width" : "0px", opacity: 0};
-	json["circles" + i]["option"] = {
-		timingFunction : [d, duration + d, customTimingFunction]
-	}
 	
-	scene3.load(json).setSelector("#circles1 .circle:nth-child(" + (i+1) + ")" , "circles" + i)
-	scene3.getItem("circles"+i).addStyleToFrame(-1);
+	scene3.newItem("circles" + i).load({
+		[-1]: {"margin-left": "-"+r, "margin-top" : "-"+r, width: w, height: w},
+		0: {transform : {translate : x +"px,"+y+"px", scale : "0,0" }},
+		[d]: {transform:"scale(0,0)"},
+		[duration * 0.3 + d]: {"border-width" : r},
+		[duration * 0.7 + d]: {"opacity" : 1},
+		[duration + d]: {transform:"scale(1,1)", "border-width" : "0px", opacity: 0},
+		"option": {
+			timingFunction : [d, duration + d, customTimingFunction]
+		}
+	}).setSelector("#circles1 .circle:nth-child(" + (i+1) + ")").addStyleToFrame(-1);
 }
 
 
 
-
-
-
-
-
-var clipArea, sign, r = 75, duration = 0.3;
-var scene4 = new Scene();
-var scene4_slice_circle = scene4.newItem("slicecircle");
+const scene4 = new Scene();
+const scene4_slice_circle = scene4.newItem("slicecircle");
+let clipArea, sign, scene4_duration = 0.3;
 scene4_slice_circle.load({
 	0 : {transform : "scale(0,0)"},
 	0.3 : {transform : "scale(1,1)"}, 
 });
-for(var i = 0; i <= 5; ++i) {
+
+for(let i = 0; i <= 5; ++i) {
 	clipArea = i * 30 ;
-	scene4_slice_circle.setProperty(0.3 + i * duration, "clip", "rect("+clipArea+"px, 150px, 150px, 0px)");	
 	sign = i % 2 == 0 ? 1 : -1;
-	scene4_slice_circle.setTransform(0.3 + i * duration, "rotate", sign * 10 + "deg");
+	scene4_slice_circle.load({
+		[0.3 + i * scene4_duration]: {"clip": "rect("+clipArea+"px, 150px, 150px, 0px)", transform : "rotate(" + sign*10+"deg)"}
+	});
 	if(i >= 4)
 		continue;
-	scene4_slice_circle.addTimingFunction(0.3 + i * duration, 0.3 + (i + 1) * duration, customTimingFunction);
+	scene4_slice_circle.addTimingFunction(0.3 + i * scene4_duration, 0.3 + (i + 1) * scene4_duration, customTimingFunction);
 }
 scene4_slice_circle.setSelector("#slice_circle")
 
 
 
-var scene5 = new Scene();
+const scene5 = new Scene();
 
-var _css = [];
-var css = document.querySelectorAll("#circle_squares .circle_square");
-l = css.length;
-deg = 360 / l;
-for (var i = 0; i < l; ++i) {
-	var json = {};
-	json["circlesquare" + i] = {};
-	json["circlesquare" + i][0] = {transform: {rotate:(i * deg +"deg"), translate:"100px, 0px", scale: "0,0"}};
 
-	json["circlesquare" + i][0 + i * 0.1 + 0.01] = {transform: {scale:"0, 0"}};
-		
-	json["circlesquare" + i][0.2 + i * 0.1] = {transform: {scale:"1.3, 1.3"}};
-	json["circlesquare" + i][0.3 + i * 0.1] = {transform: {scale:"1, 1"}};
-	json["circlesquare" + i][0.6 + i * 0.1] = {"border-radius": "50%", opacity: 1};
-	json["circlesquare" + i][1 + i * 0.1] = {"border-radius": "0%", opacity: 0};
-	
-	scene5.load(json).setSelector(".circle_square:nth-child(" + (i + 1) +")", "circlesquare" + i);
+const css = document.querySelectorAll("#circle_squares .circle_square");
+const deg = 360 / l;
+for (let i = 0; i < css.length; ++i) {
+	scene5.newItem("circlesquare" + i).load({
+		0 : {transform: {rotate:(i * deg +"deg"), translate:"100px, 0px", scale: "0,0"}},
+		[0 + i * 0.1 + 0.01] : {transform: {scale:"0, 0"}},
+		[0.2 + i * 0.1] : {transform: {scale:"1.3, 1.3"}},
+		[0.3 + i * 0.1] : {transform: {scale:"1, 1"}},
+		[0.6 + i * 0.1] : {"border-radius": "50%", opacity: 1},
+		[1 + i * 0.1] : {"border-radius": "0%", opacity: 0}
+	}).setSelector(".circle_square:nth-child(" + (i + 1) +")");
 }
 
 
-var scene6 = new Scene({
+const scene6 = new Scene({
 	"bomb" : {
 		0 : {transform : "rotate(20deg) scale(0,0)"},
 		0.3 : {transform: "scale(1.3, 1.3)"},
@@ -447,27 +439,22 @@ var scene6 = new Scene({
 	"#bomb .body" : "body"
 });
 
-scene1.on("done", function() {
+scene1.play().then(() => {
 	text.innerHTML = "2";
-	scene2.play();
-});
-scene2.on("done", function() {
+	return scene2.play();
+}).then(() => {
 	text.innerHTML = "3";
-	scene3.play();
-});
-scene3.on("done", function() {
+	return scene3.play();
+}).then(() => {
 	text.innerHTML = "4";
-	scene4.play();
-});
-scene4.on("done", function() {
+	return scene4.play();
+}).then(() => {
 	text.innerHTML = "5";
-	scene5.play();
-});
-scene5.on("done", function() {
+	return scene5.play();
+}).then(() => {
 	text.innerHTML = "6";
-	scene6.play();
-});
-scene6.on("done", function() {
+	return scene6.play();
+}).then(() => {
 	text.innerHTML = "";
 });
 
