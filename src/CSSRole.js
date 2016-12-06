@@ -29,7 +29,7 @@ defineGetterSetter(sceneItemPrototype, "element");
      * @method Scene#setSelector
      * @param {Object|String} selectors selectors key=selector, value = itemName.
      * @param {String} [itemName] sceneItem name to connect.
-     * @return {SceneItem} a Instance.
+     * @return {Scene} a Instance.
      * @example
 scene.setSelector({
 	"#id .class" : "item1",
@@ -59,6 +59,15 @@ scenePrototype.setSelector = function(selectors, itemName) {
 	}
 	return this;
 }
+
+/**
+     * set selector to connect sceneItem and Element
+     * @method Scene.SceneItem#setSelector
+     * @param {String} selector
+     * @return {SceneItem} a Instance.
+     * @example
+sceneItem.setSelector("#id .class");
+     */
 sceneItemPrototype.setSelector = function(selector) {
 	this.selector = selector;
 	
@@ -93,6 +102,21 @@ scenePrototype._addElement = function(elements) {
 	}
 	return arr;
 }
+
+/**
+     * add Element and connect sceneItem and element.
+     * @method Scene#addElement
+     * @param {String|NodeList} id
+     * @param {Element|NodeList} element
+     * @return {SceneItem} new SceneItem.
+     * @example
+scene1.addElement("#id .class");
+scene1.addElement(document.querySelectorAll(".item1"));
+
+
+scene1.addElement("item1", document.querySelector(".item1"));
+scene1.addElement("item2", document.querySelectorAll(".item2"));
+     */
 scenePrototype.addElement = function(id, element) {
 	var length = arguments.length;
 	if(length === 0) {
@@ -103,18 +127,16 @@ scenePrototype.addElement = function(id, element) {
 		
 		var type = typeof element;
 		
-		if(type === "undefined") {
-			var item = new SceneItem();
-			return this.addItem(id, item);
-		}
-		else if(type === "string") {
+		if(!element) {
+			return;
+		} else if(type === "string") {
 			return this._addElement(document.querySelectorAll(element));
 		}
 		else if(element instanceof Array || element instanceof NodeList) {
 			return this._addElement(element);
 		}
 	}
-	
+
 	_id = element.getAttribute(ATTR_ITEM_ID);
 	if(!_id) {
 		id = id ? id : "item" + parseInt(Math.random() * 10000);
@@ -137,9 +159,18 @@ sceneItemPrototype.init = function() {
 
 }
 
-/*
-	Element의 현재 Style을 해당 time의 Frame에 저장한다.
-*/
+
+
+/**
+     * save current style of the element in the frame at that time.
+     * @method Scene#addCSSToFrame
+     * @param {Number} time set frame in time.
+     * @param {String} property get element's property.
+     * @return {SceneItem} a Instance.
+     * @example
+sceneItem.addCSSToFrame(0, "background-color");
+// set 0s Frame Property element's background-color 
+     */
 sceneItemPrototype.addCSSToFrame = function(time, property) {
 	var element = this.element;
 	if(element instanceof NodeList)
@@ -192,7 +223,6 @@ sceneItemPrototype.addStyleToFrame = function(time) {
 	return this;
 }
 
-
 scenePrototype.playCSS = function play (){
 	if(this.isStart)
 		return this;
@@ -241,11 +271,13 @@ scenePrototype.stopCSS = function stop() {
 			elements[i].className = replaceAll(elements[i].className , "startAnimation" ,"");
 		}
 	}
+	
+	return this;
 }
 
 
 /*export CSS STYLE*/
-scenePrototype.setFrameToCSSRule = function() {
+scenePrototype.exportCSS = function() {
 	var sceneItems = this.sceneItems;
 	var sceneItem;
 	var finishTime = this.getFinishTime();
@@ -262,7 +294,7 @@ scenePrototype.setFrameToCSSRule = function() {
 }
 var CSS_ANIMATION_RULE = "";
 var CSS_ANIMATION_START_RULE = "{selector}.startAnimation{{prefix}animation: scenejs_animation_{id} {time}s {type};{prefix}animation-fill-mode: forwards;{prefix}animation-iteration-count:{count};}"
-sceneItemPrototype.setFrameToCSSRule = function(finishTime, count) {
+sceneItemPrototype.exportCSSRule = function(finishTime, count) {
 	if(!this.getSelector())
 		return "";
 		
@@ -299,6 +331,15 @@ sceneItemPrototype.setFrameToCSSRule = function(finishTime, count) {
 }
 
 
+
+/**
+     * get CSSObject
+     * @method Scene.Frame#getCSSObject
+     * @return {object} CSSObject
+     * @example
+sceneItem.getFrame(0.5).getCSSObject()
+//ex => {"background" :"#fff", transform: "scale(1) rotate(30deg)"}
+     */
 framePrototype.getCSSObject = function() {
 	var transforms = this.properties["transform"], filters = this.properties["filter"], properties = this.properties["property"];
 	var value;
@@ -353,10 +394,18 @@ var convertCrossBrowserCSSObject = function(cssObject, property) {
 	cssObject["-o-" + property] =
 	cssObject["-webkit-" + property] = cssObject[property];
 }
-/*
-	CSSObject를 cssText로 바꿔준다.
+
+
+
+/**
+     * get cssText // convert CSSObject to cssText 
+     * @method Scene.Frame#getCSSText
+     * @return {String} cssText
+     * @example
+sceneItem.getFrame(0.5).getCSSText()
+//ex => "background:#fff; transform:scale(1) rotate(30deg);"
 */
-framePrototype.getCSSText = function(prefix) {
+framePrototype.getCSSText = function() {
 	var cssObject = this.getCSSObject();
 	var cssText = "", value, property;
 	if(cssObject.transform)
