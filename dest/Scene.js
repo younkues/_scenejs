@@ -1353,8 +1353,15 @@ propertyObjectPrototype.toValue = function() {
 		})(property);
 	}
 })();
+/** 
+	* @namespace Scene.Util
+ */
 var _u = Scene.Util = {
 	// ex) 100px unit:px, value: 100
+	/**
+	* split Unit
+	* @function Scene.Util#splitUnit
+	*/
 	splitUnit: function splitUnit(v) {
 		v = v + "";
 		var value = v.replace(/[^0-9|\.|\-|e\-|e\+]/g,'');
@@ -1590,7 +1597,14 @@ var _u = Scene.Util = {
 		object.setSuffix(a1.getSuffix());
 		
 		return object;
-	 },	 
+	 },
+	 /**
+	* convert CSS Value to PropertyObject
+	* @function Scene.Util#stringToObject
+	* @param {String} value it's text contains the array.
+	* @return {String} Not Array, Not Separator, Only Number & Unit
+	* @return {PropertyObject} Array with Separator.
+	*/
 	 stringToObject: function(a1) {
 	 /*
 	 	공백을 기준으로 나눈다. 자동으로 양쪽 끝 여백은 매칭하지 않는다.
@@ -1639,6 +1653,19 @@ var _u = Scene.Util = {
 		 a1과 a2를 b1과 b2에 대해 내적한다.
 		 a2 *  b1 / (b1 + b2) + a1 * b2 / (b1 + b2)
 	 */
+	 /**
+	* The dot product of a1 and a2 for the b1 and b2.
+	* @function Scene.Util#dot
+	* @param {String|Number|PropertyObject} a1 value1
+	* @param {String|Number|PropertyObject} a2 value2
+	* @param {Number} b1 b1 ratio
+	* @param {Number} b2 b2 ratio
+	* @return {String} Not Array, Not Separator, Only Number & Unit
+	* @return {PropertyObject} Array with Separator.
+	* @example
+Util.dot(1, 3, 0.3, 0.7);
+// => 1.6
+	*/
 	dot : function dot(a1, a2, b1, b2) {
 
 		// PropertyObject일 경우 Object끼리 내적을 한다.
