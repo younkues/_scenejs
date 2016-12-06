@@ -1817,6 +1817,22 @@ Scene.addRole("filter", "filters");
 defineGetterSetter(sceneItemPrototype, "selector");
 defineGetterSetter(sceneItemPrototype, "element");
 
+
+
+/**
+     * set selector to connect sceneItem and Element
+     * @method Scene#setSelector
+     * @param {Object|String} selectors selectors key=selector, value = itemName.
+     * @param {String} [itemName] sceneItem name to connect.
+     * @return {SceneItem} a Instance.
+     * @example
+scene.setSelector({
+	"#id .class" : "item1",
+	".class2" : "item2"
+});
+
+scene.setSelector(".class3", "item3");
+     */
 scenePrototype.setSelector = function(selectors, itemName) {
 	var item;
 	if(typeof selectors === "string") {
