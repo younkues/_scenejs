@@ -50,6 +50,10 @@ Scene.js is an Javascript Aniamtion Library. Make Your Homepage Dynamic.
 
 [Circle Burst ES6](http://daybrush.com/Scene.js/sample/circleburst.es6.html)
 
+[Color Test](http://daybrush.com/Scene.js/sample/colortest.html)
+
+[Moon SVG](http://daybrush.com/Scene.js/sample/fullmoon.html)
+
 Slot Machine(Soon)
 
 
