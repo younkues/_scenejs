@@ -1,4 +1,8 @@
-//element를 바깥으로 빼기
+/**
+* Add & Manage Frame
+* @class
+* @name Scene.SceneItem
+*/
 var SceneItem = Scene.SceneItem = function(element) {
 	var self = this;
 	self.id = "";
@@ -36,6 +40,19 @@ defineGetterSetter(sceneItemPrototype, "id");
 sceneItemPrototype.init = function() {
 	
 }
+
+/**
+     * load Frame as JSON.
+     * @method Scene.SceneItem#load
+     * @param {Object} frames frames.
+     * @return {SceneItem} a Instance.
+     * @example
+sceneItem1.load({
+    0 : {width: "30px", height: "20px", property:value},
+    2 : {width: "50px", property:value},
+    6.5:{height: "200px", property:value},
+});
+     */
 sceneItemPrototype.load = function(item) {
 	var time, properties, frame;
 	for(time in item) {

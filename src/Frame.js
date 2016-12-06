@@ -1,8 +1,8 @@
-/*
-	Frame
+/**
+* Set Property & get CSSText
+* @class
+* @name Scene.Frame
 */
-
-
 var Frame = Scene.Frame = function Frame(sceneItem, time) {
 	this.sceneItem = sceneItem;
 	this.properties = {};
@@ -19,6 +19,15 @@ var framePrototype = Frame.prototype;
 defineAll(framePrototype, "sceneItem");
 
 
+
+/**
+* load Frames as JSON.
+* @method Scene.Frame#load
+     * @param {Object} properties properties.
+     * @return {Frame} a Instance.
+     * @example
+frame1.load({width: "30px", height: "20px", property:value});
+     */
 framePrototype.load = function(properties) {
 	var self = this;
 	var _util = Scene.Util;

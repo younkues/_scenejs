@@ -10,7 +10,7 @@ grunt.initConfig({
 			src: ['./dest/Scene.js', "README.md"],
 			options: {
 				destination: 'doc',
-				template: "node_modules/docdash"
+				template: "./template"
 			}
 		}
 	},

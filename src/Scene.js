@@ -1,7 +1,21 @@
 /**
-* @class
-* @
-*/
+     * create a Scene, Control SceneItem, Speed & Count, Play & Stop
+     * @class Scene
+     * @param {Object} [sceneItems={}] load sceneItem as JSON.
+     * @example
+var scene = new Scene({
+    "item1" : {
+        0 : {width: "30px", height: "20px", property:value},
+        2 : {width: "50px", property:value},
+        6.5:{height: "200px", property:value},
+    },
+    "item2" : {
+        0 : {transform:{scale:0.5}, property:value},
+        2 : {transform:{scale:1.5, rotate:"0deg"}, width: "50px", property:value},
+        6.5: {transform:{scale:1, rotate:"50deg"}, width: "10px", property:value},
+    },
+});
+     */
 var Scene = window.Scene = function Scene(items) {
 	this.sceneItems = {};
 	this._startTime = this._prevTime = this._nowTime = 0;
@@ -43,6 +57,25 @@ defineGetterSetter(scenePrototype, "iterationCount");
 defineGetterSetter(scenePrototype, "direction");
 
 
+/**
+     * load sceneItem as JSON.
+     * @method Scene#load
+     * @param {Object} sceneItems sceneItem.
+     * @return {Scene} a Instance.
+     * @example
+scene.load({
+    "item1" : {
+        0 : {width: "30px", height: "20px", property:value},
+        2 : {width: "50px", property:value},
+        6.5:{height: "200px", property:value},
+    },
+    "item2" : {
+        0 : {transform:{scale:0.5}, property:value},
+        2 : {transform:{scale:1.5, rotate:"0deg"}, width: "50px", property:value},
+        6.5: {transform:{scale:1, rotate:"50deg"}, width: "10px", property:value},
+    }
+});
+     */
 scenePrototype.load = function(items) {
 	if(!items)
 		return this;
@@ -70,10 +103,20 @@ scenePrototype.load = function(items) {
 	}
 	return this;
 }
+
+/**
+     * add Item in Scene
+     * @method Scene#newItem
+     * @param {String} id sceneItem ID.
+     * @return {SceneItem} SceneItem new Item.
+     * @example
+var sceneItem = scene.newItem("item1");
+     */
 scenePrototype.newItem = function(id) {
 	var item = new SceneItem();
 	return this.addItem(id, item);
 }
+
 scenePrototype.addItem = function(id, sceneItem) {
 	sceneItem.setId(id);
 	if(this.sceneItems[id])
@@ -82,6 +125,12 @@ scenePrototype.addItem = function(id, sceneItem) {
 	this.sceneItems[id] = sceneItem;
 	return sceneItem;
 }
+
+/**
+* get Finish Time of a Scene.
+* @method Scene#getFinishTime
+* @return {Number} time Scene's Running Time.
+*/
 scenePrototype.getFinishTime = function() {
 	var item, id;
 	var sceneItems = this.sceneItems;
@@ -94,7 +143,12 @@ scenePrototype.getFinishTime = function() {
 	}
 	return time;
 }
-
+/**
+* get Item in Scene.
+* @method Scene#getItem
+* @param {String} itemID SceneItem ID.
+* @return {SceneItem} SceneItem getItem in Scene.
+*/
 scenePrototype.getItem = function(id) {
 	// string(id), object(element)
 	var type = typeof id;

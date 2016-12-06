@@ -3,7 +3,7 @@ Scene.js
 Scene.js is an Javascript Aniamtion Library. Make Your Homepage Dynamic.
 <br>
 
-<img src="model/model.png">
+<img src="https://github.com/daybrush/scenejs/raw/master/model/model.png">
 
 ## Component
 * **Scene** : Control SceneItem, Speed & Count, Play & Stop
