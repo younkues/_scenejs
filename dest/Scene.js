@@ -1003,7 +1003,7 @@ defineAll(framePrototype, "sceneItem");
 * load Frames as JSON.
 * @method Scene.Frame#load
      * @param {Object} properties properties.
-     * @return {Frame} a Instance.
+     * @return {this} a Instance.
      * @example
 frame1.load({width: "30px", height: "20px", property:value});
      */
@@ -1045,6 +1045,20 @@ framePrototype.load = function(properties) {
 	
 	return this;	
 }
+
+/**
+* set property in frame
+* @method Scene.Frame#set
+     * @param {String} role ex) "property", "transform", "filter"
+     * @param {String} property
+     * @param {String|Object} value
+     * @return {this} a Instance.
+     * @example
+frame1.set("property", "opacity", 0.5);
+frame1.set("property", "background", "#333");
+frame1.set("transform", "rotate", "10deg");
+frame1.set("filter", "brightness", "30%");
+     */
 framePrototype.set = function(name, property, value) {
 	if(!this.properties[name])
 		return this;
@@ -1062,6 +1076,7 @@ framePrototype.set = function(name, property, value) {
 
 	return this;
 }
+
 framePrototype.sets = function(name, properties) {
 	for(var property in properties) {
 		this.set(name, property, properties[property]);
@@ -1095,14 +1110,90 @@ Frame.addPropertyFunction = function(name, names) {
 	var getProperty = camelize("get " + name);
 	var setProperties = camelize("set " + names);
 	var removeProperty = camelize("remove " + name);
+	
+	/**
+* get property in frame
+* @method Scene.Frame#getProperty
+     * @param {String} property
+     * @return {String|Number|Object} propertyValue.
+     * @example
+frame1.getProperty("opacity")
+     */
+	/**
+* get transform property in frame
+* @method Scene.Frame#getTransform
+     * @param {String} property
+     * @return {String|Number|Object} propertyValue.
+     * @example
+frame1.getTrasnform("rotate")
+     */
+	/**
+* get filter property in frame
+* @method Scene.Frame#getFilter
+     * @param {String} property
+     * @return {String|Number|Object} propertyValue.     
+     * @example
+frame1.getFilter("brightness")
+     */
 	framePrototype[getProperty] = function(property) {
 		return this.get(name, property);
-
 	};
+	/**
+* set property in frame
+* @method Scene.Frame#setProperty
+     * @param {String} property
+     * @param {String|Number|Object} value
+     * @return {this} a Instance.
+     * @example
+frame1.setProperty("opacity", 0.5)
+     */
+	/**
+* set transform in frame
+* @method Scene.Frame#setTransform
+     * @param {String} property
+     * @param {String|Number|Object} value
+     * @return {this} a Instance.
+     * @example
+frame1.setTrasnform(rotate", "10deg")
+     */
+	/**
+* set filter in frame
+* @method Scene.Frame#setFilter
+     * @param {String} property
+     * @param {String|Number|Object} value
+     * @return {this} a Instance.
+     * @example
+frame1.setFilter("brightness", "50%")
+     */
 	framePrototype[setProperty] = function(property, value) {
 		this.set(name, property, value);
 		return this;
 	};
+	
+	/**
+* set properties in frame
+* @method Scene.Frame#setProperties
+     * @param {Object} values
+     * @return {this} a Instance.
+     * @example
+frame1.setProperties({opacity:0.5, background:"#f55"});
+     */
+	/**
+* set transforms in frame
+* @method Scene.Frame#setTransforms
+     * @param {Object} values
+     * @return {this} a Instance.
+     * @example
+frame1.setTrasnforms({rotate:"10deg", scale:"1,5"});
+     */
+	/**
+* set filters in frame
+* @method Scene.Frame#setFilters
+     * @param {Object} values
+     * @return {this} a Instance.
+     * @example
+frame1.setFilter({"brightness": "50%", grayscale:"30%"});
+     */
 	framePrototype[setProperties] = function(properties) {
 		this.sets(name, properties);
 		return this;
@@ -1117,14 +1208,28 @@ Frame.addPropertyFunction = function(name, names) {
 
 
 
-// 프레임 복사본을 만든다.
+	/**
+* Make a copy of frame.
+* @method Scene.Frame#copy
+     * @return {Frame} a copy of frame.
+     * @example
+var frame2 = frame1.copy()
+     */
 framePrototype.copy = function() {
 	var frame = new Frame(this.sceneItem, this.time);
 	frame.merge(this);
 	
 	return frame;
 }
-//다른 프레임과 합치다.
+
+	/**
+	* Merge with other frame.
+	* @method Scene.Frame#merge
+    * @param {Frame} frame to merge.
+    * @return {this} a Instance.
+    * @example
+frame1.merge(frame2);
+     */
 framePrototype.merge = function(frame) {
 	
 	var _frame = this;
@@ -1134,6 +1239,8 @@ framePrototype.merge = function(frame) {
 		properties = frame.properties[_roles[i]["name"]];
 		_frame.sets(_roles[i]["name"], properties);
 	}
+	
+	return this;
 }
 
 
