@@ -4,8 +4,14 @@
 var _u = Scene.Util = {
 	// ex) 100px unit:px, value: 100
 	/**
-	* split Unit
-	* @function Scene.Util#splitUnit
+		* Divide the unit of text.
+		* @function Scene.Util#splitUnit
+		* @param {String|Number} value ex) "10px", "350", "-4em"
+		* @return {Object} unit, value
+		* @example
+Util.splitUnit("10px"); // {unit:"px", value:10}
+Util.splitUnit("-4em"); // {unit:"em", value:-4}
+Util.splitUnit("350"); // {unit:"", value:350}	
 	*/
 	splitUnit: function splitUnit(v) {
 		v = v + "";
@@ -16,6 +22,16 @@ var _u = Scene.Util = {
 		return {unit:unit, value:value};
 		
 	 },
+	/**
+		* convert array to PropertyObject[type=color].
+		* default model "rgba"
+		* @function Scene.Util#arrayToColorObject
+		* @param {Array|PropertyObject} value ex) [0, 0, 0, 1]
+		* @return {PropertyObject} PropertyObject[type=color]
+		* @example
+	Util.arrayToColorObject([0, 0, 0])
+	// => PropertyObject(type="color", model="rgba", value=[0, 0, 0, 1], separator=",")
+	*/
 	 arrayToColorObject: function(arr) {
 	 	var model = "rgba";
 	 	if(arr instanceof PropertyObject) {
@@ -30,15 +46,26 @@ var _u = Scene.Util = {
 			arr[3] = 1;
 		
 		
-
-		var object = new PropertyObject(arr, ",");
-		object.setType("color")
-		object.setModel(model);
-		object.setPrefix(model + "(");
-		object.setSuffix(")");
+		var object = new PropertyObject(arr, {
+			separator : ",",
+			type : "color",
+			model : model,
+			prefix : model + "(",
+			suffix : ")"
+		});
 		
 		return object;
 	 },
+ /**
+	* convert text with parentheses to PropertyObject[type=color].
+	* If the values are not RGBA model, change them RGBA mdoel.
+	* @function Scene.Util#toColorObject
+	* @param {String|PropertyObject} value ex) "rgba(0,0,0,1)"
+	* @return {PropertyObject} PropertyObject[type=color]
+	* @example
+Util.toColorObject("rgba(0, 0, 0,1)")
+// => PropertyObject(type="color", model="rgba", value=[0, 0, 0,1], separator=",")
+*/
 	 toColorObject: function(v) {
 		var colorArray, length;
 		var colorObject;
@@ -105,10 +132,11 @@ var _u = Scene.Util = {
 	 /**
 	* convert text with parentheses to PropertyObject.
 	* @function Scene.Util#toBracketObject
-	* @param {String} a1 value ex) "rgba(0,0,0,1)"
+	* @param {String} value ex) "rgba(0,0,0,1)"
 	* @return {PropertyObject} PropertyObject
 	* @example
-Util.toBracketObject("rgba(0, 0, 0,1)")
+Util.toBracketObject("abcde(0, 0, 0,1)")
+// => PropertyObject(model="abcde", value=[0, 0, 0,1], separator=",")
 */
 	 toBracketObject: function(a1) {
 	 	/*

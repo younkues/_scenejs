@@ -18,10 +18,14 @@ var _color = Scene.Color = {
 		var r = parseInt(h.substring(0,2), 16);
 		var g = parseInt(h.substring(2,4), 16);
 		var b = parseInt(h.substring(4,6), 16);
-		return [r, g, b];
+		var a = parseInt(h.substring(6,8), 16) / 255;
+		if(isNaN(a))
+			a = 1;
+			
+		return [r, g, b, a];
 	},
 	cutHex: function(h) {
-		return (h.charAt(0)==="#") ? h.substring(1,7):h;
+		return (h.charAt(0)==="#") ? h.substring(1,9):h;
 	},
 	hex4to6: function(h) {
 		var r = h.charAt(1);
@@ -83,7 +87,7 @@ var _color = Scene.Color = {
 		var result = [Math.round((rgb[0] + m) * 255), Math.round((rgb[1] + m) * 255), Math.round((rgb[2] + m) * 255)];
 	    if(hsl.length > 3)
 	    	result[3] = hsl[3];
-	    	
+	    
 	    return result;
 	}
 };
