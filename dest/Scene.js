@@ -1457,6 +1457,14 @@ var _u = Scene.Util = {
 
 		return colorObject;
 	 },
+	 /**
+	* convert text with parentheses to PropertyObject.
+	* @function Scene.Util#toBracketObject
+	* @param {String} a1 value ex) "rgba(0,0,0,1)"
+	* @return {PropertyObject} PropertyObject
+	* @example
+Util.toBracketObject("rgba(0, 0, 0,1)")
+*/
 	 toBracketObject: function(a1) {
 	 	/*
 			[prefix, value, other]
@@ -1504,13 +1512,29 @@ var _u = Scene.Util = {
 		}
 		
 
-		var object = new PropertyObject(arr, ",");
-		object.setModel(model);
-		object.setPrefix(prefix);
-		object.setSuffix(suffix);
-		
+		var object = new PropertyObject(arr, {
+			separator : ",",
+			model : model,
+			prefix: prefix,
+			suffix: suffix
+		});		
 		return object;
 	 },
+	 /**
+	* The dot product of PropertyObject(type=color)
+	* If the values are not RGBA model, change them RGBA mdoel.
+	* @function Scene.Util#dotColor
+	* @param {PropertyObject|String} a1 value1
+	* @param {PropertyObject|String} a2 value2
+	* @param {Number} b1 b1 ratio
+	* @param {Number} b2 b2 ratio
+	* @return {PropertyObject} PropertyObject(type=color).
+	* @example
+var colorObject = ......; //PropertyObject(type=color, model="rgba", value=[254, 254, 254, 1]);
+Util.dotColor("#000",  colorObject, 0.5, 0.5);
+// "#000" => PropertyObject(type=color, model="rgba", value=[0, 0, 0, 1]);
+// return => PropertyObject(type=color, model="rgba", value=[127, 127, 127, 1]);
+	*/
  	 dotColor: function(a1, a2, b1, b2) {
 	 	 /*
 	 	 	배열을 PropertyObject로 변환		 	 
@@ -1559,6 +1583,18 @@ var _u = Scene.Util = {
 		return object;
 			
 	 },
+	 /**
+	* The dot product of Arrays
+	* @function Scene.Util#dotArray
+	* @param {Array} a1 value1
+	* @param {Array} a2 value2
+	* @param {Number} b1 b1 ratio
+	* @param {Number} b2 b2 ratio
+	* @return {Array|Object} Array.
+	* @example
+Util.dotArray([0, 0, 0, 1],[50, 50, 50, 1],0.5, 0.5);
+// => [25, 25, 25, 1]
+	*/
 	 dotArray: function(a1, a2, b1, b2) {
 	 	var obj = {};
 	 	var v1, v2;
@@ -1573,6 +1609,20 @@ var _u = Scene.Util = {
 		
 		return obj;
 	 },
+	 /**
+	* The dot product of Objects
+	* @function Scene.Util#dotObject
+	* @param {PropertyObject} a1 value1
+	* @param {PropertyObject} a2 value2
+	* @param {Number} b1 b1 ratio
+	* @param {Number} b2 b2 ratio
+	* @return {PropertyObject} Array with Separator.
+	* @example
+Util.dotObject(PropertyObject(["1px", "solid", rgba(0, 0, 0, 1)]),
+		PropertyObject(["9px", "solid", rgba(50, 50, 50, 1)]),
+		0.5, 0.5);
+// => PropertyObject(["5px", "solid", rgba(25, 25, 25, 1)])
+	*/
 	 dotObject: function(a1, a2, b1, b2) {
 		 var a1type = a1.getType();
 	 	if(a1type === "color")
@@ -1604,6 +1654,10 @@ var _u = Scene.Util = {
 	* @param {String} value it's text contains the array.
 	* @return {String} Not Array, Not Separator, Only Number & Unit
 	* @return {PropertyObject} Array with Separator.
+	* @see referenced regular expression {@link http://stackoverflow.com/questions/20215440/parse-css-gradient-rule-with-javascript-regex}
+	* @example
+Util.stringToObject("1px solid #000");
+// => PropertyObject(["1px", "solid", rgba(0, 0, 0, 1)])
 	*/
 	 stringToObject: function(a1) {
 	 /*
@@ -1735,7 +1789,6 @@ Util.dot(1, 3, 0.3, 0.7);
 			target[name] = newfunc(_func , func, chkfunc, !isRV, isRV);
 	}
 };
-
 var _color = Scene.Color = {
 	models : ["rgb", "rgba", "hsl", "hsla"],
 	nameToRGB : function(name){
