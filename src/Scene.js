@@ -44,7 +44,7 @@ Scene.addRole = function(name, plural) {
 
 	_roles.push({"name":name, "plural":plural, "capitalize":camelize(" " + name)});
 	
-	SceneItem.addGetFramePropertyFunction(name);
+	//SceneItem.addGetFramePropertyFunction(name);
 	SceneItem.addPropertyFunction(name, plural);
 	Frame.addPropertyFunction(name, plural);
 }

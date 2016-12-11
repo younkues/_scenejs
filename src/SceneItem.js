@@ -201,34 +201,59 @@ SceneItem.addPropertyFunction = function(name, names) {
 	}
 }
 
-/*
-	getNowFrameByProperty, getNowFrameByTransform, getNowFrameByFilter
-	time에 해당하는 Frame을 가져온다.
-*/
-var getNowFrameByProperty = function(sceneItem, time, property, prevFunc, nextFunc, func) {
-
-	var prevFrame = sceneItem[prevFunc](time, property);
-	var nextFrame = sceneItem[nextFunc](time, property);
+sceneItemPrototype.getNowValue = function(name, time, property) {
+	var times = this.times, length = times.length, finishTime = this.getFinishTime();
 	
-	if(!prevFrame)
+    if(length === 0)
 		return;
+    
+	// index : length = time : this.getFinishTime()
+	var index = finishTime > 0 ? time * length / finishTime : 0 , right = length - 1, left = 0;
+    
+    if(index < 0)
+        index = 0;
+    else if(index > right)
+        index = right;
+			
+	//Binary Search
+	while (left < right) {
+		if(left === index || right === index) {
+			break;
+		} else if (times[index] > time) {
+			right = index;
+		} else if (times[index] < time) {
+			left = index;
+		} else {
+			left = right = index;
+			break;
+		}
+		index = parseInt((left + right) / 2);
+	}
+	
+    var prevTime = times[left], nextTime = times[right];
+    if(time < prevTime)
+        return;
+    
+    var prevFrame = this.frames[prevTime];
+    var nextFrame = this.frames[nextTime];
+	
+	
 		
-	var prevValue = prevFrame[func](property);
+	var prevValue = prevFrame.get(name, property);
 	if(typeof prevValue === "undefined")
 		return;
 		
 	if(!nextFrame)
 		return prevValue;
 		
-	var nextValue = nextFrame[func](property);	
+	var nextValue = nextFrame.get(name, property);	
 	
 	if(typeof nextValue === "undefined")
 		return prevValue;
 	
 	var value;
 	
-
-	var prevTime = prevFrame.time;
+	
 	if(prevTime < 0)
 		prevTime = 0;
 		
@@ -238,72 +263,6 @@ var getNowFrameByProperty = function(sceneItem, time, property, prevFunc, nextFu
 	
 	return value;
 }
-/*
-	getPrevFrameByProperty, getPrevFrameByTransform, getPrevFrameByFilter
-	property가 time 이전에 있는 Frame을 가져온다. 없으면 Element의 Style을 기본값으로 설정한다.
-*/
-var getPrevFrameByProperty = function(sceneItem, time, property, func) {
-	var frame;
-	var value, tvalue = 0;
-	if((frame = sceneItem.getFrame(time)) && (value = frame[func](property)))
-		return frame;
-		
-	var times = sceneItem.times;
-	var length = times.length;	
-	
-	for(var i = times.length - 1; i >=0 ; --i) {
-		if(times[i] > time)
-			continue;
-		
-		frame = sceneItem.getFrame(times[i]);
-		if(typeof frame[func](property) !== "undefined")
-			return frame;
-	}
-	
-	
-	if(!sceneItem.element)
-		return;
-		
-	var element = sceneItem.element;
-	
-	
-	return sceneItem.getFrame(DEFAULT_FRAME_TIME);
-}
-/*
-	getNextFrameByProperty, getNextFrameByTransform, getNextFrameByFilter
-	property가 time 이후에 있는지 확인다.
-*/
-var getNextFrameByProperty = function(sceneItem, time, property, func) {
-	var frame;
-	var value, tvalue = 0;
-	if((frame = sceneItem.getFrame(time)) && (value = frame[func](property)))
-		return frame;
-	var times = sceneItem.times;
-	var length = times.length;
-	
-	for(var i = 0; i < length ; ++i ) {
-		if(times[i] < time)
-			continue;
-
-		frame = sceneItem.getFrame(times[i]);
-		if(typeof frame[func](property) !== "undefined")
-			return frame;
-	}
-	return;
-}
-SceneItem.addGetFramePropertyFunction = function(name) {
-	var Property = camelize(" " + name);
-	sceneItemPrototype["getNowFrameBy" + Property] = function(time, property) {
-		return getNowFrameByProperty(this, time, property, "getPrevFrameBy" + Property, "getNextFrameBy" + Property, "get" + Property);
-	}
-	sceneItemPrototype["getPrevFrameBy" + Property] = function(time, property) {
-		return getPrevFrameByProperty(this, time, property, "get" + Property);
-	}
-	sceneItemPrototype["getNextFrameBy" +Property] = function(time, property) {
-		return getNextFrameByProperty(this, time, property, "get" + Property);
-	}
-}
-
 
 /*
 	해당 time이 몇번째에 지정되어있는지 확인
@@ -315,42 +274,27 @@ sceneItemPrototype.getTimeIndex = function(time) {
 	Frame과 Frame 사이를 시간에 대해 내적해서 얻은 Frame을 얻어냄
 */
 sceneItemPrototype.getNowFrame = function(time) {
-	var self = this;
-	var times = self.times;
-	var names, vNames;
-	var frame = new Frame(self, time);
+	var times = this.times;
+	var names, propertyNames, nameLength;
+	var frame = new Frame(this, time);
 	var value, property;
-	var _roles = Scene._roles, length = _roles.length;
+	var _roles = Scene._roles,
+        length = _roles.length,
+        role, roleName;
 	var capital;
 	for(var i = 0; i < length; ++i) {
-		capital = _roles[i]["capitalize"];
-		vNames = self.names[_roles[i]["name"]];
-		var nameLength = vNames.length;
+        role = _roles[i];
+		capital = role.capitalize;
+        roleName = role.name;
+        
+		propertyNames = this.names[roleName];
+		nameLength = propertyNames.length;
 		for(var j = 0; j < nameLength; ++j) {
-			property = vNames[j];
-			value = self["getNowFrameBy" + capital](time, property);
-			frame["set" + capital](property, value);	
+			property = propertyNames[j];
+			value = this.getNowValue(roleName, time, property);
+			frame.set(roleName, property, value);	
 		}
 	}
-/*
-	for(var i = 0; i < propertyNames.length; ++i) {
-		property = propertyNames[i];
-		value = this.getNowFrameByProperty(time, property);
-		frame.setProperty(property, value);
-	}
-	for(var i = 0; i < transformNames.length; ++i) {
-		transform = transformNames[i];
-		value = this.getNowFrameByTransform(time, transform);
-		if(typeof value === "undefined")
-			continue;
-		frame.setTransform(transform, value);
-	}
-	for(var i = 0; i < filterNames.length; ++i) {
-		filter = filterNames[i];
-		value = this.getNowFrameByFilter(time, filter);
-		frame.setFilter(filter, value);
-	}
-*/
 	return frame;
 }
 /*
@@ -430,7 +374,7 @@ sceneItemPrototype.setTime = function setTime(time, isPlay) {
 	
 	try {
 		if(nowTimingFunction)
-		time = nowTimingFunction && nowTimingFunction.cubicBezier(time) || time;
+			time = nowTimingFunction && nowTimingFunction.cubicBezier(time) || time;
 	} catch(e) {
 	}
 	
