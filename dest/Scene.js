@@ -637,36 +637,60 @@ sceneItemPrototype.getNowValue = function(name, time, property) {
 		return;
     
 	// index : length = time : this.getFinishTime()
-	var index = finishTime > 0 ? time * length / finishTime : 0 , right = length - 1, left = 0;
+	var index = parseInt(finishTime > 0 ? time * length / finishTime : 0) , right = length - 1, left = 0;
     
     if(index < 0)
         index = 0;
     else if(index > right)
         index = right;
-			
-	//Binary Search
-	while (left < right) {
-		if(left === index || right === index) {
-			break;
-		} else if (times[index] > time) {
-			right = index;
-		} else if (times[index] < time) {
-			left = index;
-		} else {
-			left = right = index;
-			break;
-		}
-		index = parseInt((left + right) / 2);
-	}
+    
+    if(time < times[right]) {
+        //Binary Search
+        while (left < right) {
+            if( (left === index  || right === index ) && (left +1 === right)) {
+                break;
+            } else if (times[index] > time) {
+                right = index;
+            } else if (times[index] < time) {
+                left = index;
+            } else {
+                left = right = index;
+                break;
+            }
+            index = parseInt((left + right) / 2);
+        }
+    } else {
+        left = index = right;
+    }
 	
     var prevTime = times[left], nextTime = times[right];
     if(time < prevTime)
         return;
     
+//    if(time > nextTime) {
+//        nextTime = ++right >= length ? prevTime : times[++right];
+//    }
     var prevFrame = this.frames[prevTime];
     var nextFrame = this.frames[nextTime];
-	
-	
+    
+    
+    
+    for(var i = left; i >= 0; --i) {
+        prevFrame = this.frames[times[i]];
+        prevTime = times[i];
+        if(typeof prevFrame.get(name, property) !== "undefined")
+            break;
+    }
+    for(var i = right; i < length; ++i) {
+        nextFrame = this.frames[times[i]];
+        nextTime = times[i];
+        if(typeof nextFrame.get(name, property) !== "undefined")
+            break;
+    }
+    
+    console.log(property, prevTime, nextTime);
+    
+    
 		
 	var prevValue = prevFrame.get(name, property);
 	if(typeof prevValue === "undefined")
@@ -721,6 +745,10 @@ sceneItemPrototype.getNowFrame = function(time) {
 		for(var j = 0; j < nameLength; ++j) {
 			property = propertyNames[j];
 			value = this.getNowValue(roleName, time, property);
+            
+            if(typeof value === "undfined")
+                continue;
+            
 			frame.set(roleName, property, value);	
 		}
 	}
