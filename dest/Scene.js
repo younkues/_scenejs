@@ -662,14 +662,10 @@ sceneItemPrototype.getNowValue = function(name, time, property) {
     } else {
         left = index = right;
     }
-	
     var prevTime = times[left], nextTime = times[right];
     if(time < prevTime)
         return;
-    
-//    if(time > nextTime) {
-//        nextTime = ++right >= length ? prevTime : times[++right];
-//    }
+
     var prevFrame = this.frames[prevTime];
     var nextFrame = this.frames[nextTime];
     
@@ -687,8 +683,6 @@ sceneItemPrototype.getNowValue = function(name, time, property) {
         if(typeof nextFrame.get(name, property) !== "undefined")
             break;
     }
-    
-    console.log(property, prevTime, nextTime);
     
     
 		

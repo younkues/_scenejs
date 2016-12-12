@@ -4,8 +4,8 @@ scene.load({
 		0 : {"t1":"1px", transform:{"t2": "30deg"}, "c1":"rgba(0, 0, 0, 0)","c2":"#F4E2B2","c3":"HSL(44, 75%, 82.7%)", "t4":"1,2,3","t5":"1 2 3 4", border:"4px solid #000000"},
 		1 : {"t1":"5px", transform:{"t2": "40deg"}, border:"10px solid #f50520"},
         2 : {"t1":"7px", transform:{"t2": "40deg"}, "c1":"rgba(40, 80, 120, 1)", border:"10px solid #f50520"},
-        3.4 : {"t1":"8px", transform:{"t2": "40deg"}, "c1":"rgba(40, 80, 120, 1)", border:"10px solid #f50520"},
-        4.4 : {"t1":"5px", transform:{"t2": "40deg"}, "c1":"rgba(40, 80, 120, 1)", border:"10px solid #f50520"},
+        3.4 : {"t1":"8px", transform:{"t2": "40deg"}, border:"10px solid #f50520"},
+        4.4 : {"t1":"5px", transform:{"t2": "40deg"}, "c1":"rgba(50, 50, 120, 1)", border:"10px solid #f50520"},
 	},
 	"test2" : {
 		0 : {"t1":"1px", transform:{"t2": "30deg"}, "c1":"rgba(0, 0, 0, 0)"},
@@ -45,5 +45,7 @@ QUnit.test( "Scene getNowFrame", function( assert ) {
     
     
     assert.equal(item1.getNowFrame(1).getProperty("c1").toValue(), "rgba(20,40,60,0.5)");
+    assert.equal(item1.getNowFrame(3.2).getProperty("c1").toValue(), "rgba(45,65,120,1)");
+    assert.equal(item1.getNowFrame(10).getProperty("c1").toValue(), "rgba(50,50,120,1)");
 	
 });
