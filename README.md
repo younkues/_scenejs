@@ -61,7 +61,9 @@ Slot Machine(Soon)
 Only load Scene,js
 
 ```HTML
-<script src="Scene.js"></script>
+<script src="./dest/Scene.js"></script>
+or
+<script src="./dest/Scene.min.js"></script>
 
 ```
  
