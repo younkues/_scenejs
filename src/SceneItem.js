@@ -433,7 +433,7 @@ sceneItemPrototype.addFrame = function(time, frame) {
 	
 	var times = this.times;
 	var length = times.length;
-	var pushIndex = 0;
+	var pushIndex = 0 , left = 0, right = length - 1;
 	
 	//추가 시킬 위치를 찾는 중 정렬
 	for(var i = 0; i < length; ++i) {
@@ -443,6 +443,7 @@ sceneItemPrototype.addFrame = function(time, frame) {
 			break;
 		}
 	}
+    
 	this.times.splice(pushIndex,0, time);
 	this.frames[time] = frame;
 	frame.time = time;
