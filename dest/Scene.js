@@ -1345,6 +1345,9 @@ propertyObjectPrototype.join = function() {
 	var rv = "", v = "";
 	var s = false;
 	var arr = this.value, separator = this.separator;
+    if(typeof arr.join === "function")
+        return arr.join(separator);
+    
 	for(var i in arr) {
 		if(s) rv += separator;
 
