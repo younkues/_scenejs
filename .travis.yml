@@ -1,8 +1,8 @@
 language: node_js
 node_js:
 - stable
+before_install: npm install -g grunt-cli
 install:
-- sudo npm install -g grunt
 - npm install
 script:
 - grunt
