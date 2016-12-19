@@ -1,5 +1,8 @@
 Scene.js
 ============
+[![Build Status](https://travis-ci.org/daybrush/scenejs.svg?branch=master)](https://travis-ci.org/daybrush/scenejs)
+
+
 Scene.js is an Javascript Aniamtion Library. Make Your Homepage Dynamic.
 <br>
 
