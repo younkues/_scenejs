@@ -15,12 +15,18 @@ Util.splitUnit("350"); // {unit:"", value:350}
 	*/
 	splitUnit: function splitUnit(v) {
 		v = v + "";
-		var value = v.replace(/[^0-9|\.|\-|e\-|e\+]/g,'');
-		value = parseFloat(value);
-		var unit = v.replace(value, "") || "";
+        try {
+            var value = v.match(/([0-9]|\.|\-|e\-|e\+)+/g, "")[0]
 
-		return {unit:unit, value:value};
-		
+            var unit = v.replace(value, "") || "";
+
+            value = parseFloat(value);
+
+
+            return {unit:unit, value:value};
+        } catch(e) {
+            return {unit:v}
+        }
 	 },
 	/**
 		* convert array to PropertyObject[type=color].

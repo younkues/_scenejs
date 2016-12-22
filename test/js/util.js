@@ -4,8 +4,8 @@ scene.load({
 		1 : {"t1":"5px", transform:{"t2": "40deg"}, "c1":"rgba(40, 80, 120, 1)", border:"10px solid #f50520"},
 	},
 	"test4" : {
-		0 : {"t1":"1px", transform:{"t2": "30deg"}, "c1":"rgba(0, 0, 0, 0)"},
-		1 : {"t1":"5px", transform:{"t2": "40deg"}, "c1":"rgba(0, 0, 0, 0)"},
+		0 : {"t1":"1px", transform:{"t2": "30deg"}, "c1":"rgba(0, 0, 0, 0)", "c3":"0px, 0px", "c4": "-0px"},
+		1 : {"t1":"5px", transform:{"t2": "40deg"}, "c1":"rgba(0, 0, 0, 0)", "c3":"-4px, 4px", "c4": "-4px"},
 	},
 });
 QUnit.test( "Scene.Util.splitUnit", function( assert ) {
@@ -88,5 +88,7 @@ QUnit.test( "Scene Util dot Test", function( assert ) {
 	assert.equal(border.value[0], "7px", "border property double seperator 1");
 	assert.equal(border.value[1], "solid", "border property double seperator 2");
 	assert.deepEqual(border.value[2].value, {"0":122,"1":2,"2":16,"3":1}, "border property double seperator 3");
+	assert.equal(scene.getItem("test4").getNowFrame(0.5).getProperty("c3").toValue(), "-2px,2px");
+	assert.equal(scene.getItem("test4").getNowFrame(0.5).getProperty("c4"), "-2px");	
 	
 });

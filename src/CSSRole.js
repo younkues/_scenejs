@@ -285,7 +285,7 @@ scenePrototype.exportCSS = function() {
 	css = "";
 	for(var id in sceneItems) {
 		sceneItem = sceneItems[id];
-		css += sceneItem.setFrameToCSSRule(finishTime, count);
+		css += sceneItem.exportCSSRule(finishTime, count);
 	}
 	
 	var style = "<style>" + css +"</style>";
@@ -293,7 +293,8 @@ scenePrototype.exportCSS = function() {
 	return this;
 }
 var CSS_ANIMATION_RULE = "";
-var CSS_ANIMATION_START_RULE = "{selector}.startAnimation{{prefix}animation: scenejs_animation_{id} {time}s {type};{prefix}animation-fill-mode: forwards;{prefix}animation-iteration-count:{count};}"
+var CSS_ANIMATION_START_RULE = "{selector}.startAnimation{{prefix}animation: scenejs_animation_{id} {time}s {type};{prefix}animation-fill-mode: forwards;{prefix}animation-iteration-count:{count};}";
+
 sceneItemPrototype.exportCSSRule = function(finishTime, count) {
 	if(!this.getSelector())
 		return "";
