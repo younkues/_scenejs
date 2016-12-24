@@ -488,6 +488,9 @@ sceneItemPrototype.removeFrame = function(time) {
 
 sceneItemPrototype.copyFrame = function(fromTime, toTime) {
 	var frame = this.getFrame(fromTime);
+	if(!frame)
+		return this;
+		
 	var copyFrame = frame.copy();
 	this.setFrame(toTime, copyFrame);	
 	return this;

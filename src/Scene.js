@@ -38,7 +38,9 @@ var Scene = window.Scene = function Scene(items) {
 }
 var _roles = Scene._roles = [];
 
-
+Scene.Timeline = function(json) {
+	return new Scene().loadTimeline(json);
+}
 Scene.addRole = function(name, plural) {
 	var _roles = Scene._roles;
 
@@ -104,6 +106,26 @@ scenePrototype.load = function(items) {
 	return this;
 }
 
+scenePrototype.loadTimeline = function(times) {
+	if(!times)
+		return this;
+	
+	var json = {}, time, items, item;
+	for(time in times) {
+		items = times[time];
+		for(item in items) {
+			if(!(item in json))
+				json[item] = {};
+			
+			json[item][time] = items[item];
+		}
+	}
+	if("option" in times) {
+		json.option = times.option;
+	}
+	return this.load(json);	
+}
+
 /**
      * add Item in Scene
      * @method Scene#newItem
@@ -124,6 +146,17 @@ scenePrototype.addItem = function(id, sceneItem) {
 		
 	this.sceneItems[id] = sceneItem;
 	return sceneItem;
+}
+
+scenePrototype.copyFrame = function(fromTime, toTime) {
+	var sceneItems = this.sceneItems;
+	var item;
+			
+	for(var id in sceneItems) {	
+		item = sceneItems[id];
+		item.copyFrame(fromTime, toTime);
+	}
+	return this;
 }
 
 /**
