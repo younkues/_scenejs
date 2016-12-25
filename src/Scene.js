@@ -25,8 +25,11 @@ var Scene = window.Scene = function Scene(items) {
 	this.iterationCount = 1;
 	/*iterationCount = 1, 2, 3, 4, infinite*/
 	this.direction = "normal";
+	/*normal, reverse, alternate, alternate-reverse*/	
 	this.delay = 0;
-	/*normal, reverse, alternate, alternate-reverse*/
+	this.fillMode= "none";
+	//default: none // forwards
+
 	
 	
 	this.name = "";
@@ -57,6 +60,7 @@ defineGetterSetter(scenePrototype, "playSpeed");
 defineGetterSetter(scenePrototype, "playCount");
 defineGetterSetter(scenePrototype, "iterationCount");
 defineGetterSetter(scenePrototype, "direction");
+defineGetterSetter(scenePrototype, "fillMode");
 
 
 /**
@@ -285,6 +289,7 @@ scenePrototype.tick = function(resolve, reject) {
 		if(this.getFinishTime() <= 0) {	
 		} else if(ic === "infinite" || pc < ic) {
 			this.play();
+			this.setPlayCount(pc);
 			return;
 		}
 

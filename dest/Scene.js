@@ -108,8 +108,11 @@ var Scene = window.Scene = function Scene(items) {
 	this.iterationCount = 1;
 	/*iterationCount = 1, 2, 3, 4, infinite*/
 	this.direction = "normal";
+	/*normal, reverse, alternate, alternate-reverse*/	
 	this.delay = 0;
-	/*normal, reverse, alternate, alternate-reverse*/
+	this.fillMode= "none";
+	//default: none // forwards
+
 	
 	
 	this.name = "";
@@ -140,6 +143,7 @@ defineGetterSetter(scenePrototype, "playSpeed");
 defineGetterSetter(scenePrototype, "playCount");
 defineGetterSetter(scenePrototype, "iterationCount");
 defineGetterSetter(scenePrototype, "direction");
+defineGetterSetter(scenePrototype, "fillMode");
 
 
 /**
@@ -368,6 +372,7 @@ scenePrototype.tick = function(resolve, reject) {
 		if(this.getFinishTime() <= 0) {	
 		} else if(ic === "infinite" || pc < ic) {
 			this.play();
+			this.setPlayCount(pc);
 			return;
 		}
 
@@ -2311,11 +2316,10 @@ scenePrototype.exportCSS = function() {
 	var sceneItems = this.sceneItems;
 	var sceneItem;
 	var finishTime = this.getFinishTime();
-	var count = this.getIterationCount();
 	css = "";
 	for(var id in sceneItems) {
 		sceneItem = sceneItems[id];
-		css += sceneItem.exportCSSRule(finishTime, count);
+		css += sceneItem.exportCSSRule(this, finishTime);
 	}
 	
 	var style = "<style>" + css +"</style>";
@@ -2323,15 +2327,14 @@ scenePrototype.exportCSS = function() {
 	return this;
 }
 var CSS_ANIMATION_RULE = "";
-var CSS_ANIMATION_START_RULE = "{selector}.startAnimation{{prefix}animation: scenejs_animation_{id} {time}s {type};{prefix}animation-fill-mode: forwards;{prefix}animation-iteration-count:{count};}";
+var CSS_ANIMATION_START_RULE = "{selector}.startAnimation{{prefix}animation: scenejs_animation_{id} {time}s {type};{prefix}animation-fill-mode: {fillMode};{prefix}animation-iteration-count:{count};}";
 
-sceneItemPrototype.exportCSSRule = function(finishTime, count) {
+sceneItemPrototype.exportCSSRule = function(scene, finishTime) {
 	if(!this.getSelector())
 		return "";
 		
 	var selectors = this.getSelector().split(","), length = selectors.length;
 	finishTime = finishTime || this.getFinishTime();
-	count = count || 1;
 	var css = "";
 
 //**임시
@@ -2339,8 +2342,9 @@ sceneItemPrototype.exportCSSRule = function(finishTime, count) {
 	var _CSS_ANIMATION_START_RULE = replaceAll(CSS_ANIMATION_START_RULE, "{prefix}", "");
 	 _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{time}", finishTime);
 	 _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{type}", "linear");
-	  _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{count}", count);
 	  _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{id}", id);
+	  _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{count}", scene.iterationCount || 1);
+	  _CSS_ANIMATION_START_RULE = replaceAll(_CSS_ANIMATION_START_RULE, "{fillMode}", scene.fillMode);
 	for(var i = 0; i < length; ++i) {
 		css += replaceAll(_CSS_ANIMATION_START_RULE, "{selector}", selectors[i]);
 	}
